@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado de Sistemas Operacionais - Carreira EBTT</title>
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --text-color: #2c3e50;
+            --accent-color: #27ae60;
+            --error-color: #e74c3c;
+            --border-color: #e0e0e0;
+            --card-bg: #ffffff;
+            --resolution-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        main {
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px 100px 20px;
+            box-sizing: border-box;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: #f1f8ff;
+            border-color: #b3d7ff;
+        }
+
+        .option-label input {
+            margin-top: 6px;
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        /* Classes para o resultado */
+        .option-label.correct {
+            background-color: #d4edda !important;
+            border-color: #c3e6cb !important;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-label.wrong {
+            background-color: #f8d7da !important;
+            border-color: #f5c6cb !important;
+            color: #721c24;
+        }
+
+        .resolution-box {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: var(--resolution-bg);
+            border-left: 4px solid var(--accent-color);
+            display: none;
+            font-size: 0.95rem;
+            color: #444;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: #219150;
+        }
+
+        #results-summary {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: #fff;
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+
+        .score-circle {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #888;
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.6rem; }
+            .question-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Simulado: Sistemas Operacionais</h1>
+        <p class="subtitle">Foco em Concursos para Professor EBTT - Institutos Federais</p>
+    </header>
+
+    <main id="quiz-container">
+        <form id="quiz-form">
+            <!-- Questões serão inseridas via JS -->
+            <div id="questions-list"></div>
+            
+            <button type="submit" class="submit-btn" id="finish-btn">Finalizar e Ver Resoluções</button>
+        </form>
+
+        <div id="results-summary">
+            <h2>Resultado Final</h2>
+            <div class="score-circle" id="score-display">0/10</div>
+            <p id="feedback-text"></p>
+            <p>Confira as resoluções detalhadas abaixo de cada questão.</p>
+        </div>
+    </main>
+
+    <footer>
+        Desenvolvido para fins didáticos - Disciplina de Sistemas Operacionais
+    </footer>
+
+    <script>
+        const questionsData = [
+            {
+                id: 1,
+                question: "No âmbito da literatura clássica de sistemas operacionais, Andrew Tanenbaum descreve o SO através de duas funções fundamentais que operam sob perspectivas distintas. Sobre a função do sistema operacional como um 'Gerente de Recursos', assinale a alternativa que descreve corretamente sua atuação:",
+                options: [
+                    "Fornecer ao usuário uma abstração simplificada que esconde as complexidades eletrônicas do hardware, facilitando o desenvolvimento de software.",
+                    "Atuar como um árbitro centralizado que controla e coordena a alocação de tempo de processador, espaço em memória e acesso a dispositivos entre múltiplos processos.",
+                    "Carregar os drivers de dispositivos no momento do boot e realizar o teste de integridade física dos componentes através do POST.",
+                    "Prover exclusivamente uma interface gráfica intuitiva para que o usuário final possa manipular arquivos sem o uso de comandos de texto."
+                ],
+                correct: 1,
+                resolution: "**Gabarito: B**<br>A perspectiva do sistema operacional como gerente de recursos foca na eficiência e no controle. Em um computador, os recursos são limitados (CPU, memória, tempo, periféricos). Conforme Tanenbaum e Silberschatz, o SO deve atuar como um mediador justo e eficiente para garantir que todos os processos recebam o que precisam sem conflitos. A alternativa A descreve a função de 'Máquina Estendida' (abstração). A C refere-se a funções de firmware/BIOS e a D descreve interfaces específicas."
+            },
+            {
+                id: 2,
+                question: "A arquitetura dos sistemas operacionais modernos é frequentemente descrita através de modelos de camadas ou níveis de abstração. Analise os componentes Kernel e Shell e marque a alternativa tecnicamente correta:",
+                options: [
+                    "O Shell é o núcleo do sistema que gerencia diretamente a memória RAM e as instruções da CPU, enquanto o Kernel é apenas a interface de interação com o usuário.",
+                    "O Kernel opera em modo de usuário e é responsável por traduzir comandos gráficos em texto, enquanto o Shell opera em modo privilegiado para garantir a segurança do hardware.",
+                    "O Kernel é a parte fundamental do SO que gerencia os recursos e a segurança em nível de hardware, enquanto o Shell atua como um interpretador que recebe os comandos do usuário e os encaminha ao núcleo.",
+                    "Tanto o Shell quanto o Kernel são componentes de hardware integrados ao processador para acelerar a execução de algoritmos de escalonamento."
+                ],
+                correct: 2,
+                resolution: "**Gabarito: C**<br>O Kernel (núcleo) e o Shell (casca) formam a dicotomia fundamental da arquitetura de SOs. O Kernel é o código que interage com o hardware e toma decisões de baixo nível, operando em modo privilegiado para evitar que falhas de software comprometam a máquina física. O Shell é o interpretador que serve de interface para o usuário, seja por janelas ou por linha de comando."
+            },
+            {
+                id: 3,
+                question: "Diferenciar o conceito de 'programa' do conceito de 'processo' é vital para a compreensão da multitarefa. Com base nos fundamentos da disciplina, é correto afirmar que:",
+                options: [
+                    "Um programa é uma entidade passiva armazenada em disco, enquanto um processo é uma entidade ativa que representa um programa em execução na memória.",
+                    "Um processo pode ser definido como o código fonte de um software, enquanto o programa é a versão já compilada desse mesmo software no HD.",
+                    "O sistema operacional pode gerenciar apenas um processo para cada programa instalado no computador, visando economizar recursos de CPU.",
+                    "O processo é estático e não consome recursos de entrada e saída, enquanto o programa é dinâmico e utiliza a memória RAM de forma volátil."
+                ],
+                correct: 0,
+                resolution: "**Gabarito: A**<br>Um programa é um arquivo passivo (armazenado no disco, como um .exe), enquanto um processo é a instância ativa desse programa quando ele é carregado na RAM e recebe tempo de processamento da CPU. Um único programa pode originar múltiplos processos simultâneos."
+            },
+            {
+                id: 4,
+                question: "O ciclo de vida de um processo é caracterizado por transições entre diferentes estados de execução. Quando um processo que está sendo executado pela CPU solicita a leitura de um arquivo em um dispositivo de armazenamento secundário (HD), ele entra em um estado de bloqueio. Assinale a alternativa que identifica corretamente esse estado segundo o modelo clássico:",
+                options: [
+                    "Estado de Pronto (Ready), pois ele já terminou sua fatia de tempo no processador.",
+                    "Estado de Espera ou Bloqueado (Waiting/Blocked), pois depende da conclusão de uma operação de E/S para prosseguir.",
+                    "Estado de Novo (New), pois o processo precisa ser recriado após cada operação de leitura em disco.",
+                    "Estado de Suspenso, que ocorre quando o processo é movido para a memória virtual por falta de espaço na RAM física."
+                ],
+                correct: 1,
+                resolution: "**Gabarito: B**<br>Um processo é movido para o estado de 'Espera' ou 'Bloqueado' quando depende de uma operação externa (como ler um arquivo) que é ordens de grandeza mais lenta que a CPU. A CPU não pode ficar parada esperando; por isso, o SO bloqueia aquele processo e coloca outro para executar."
+            },
+            {
+                id: 5,
+                question: "Em sistemas operacionais multitarefa, a sensação de execução simultânea de vários programas em um processador de núcleo único é conhecida como pseudoparalelismo. Esse fenômeno é tecnicamente viabilizado por:",
+                options: [
+                    "Processadores que possuem múltiplas unidades lógicas e aritméticas integradas em um único circuito de silício.",
+                    "Uma alternância extremamente rápida da CPU entre os processos que estão no estado de 'Pronto', gerenciada por uma função lógica de escalonamento.",
+                    "A capacidade dos aplicativos de se autogerenciarem e liberarem a CPU voluntariamente a cada ciclo de instrução.",
+                    "O uso de memórias cache L1 e L2 que armazenam todos os processos ativos simultaneamente para execução instantânea."
+                ],
+                correct: 1,
+                resolution: "**Gabarito: B**<br>O pseudoparalelismo é a base dos sistemas multitarefa. Em uma CPU de núcleo único, apenas um processo pode ser executado por vez. O SO alterna entre os processos na fila de 'Pronto' tão rapidamente que percebemos todos como se estivessem rodando ao mesmo tempo."
+            },
+            {
+                id: 6,
+                question: "Considere que um administrador de sistemas Windows precisa encerrar um processo que não está respondendo e monitorar o impacto desse processo no consumo de memória RAM. Qual ferramenta nativa deve ser utilizada para realizar essa tarefa de forma eficiente?",
+                options: [
+                    "Painel de Controle, na seção de Desinstalar um Programa.",
+                    "Gerenciador de Tarefas (Task Manager).",
+                    "Prompt de Comando, utilizando o comando 'format'.",
+                    "Windows Explorer, através das propriedades da partição C:."
+                ],
+                correct: 1,
+                resolution: "**Gabarito: B**<br>O Gerenciador de Tarefas do Windows é a ferramenta administrativa projetada especificamente para o monitoramento de processos em tempo real e para o controle de recursos como CPU, RAM e Disco. Ele permite 'Finalizar Tarefa', enviando um comando direto para o Kernel encerrar um processo."
+            },
+            {
+                id: 7,
+                question: "A estrutura de um sistema computacional pode ser dividida em quatro componentes principais. Qual das alternativas apresenta a sequência correta de camadas, partindo do nível mais profundo (hardware) para o nível mais externo (interação)?",
+                options: [
+                    "Hardware -> Shell -> Kernel -> Usuário e Aplicativos.",
+                    "Hardware -> Kernel -> Shell -> Usuário e Aplicativos.",
+                    "Usuário e Aplicativos -> Shell -> Kernel -> Hardware.",
+                    "Kernel -> Hardware -> Shell -> Usuário e Aplicativos."
+                ],
+                correct: 1,
+                resolution: "**Gabarito: B**<br>A hierarquia lógica segue um fluxo de abstração crescente: Hardware (base física) -> Kernel (software próximo ao hardware) -> Shell (interface que envolve o núcleo) -> Usuário e Aplicativos (camada externa)."
+            },
+            {
+                id: 8,
+                question: "Um processo que está no estado 'Executando' e sofre uma interrupção por ter esgotado sua fatia de tempo (quantum) concedida pelo sistema operacional deve ser movido para qual estado?",
+                options: [
+                    "Estado de Espera (Waiting), para aguardar a permissão do usuário.",
+                    "Estado de Encerrado (Terminated), para liberar os recursos ocupados.",
+                    "Estado de Pronto (Ready), aguardando uma nova oportunidade de ser selecionado pelo escalonador.",
+                    "Estado de Novo (New), reiniciando o ciclo de alocação de recursos."
+                ],
+                correct: 2,
+                resolution: "**Gabarito: C**<br>Quando um processo esgota sua fatia de tempo (preempção), ele não está bloqueado esperando nada, nem terminou. Ele apenas cedeu a CPU para outro. Portanto, ele retorna para a fila de 'Prontos' para aguardar sua próxima vez."
+            },
+            {
+                id: 9,
+                question: "Tanenbaum utiliza a analogia do 'Roteiro vs. Filme' para explicar a relação entre programa e processo. De acordo com essa analogia didática, é correto afirmar que:",
+                options: [
+                    "O projetista do cinema é o Hardware e o filme rodando é o Kernel.",
+                    "O roteiro estático guardado na estante representa o Programa, enquanto a exibição do filme na tela representa o Processo em execução.",
+                    "O público que assiste ao filme é o Shell, e a tela do cinema é o Kernel do sistema operacional.",
+                    "O filme em execução é o Programa, e o roteiro estático é a representação do hardware."
+                ],
+                correct: 1,
+                resolution: "**Gabarito: B**<br>Esta analogia consolida a diferença entre entidade estática e dinâmica. O roteiro é o texto fixo (Programa). O filme sendo exibido, com movimento e tempo decorrendo, é a execução ativa (Processo)."
+            },
+            {
+                id: 10,
+                question: "Qual das funções abaixo é responsabilidade direta e exclusiva do Kernel de um sistema operacional moderno, visando a integridade e segurança do sistema?",
+                options: [
+                    "Prover suporte a temas e ícones personalizados para a área de trabalho do usuário.",
+                    "Gerenciar o escalonamento da CPU e garantir o isolamento entre os espaços de endereçamento de diferentes processos.",
+                    "Executar verificações ortográficas em tempo real dentro de editores de texto de terceiros.",
+                    "Realizar a conexão física de cabos de rede e garantir a alimentação elétrica da placa-mãe."
+                ],
+                correct: 1,
+                resolution: "**Gabarito: B**<br>Funções críticas como o escalonamento da CPU e a proteção de memória (isolamento entre processos) são pilares da segurança que só podem ser realizados pelo Kernel em modo privilegiado."
+            }
+        ];
+
+        const questionsList = document.getElementById('questions-list');
+        const quizForm = document.getElementById('quiz-form');
+        const resultsSummary = document.getElementById('results-summary');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedbackText = document.getElementById('feedback-text');
+
+        // Gerar as questões no HTML
+        function renderQuestions() {
+            questionsData.forEach((q, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-card-${index}`;
+
+                let optionsHtml = '';
+                q.options.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <label class="option-label" for="q${index}_opt${optIndex}">
+                            <input type="radio" name="question${index}" id="q${index}_opt${optIndex}" value="${optIndex}" required>
+                            <span>${opt}</span>
+                        </label>
+                    `;
+                });
+
+                questionCard.innerHTML = `
+                    <span class="question-text">${index + 1}. ${q.question}</span>
+                    <div class="options-container">
+                        ${optionsHtml}
+                    </div>
+                    <div class="resolution-box" id="res-${index}">
+                        <strong>Resolução:</strong><br>
+                        ${q.resolution}
+                    </div>
+                `;
+                questionsList.appendChild(questionCard);
+            });
+        }
+
+        quizForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let score = 0;
+            const formData = new FormData(quizForm);
+
+            questionsData.forEach((q, index) => {
+                const userAnswer = formData.get(`question${index}`);
+                const resolutionBox = document.getElementById(`res-${index}`);
+                const options = document.querySelectorAll(`input[name="question${index}"]`);
+                
+                // Mostrar a resolução
+                resolutionBox.style.display = 'block';
+
+                options.forEach((radio, optIdx) => {
+                    const label = radio.parentElement;
+                    
+                    // Marcar a correta em verde
+                    if (optIdx == q.correct) {
+                        label.classList.add('correct');
+                    }
+                    
+                    // Se o usuário errou, marcar a dele em vermelho
+                    if (userAnswer == optIdx && optIdx != q.correct) {
+                        label.classList.add('wrong');
+                    }
+                });
+
+                if (userAnswer == q.correct) {
+                    score++;
+                }
+            });
+
+            // Mostrar resumo
+            document.getElementById('finish-btn').style.display = 'none';
+            resultsSummary.style.display = 'block';
+            scoreDisplay.textContent = `${score} / ${questionsData.length}`;
+            
+            if (score >= 8) {
+                feedbackText.textContent = "Excelente desempenho! Você demonstra um sólido conhecimento nos fundamentos de SO para a carreira EBTT.";
+            } else if (score >= 5) {
+                feedbackText.textContent = "Bom trabalho. Revise os pontos onde houve erro para consolidar os conceitos fundamentais.";
+            } else {
+                feedbackText.textContent = "Continue estudando. Sistemas Operacionais é uma disciplina densa e requer revisão cuidadosa dos conceitos de Tanenbaum e Silberschatz.";
+            }
+
+            // Rolar para o resumo
+            resultsSummary.scrollIntoView({ behavior: 'smooth' });
+
+            // Desabilitar inputs após envio
+            const allInputs = document.querySelectorAll('input[type="radio"]');
+            allInputs.forEach(input => input.disabled = true);
+        });
+
+        // Inicializar o quiz
+        renderQuestions();
+
+    </script>
+</body>
+</html>
