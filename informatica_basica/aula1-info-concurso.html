@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Informática Básica e Normas Técnicas</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --container-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #546e7a;
+            --accent: #2980b9;
+            --correct: #27ae60;
+            --incorrect: #e74c3c;
+            --border: #dcdde1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        header {
+            border-bottom: 2px solid var(--accent);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        .question-block {
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-item label {
+            display: block;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-item label:hover {
+            background-color: #f0f4f8;
+            border-color: var(--accent);
+        }
+
+        .option-item input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        /* Classes para o resultado */
+        .selected-correct {
+            background-color: #d4edda !important;
+            border-color: var(--correct) !important;
+            color: #155724;
+        }
+
+        .selected-incorrect {
+            background-color: #f8d7da !important;
+            border-color: var(--incorrect) !important;
+            color: #721c24;
+        }
+
+        .correct-answer-highlight {
+            border: 2px solid var(--correct) !important;
+            font-weight: bold;
+        }
+
+        .resolution {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #eef2f7;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
+            color: #34495e;
+        }
+
+        #submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #submit-btn:hover {
+            background-color: #1a5276;
+        }
+
+        #result-summary {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            background-color: var(--accent);
+            color: white;
+        }
+
+        #result-summary h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .footer-note {
+            margin-top: 50px;
+            font-size: 0.8rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulado de Informática Técnica</h1>
+        <p class="subtitle">Instituto Federal - Processamento de Texto e Normas ABNT</p>
+    </header>
+
+    <div id="result-summary">
+        <h2 id="score-text">Você acertou 0 de 10 questões!</h2>
+    </div>
+
+    <form id="quiz-form">
+        <div id="questions-container">
+            <!-- As questões serão inseridas aqui via JavaScript -->
+        </div>
+
+        <button type="button" id="submit-btn" onclick="checkAnswers()">Finalizar Simulado</button>
+    </form>
+
+    <div class="footer-note">
+        Baseado na Aula 1 de Informática Básica - Padrão IFPE / ABNT
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            question: "Um estudante do curso Técnico em Informática do IFPE precisa redigir um relatório de estágio utilizando o Microsoft Word. Durante a aula de Informática Básica, o professor explicou que o Word é classificado como um 'Processador de Texto', enquanto o Bloco de Notas é apenas um 'Editor de Texto'. Qual característica técnica diferencia fundamentalmente um processador de texto de um editor de texto simples?",
+            options: [
+                "O processador de texto exige conexão constante com a internet, enquanto o editor funciona offline.",
+                "O processador de texto manipula objetos e metadados, enquanto o editor de texto manipula apenas fluxos de caracteres sem formatação.",
+                "O editor de texto permite a criação de gráficos complexos, recurso inexistente no processador de texto.",
+                "O processador de texto é utilizado exclusivamente para programação, enquanto o editor serve para documentos acadêmicos."
+            ],
+            correct: 1,
+            resolution: "A distinção entre editores e processadores é um conceito clássico de informática básica. O 'Editor de Texto' manipula o arquivo de forma bruta (texto simples/plain text). Quando salvamos um arquivo no Bloco de Notas, o sistema operacional armazena apenas os códigos numéricos que representam cada letra. Já o 'Processador de Texto', como o Microsoft Word, cria uma camada de abstração muito maior. Ele armazena o texto, mas também objetos (âncoras de imagem, tabelas) e metadados. Metadados são essenciais para que o software saiba, por exemplo, que um determinado parágrafo deve ser exibido em negrito sem que o caractere 'negrito' exista no alfabeto."
+        },
+        {
+            id: 2,
+            question: "No âmbito da arquitetura de arquivos modernos, os documentos salvos no Microsoft Word com a extensão .docx não são arquivos monolíticos simples. Do ponto de vista técnico, como é estruturado internamente um arquivo .docx?",
+            options: [
+                "É um arquivo binário criptografado que só pode ser lido por versões específicas do Windows.",
+                "É um contêiner baseado na tecnologia ZIP que armazena diversos arquivos organizados em linguagem XML.",
+                "Trata-se de uma imagem de alta resolução que contém o texto convertido em pixels.",
+                "É um atalho que aponta para um banco de dados centralizado nos servidores da Microsoft."
+            ],
+            correct: 1,
+            resolution: "Com a mudança para o .docx (Office Open XML), a Microsoft adotou uma estrutura de 'contêiner'. Tecnicamente, se você renomear a extensão de um arquivo .docx para .zip, você poderá abri-lo com qualquer descompactador de arquivos e verá uma árvore de diretórios contendo vários arquivos XML. O document.xml contém o conteúdo textual, enquanto o styles.xml contém as definições de formatação. Essa arquitetura baseada em XML torna o arquivo mais leve (devido à compressão ZIP) e mais seguro contra corrupção de dados."
+        },
+        {
+            id: 3,
+            question: "O paradigma WYSIWYG é um dos pilares do funcionamento do Microsoft Word e de outros softwares de edição moderna. Qual é a implicação prática desse paradigma para um técnico que está formatando um documento oficial?",
+            options: [
+                "O software traduz automaticamente o texto para o inglês enquanto o usuário digita.",
+                "O que é visualizado na tela do computador durante a edição corresponde fielmente ao que será obtido na impressão ou exportação.",
+                "O sistema impede que o usuário cometa erros gramaticais através de inteligência artificial generativa.",
+                "O documento é salvo automaticamente em múltiplos servidores para evitar a perda de dados."
+            ],
+            correct: 1,
+            resolution: "O termo WYSIWYG é um acrônimo para 'What You See Is What You Get' (O que você vê é o que você obtém). No Microsoft Word, o motor de renderização gráfica simula a página de papel em tempo real. Isso é crucial para a conformidade com as normas ABNT, pois o usuário consegue ajustar margens e espaçamentos visualmente, tendo a certeza de que o documento impresso terá exatamente a mesma disposição espacial vista na tela."
+        },
+        {
+            id: 4,
+            question: "Ao preparar um documento de acordo com as normas técnicas da ABNT, o primeiro passo consiste na configuração das margens da página. De acordo com o guia prático do IFPE, quais são as medidas corretas para as margens Superior, Esquerda, Inferior e Direita, respectivamente?",
+            options: [
+                "2 cm, 2 cm, 3 cm, 3 cm.",
+                "3 cm, 3 cm, 2 cm, 2 cm.",
+                "2,5 cm, 2,5 cm, 2,5 cm, 2,5 cm.",
+                "3 cm, 2 cm, 3 cm, 2 cm."
+            ],
+            correct: 1,
+            resolution: "A conformidade com a norma ABNT NBR 14724 é rigorosa. A configuração 3-3-2-2 (Superior 3cm, Esquerda 3cm, Inferior 2cm, Direita 2cm) possui uma razão técnica: a margem esquerda de 3 cm é necessária para garantir o espaço de encadernação, enquanto a margem superior de 3 cm permite a inclusão de elementos de cabeçalho sem poluir o corpo do texto."
+        },
+        {
+            id: 5,
+            question: "O uso de 'Estilos' no Microsoft Word é fundamental para a organização de documentos longos, como Trabalhos de Conclusão de Curso (TCC). Qual funcionalidade do Word depende diretamente da aplicação correta dos estilos de título (como Título 1 e Título 2) para ser executada de forma automatizada?",
+            options: [
+                "A verificação ortográfica e gramatical do documento.",
+                "A geração automática de sumários (índices).",
+                "O envio automático do arquivo por correio eletrônico.",
+                "A conversão do texto em uma apresentação de slides."
+            ],
+            correct: 1,
+            resolution: "O recurso de Sumário Automático do Microsoft Word busca nos metadados do arquivo por parágrafos que tenham sido marcados com estilos de nível hierárquico. Se o usuário apenas alterar a fonte manualmente, o Word não reconhecerá a estrutura lógica necessária para gerar o índice."
+        },
+        {
+            id: 6,
+            question: "Em uma situação prática no laboratório de informática do IFPE, um aluno precisa selecionar rapidamente todo o conteúdo de um documento de 50 páginas para alterar a fonte de Arial para Times New Roman. No Microsoft Word 2019 (versão em Português do Brasil), qual combinação de teclas de atalho deve ser utilizada para selecionar todo o texto?",
+            options: [
+                "Ctrl + A",
+                "Ctrl + S",
+                "Ctrl + T",
+                "Ctrl + Z"
+            ],
+            correct: 2,
+            resolution: "Em softwares localizados para o português brasileiro, o atalho para selecionar todo o texto é o Ctrl+T (associado à palavra 'Tudo'). No Word em inglês, o atalho seria Ctrl+A (All), mas na versão em português o Ctrl+A serve para 'Abrir' documentos."
+        },
+        {
+            id: 7,
+            question: "Para conferir um aspecto profissional e organizado a uma solicitação formal, o técnico deve garantir que o texto esteja alinhado simultaneamente às margens esquerda e direita. Qual é o nome deste alinhamento e qual o seu respectivo atalho no Word?",
+            options: [
+                "Alinhamento Centralizado (Ctrl + E).",
+                "Alinhamento Justificado (Ctrl + J).",
+                "Alinhamento à Esquerda (Ctrl + Q).",
+                "Alinhamento à Direita (Ctrl + G)."
+            ],
+            correct: 1,
+            resolution: "O alinhamento 'Justificado' ajusta o espaçamento entre as palavras para que o bloco de texto preencha exatamente a largura entre as margens esquerda e direita. O atalho Ctrl+J é a forma rápida de aplicar essa configuração padrão para documentos oficiais."
+        },
+        {
+            id: 8,
+            question: "O recuo da primeira linha de um parágrafo é um elemento de formatação padrão em documentos técnicos. Segundo as instruções da aula prática, qual tecla deve ser pressionada no início de um parágrafo para criar o recuo padrão de 1,25 cm?",
+            options: [
+                "Barra de Espaço (pressionada 10 vezes).",
+                "Tecla Enter.",
+                "Tecla Tab.",
+                "Tecla Caps Lock."
+            ],
+            correct: 2,
+            resolution: "Uso da barra de espaço é tecnicamente incorreto. A tecla Tab (Tabulação) insere uma instrução de formatação que desloca o cursor para uma posição fixa (padrão de 1,25 cm no Word), garantindo consistência visual em todo o documento."
+        },
+        {
+            id: 9,
+            question: "Após concluir a formatação de um currículo ou ofício, recomenda-se que o arquivo seja salvo ou exportado em um formato que garanta a integridade visual, impedindo que a formatação seja alterada ao abrir o arquivo em outro dispositivo. Qual formato é indicado para esta finalidade?",
+            options: [
+                ".txt",
+                ".pdf",
+                ".zip",
+                ".html"
+            ],
+            correct: 1,
+            resolution: "O formato PDF (Portable Document Format) é um padrão internacional (ISO) que encapsula fontes e layouts de forma fixa. Ao contrário do .docx, o PDF garante que o receptor verá exatamente o que foi planejado, sem quebras de página por falta de compatibilidade."
+        },
+        {
+            id: 10,
+            question: "Na interface do Microsoft Word, as ferramentas são organizadas em guias na Faixa de Opções. Em qual guia o usuário encontrará o botão 'Margens' para configurar as dimensões da página de acordo com a ABNT?",
+            options: [
+                "Guia Página Inicial.",
+                "Guia Inserir.",
+                "Guia Layout.",
+                "Guia Revisão."
+            ],
+            correct: 2,
+            resolution: "A guia Layout é responsável pelas configurações estruturais da página e do documento como um todo, incluindo margens, orientação (retrato ou paisagem), tamanho do papel e colunas."
+        }
+    ];
+
+    function loadQuiz() {
+        const container = document.getElementById('questions-container');
+        quizData.forEach((q, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-block';
+            questionDiv.id = `q-block-${index}`;
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                const letters = ['A', 'B', 'C', 'D'];
+                optionsHtml += `
+                    <div class="option-item">
+                        <label id="label-${index}-${optIndex}">
+                            <input type="radio" name="question${index}" value="${optIndex}">
+                            ${letters[optIndex]}. ${opt}
+                        </label>
+                    </div>
+                `;
+            });
+
+            questionDiv.innerHTML = `
+                <span class="question-text">${index + 1}. ${q.question}</span>
+                <div class="options-list">
+                    ${optionsHtml}
+                </div>
+                <div class="resolution" id="res-${index}">
+                    <strong>Resolução Comentada:</strong><br>
+                    ${q.resolution}
+                </div>
+            `;
+            container.appendChild(questionDiv);
+        });
+    }
+
+    function checkAnswers() {
+        let score = 0;
+        const form = document.getElementById('quiz-form');
+        const submitBtn = document.getElementById('submit-btn');
+
+        quizData.forEach((q, index) => {
+            const selected = form.querySelector(`input[name="question${index}"]:checked`);
+            const resolutionBox = document.getElementById(`res-${index}`);
+            
+            // Mostrar resolução
+            resolutionBox.style.display = 'block';
+
+            // Resetar estilos (caso o usuário clique mais de uma vez)
+            q.options.forEach((_, optIndex) => {
+                document.getElementById(`label-${index}-${optIndex}`).classList.remove('selected-correct', 'selected-incorrect', 'correct-answer-highlight');
+            });
+
+            // Destacar a resposta correta de qualquer forma
+            document.getElementById(`label-${index}-${q.correct}`).classList.add('correct-answer-highlight');
+
+            if (selected) {
+                const answerIndex = parseInt(selected.value);
+                const label = document.getElementById(`label-${index}-${answerIndex}`);
+                
+                if (answerIndex === q.correct) {
+                    score++;
+                    label.classList.add('selected-correct');
+                } else {
+                    label.classList.add('selected-incorrect');
+                }
+            }
+        });
+
+        // Mostrar resumo
+        const resultSummary = document.getElementById('result-summary');
+        const scoreText = document.getElementById('score-text');
+        resultSummary.style.display = 'block';
+        scoreText.innerText = `Você acertou ${score} de ${quizData.length} questões!`;
+        
+        // Rolar para o topo para ver o resultado
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Desabilitar o botão após finalizar
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Simulado Finalizado";
+        submitBtn.style.backgroundColor = "#95a5a6";
+        submitBtn.style.cursor = "default";
+        
+        // Desabilitar inputs
+        const inputs = form.querySelectorAll('input');
+        inputs.forEach(input => input.disabled = true);
+    }
+
+    // Inicializar o quiz ao carregar a página
+    window.onload = loadQuiz;
+</script>
+
+</body>
+</html>
