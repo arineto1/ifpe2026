@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado de Sistemas Operacionais - Perfil EBTT</title>
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --text-color: #2d3436;
+            --accent-color: #0984e3;
+            --correct-color: #27ae60;
+            --wrong-color: #d63031;
+            --card-bg: #ffffff;
+            --border-color: #dfe6e9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #1e272e;
+        }
+
+        .intro {
+            font-size: 1.1rem;
+            color: #636e72;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: #f1f2f6;
+        }
+
+        input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #0771c1;
+        }
+
+        /* Resultados */
+        #results-section {
+            display: none;
+            margin-top: 50px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px dashed #b2bec3;
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .resolution-card {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-left: 5px solid var(--accent-color);
+            background: white;
+        }
+
+        .res-correct {
+            color: var(--correct-color);
+            font-weight: bold;
+        }
+
+        .res-wrong {
+            color: var(--wrong-color);
+            font-weight: bold;
+        }
+
+        .res-comment {
+            margin-top: 10px;
+            font-style: italic;
+            color: #4b4b4b;
+            background: #f1f2f6;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .math {
+            font-family: 'Courier New', Courier, monospace;
+            background: #eee;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: #95a5a6;
+        }
+
+        /* Estilos de feedback na questão */
+        .feedback-icon {
+            margin-left: auto;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulado: Gerenciamento de Processos</h1>
+        <p class="intro">Prepare-se para o concurso EBTT com questões baseadas nos fundamentos de Sistemas Operacionais.</p>
+    </header>
+
+    <form id="quiz-form">
+        <div id="questions-list" class="quiz-container">
+            <!-- As questões serão injetadas via JavaScript -->
+        </div>
+        <button type="button" class="btn-submit" onclick="gradeQuiz()">Finalizar Quiz e Ver Resoluções</button>
+    </form>
+
+    <div id="results-section">
+        <div class="score-display" id="score-text"></div>
+        <div id="resolutions-container"></div>
+        <button type="button" class="btn-submit" style="background: #636e72;" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Voltar ao Topo</button>
+    </div>
+
+    <footer>
+        <p>© 2024 - Material Didático para Institutos Federais</p>
+    </footer>
+</div>
+
+<script>
+    const questionsData = [
+        {
+            id: 1,
+            q: "Um professor de Sistemas Operacionais do Instituto Federal, ao iniciar a disciplina, utiliza a analogia do 'cérebro invisível' para descrever o software básico. Segundo essa perspectiva pedagógica e técnica, assinale a alternativa que descreve corretamente a função primordial de um sistema operacional:",
+            options: [
+                "Atuar como um hardware especializado para acelerar o processamento de planilhas e documentos.",
+                "Servir como um intermediário que gerencia os recursos de hardware e fornece uma interface para a execução de aplicações.",
+                "Funcionar exclusivamente como um antivírus embutido para proteger a memória RAM de falhas físicas.",
+                "Converter programas dinâmicos em arquivos estáticos para que possam ser guardados no HD ou SSD."
+            ],
+            correct: 1,
+            comment: "O SO é o componente de software que gerencia o hardware (CPU, memória, periféricos) e fornece métodos de acesso e uma interface para o usuário e seus aplicativos."
+        },
+        {
+            id: 2,
+            q: "A organização estruturada de um sistema operacional visa garantir a segurança e a abstração de comandos. Sobre a relação entre o Kernel e o Shell, assinale a alternativa correta:",
+            options: [
+                "O Kernel é a camada externa que interage diretamente com o usuário por meio de interfaces gráficas (GUI).",
+                "O Shell é o núcleo do sistema operacional, responsável direto pelo escalonamento da CPU e proteção de memória.",
+                "O Shell atua como um interpretador que traduz os comandos do usuário para solicitações de serviços ao Kernel.",
+                "O Kernel e o Shell são componentes de hardware que residem dentro do processador central."
+            ],
+            correct: 2,
+            comment: "O Shell funciona como uma 'casca' ou interface (CLI ou GUI) que permite ao usuário solicitar serviços específicos ao Kernel."
+        },
+        {
+            id: 3,
+            q: "Durante uma aula prática no laboratório do IF, um aluno observa o Gerenciador de Tarefas e percebe várias instâncias do navegador Google Chrome abertas. Com base nos conceitos de programa e processo, é correto afirmar:",
+            options: [
+                "O Google Chrome instalado no disco rígido é um processo, enquanto cada janela aberta é um programa diferente.",
+                "Um programa é uma entidade passiva armazenada em disco, enquanto um processo é uma instância ativa desse programa em execução na memória.",
+                "O processo é o arquivo executável (.exe) gravado no SSD, e o programa é a ocupação da CPU por esse arquivo.",
+                "Não existe diferença técnica entre programa e processo em sistemas operacionais modernos como o Windows 11."
+            ],
+            correct: 1,
+            comment: "O programa é um arquivo estático (estocado), e o processo é esse programa 'vivo', ocupando memória RAM e sendo processado pela CPU."
+        },
+        {
+            id: 4,
+            q: "Um processo P1 está em estado de 'Executando' e realiza uma chamada de sistema para ler dados de uma unidade de armazenamento NVMe. Como o dispositivo está ocupado, o sistema operacional altera o estado de P1. De acordo com o ciclo de vida dos processos, qual será o novo estado de P1 e para qual estado ele irá após a conclusão da leitura?",
+            options: [
+                "Espera (Bloqueado) e, em seguida, Pronto.",
+                "Pronto e, em seguida, Executando.",
+                "Encerrado e, em seguida, Novo.",
+                "Executando e, em seguida, Espera."
+            ],
+            correct: 0,
+            comment: "Quando um processo aguarda um evento externo ou dispositivo de E/S, ele entra em estado de Espera (bloqueado). Uma vez que a leitura termina, ele vai para a fila de Pronto aguardando o escalonador."
+        },
+        {
+            id: 5,
+            q: "O algoritmo Round Robin (Circular) é amplamente utilizado em sistemas operacionais interativos por garantir que todos os processos recebam tempo de CPU. Sobre o funcionamento deste algoritmo, assinale a alternativa que define corretamente o conceito de 'Quantum':",
+            options: [
+                "É o número total de processos que o sistema consegue executar simultaneamente em um único núcleo.",
+                "É a prioridade máxima atribuída a um processo de tempo real no Kernel do Windows.",
+                "É a pequena fatia de tempo fixada pelo sistema operacional que cada processo pode utilizar a CPU antes de sofrer preempção.",
+                "É o tempo total que um programa leva para ser carregado do disco rígido para a memória RAM."
+            ],
+            correct: 2,
+            comment: "O Quantum (ou time-slice) é a unidade de tempo básica do Round Robin. Se o processo não termina nesse tempo, o SO o interrompe (preempção) e passa para o próximo."
+        },
+        {
+            id: 6,
+            q: "Um estudante de Licenciatura em Computação submete um trabalho acadêmico para processamento no servidor do campus. O processo entra na fila de prontos no tempo T=2 segundos e sua execução é totalmente finalizada no tempo T=10 segundos. De acordo com os critérios de escalonamento, qual o Tempo de Retorno (Turnaround) deste processo?",
+            options: [
+                "12 segundos.",
+                "5 segundos.",
+                "8 segundos.",
+                "2 segundos."
+            ],
+            correct: 2,
+            comment: "O Turnaround é o tempo total no sistema: T_finalização - T_chegada. Logo: 10s - 2s = 8s."
+        },
+        {
+            id: 7,
+            q: "O algoritmo de escalonamento First-Come, First-Served (FIFO) é intuitivo, mas pode apresentar baixa eficiência em cenários mistos. O fenômeno onde processos curtos esperam por um longo tempo atrás de um processo muito grande na CPU é conhecido como:",
+            options: [
+                "Inanição (Starvation).",
+                "Boosting de Prioridade.",
+                "Efeito Comboio (Convoy Effect).",
+                "Swapping de Processos."
+            ],
+            correct: 2,
+            comment: "O Efeito Comboio é a principal crítica ao FIFO, onde o throughput e o tempo de espera médio são prejudicados por uma única tarefa longa."
+        },
+        {
+            id: 8,
+            q: "Sobre o algoritmo Shortest Job First (SJF), é correto afirmar que sua principal vantagem teórica é:",
+            options: [
+                "Minimizar o tempo médio de espera para um conjunto fixo de processos.",
+                "Garantir que processos longos nunca sofram de inanição (starvation).",
+                "Ser o algoritmo de implementação mais simples, sem necessidade de conhecer o tempo de execução.",
+                "Eliminar a necessidade de trocas de contexto entre o Kernel e o Shell."
+            ],
+            correct: 0,
+            comment: "O SJF é provadamente ótimo para reduzir o tempo médio de espera, pois ao terminar processos curtos primeiro, ele diminui a fila rapidamente."
+        },
+        {
+            id: 9,
+            q: "O sistema operacional Windows utiliza uma técnica de escalonamento que ajusta a prioridade dos processos com base no seu comportamento. Quando um usuário traz uma janela de um aplicativo para o primeiro plano (foreground), o Windows realiza um 'boost'. Qual o objetivo dessa ação?",
+            options: [
+                "Diminuir o consumo de energia da bateria do notebook.",
+                "Garantir que a interface do usuário responda rapidamente (fluidez), aumentando a prioridade e o quantum do processo.",
+                "Bloquear permanentemente o acesso desse aplicativo à conexão de rede.",
+                "Mover o programa do estado 'Executando' diretamente para o estado 'Encerrado'."
+            ],
+            correct: 1,
+            comment: "O 'boost' de prioridade no Windows serve para melhorar a experiência do usuário, priorizando processos interativos sobre processos de segundo plano."
+        },
+        {
+            id: 10,
+            q: "Nos sistemas operacionais modernos, a função de decidir qual processo terá o controle do processador em um determinado momento e gerenciar a transição de estados é chamada de:",
+            options: [
+                "Escalonamento de Processos.",
+                "Compilação de Código-Fonte.",
+                "Formatação de Sistema de Arquivos.",
+                "Gerenciamento de Resoluções de Vídeo."
+            ],
+            correct: 0,
+            comment: "O escalonamento de processos é a função lógica responsável por gerenciar a transição de estados e otimizar o uso da CPU de acordo com algoritmos específicos."
+        }
+    ];
+
+    function initQuiz() {
+        const list = document.getElementById('questions-list');
+        questionsData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${index}`;
+            
+            let optionsHtml = '';
+            item.options.forEach((opt, optIndex) => {
+                optionsHtml += `
+                    <li class="option-item">
+                        <label class="option-label">
+                            <input type="radio" name="question-${index}" value="${optIndex}">
+                            <span>${opt}</span>
+                        </label>
+                    </li>
+                `;
+            });
+
+            card.innerHTML = `
+                <span class="question-text">${item.id}. ${item.q}</span>
+                <ul class="options">
+                    ${optionsHtml}
+                </ul>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function gradeQuiz() {
+        let score = 0;
+        const resContainer = document.getElementById('resolutions-container');
+        resContainer.innerHTML = '<h2>Resoluções Comentadas</h2>';
+        
+        questionsData.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="question-${index}"]:checked`);
+            const isCorrect = selected && parseInt(selected.value) === item.correct;
+            
+            if (isCorrect) score++;
+
+            // Mostrar resolução
+            const resCard = document.createElement('div');
+            resCard.className = 'resolution-card';
+            
+            const userStatus = isCorrect 
+                ? '<span class="res-correct">✓ Você acertou!</span>' 
+                : `<span class="res-wrong">✗ Você errou ou não respondeu.</span>`;
+
+            const letters = ['A', 'B', 'C', 'D'];
+            
+            resCard.innerHTML = `
+                <h3>Questão ${item.id}</h3>
+                <p>${userStatus}</p>
+                <p><strong>Resposta Correta:</strong> Alternativa ${letters[item.correct]}</p>
+                <div class="res-comment">
+                    <strong>Comentário:</strong> ${item.comment}
+                </div>
+            `;
+            resContainer.appendChild(resCard);
+        });
+
+        // Exibir placar
+        const scoreText = document.getElementById('score-text');
+        scoreText.innerHTML = `Você acertou ${score} de ${questionsData.length} questões! (${(score/questionsData.length*100).toFixed(0)}%)`;
+        
+        document.getElementById('results-section').style.display = 'block';
+        window.scrollTo({
+            top: document.getElementById('results-section').offsetTop - 50,
+            behavior: 'smooth'
+        });
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
