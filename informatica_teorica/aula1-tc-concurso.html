@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado: Informática Teórica - Concurso EBTT</title>
+    <style>
+        :root {
+            --bg-color: #fcfcfc;
+            --text-color: #2c3e50;
+            --accent-color: #27ae60;
+            --secondary-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --correct-color: #d4edda;
+            --header-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Georgia', serif; /* Fonte serifada leve para leituras longas */
+            line-height: 1.7;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--secondary-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h1, h2, h3 {
+            font-family: var(--header-font);
+            color: #1a1a1a;
+        }
+
+        header {
+            border-bottom: 2px solid var(--accent-color);
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+
+        .question-block {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .question-text {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            margin-bottom: 10px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .options li:hover {
+            background-color: #f1f1f1;
+        }
+
+        .options input {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-family: var(--header-font);
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #219150;
+        }
+
+        #result-section {
+            display: none;
+            margin-top: 40px;
+            padding: 30px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .resolution {
+            margin-top: 30px;
+        }
+
+        .resolution-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        .resolution-item h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+
+        .math {
+            font-family: "Courier New", Courier, monospace;
+            background: #eee;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            body { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulado: Informática Teórica</h1>
+        <p>Questões estilo concurso Professor EBTT - Instituto Federal</p>
+    </header>
+
+    <form id="quiz-form">
+        <!-- Questões serão injetadas via JavaScript -->
+        <div id="questions-container"></div>
+        <button type="button" class="btn-submit" onclick="gradeQuiz()">Finalizar Quiz</button>
+    </form>
+
+    <div id="result-section">
+        <div class="score-display" id="score-text"></div>
+        <hr>
+        <h3>Resoluções Comentadas</h3>
+        <div id="resolutions-container"></div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            id: 1,
+            q: "No contexto da Teoria da Computação e Linguagens Formais, o conceito de Alfabeto (Σ) é fundamental para a definição de autômatos e gramáticas. Com base nas definições clássicas, assinale a alternativa que apresenta a definição CORRETA de um alfabeto:",
+            options: [
+                "É um conjunto infinito de símbolos que permite a construção de cadeias de comprimento variável.",
+                "É um conjunto finito e não vazio de símbolos tratados como entidades atômicas.",
+                "É a sequência de todos os caracteres possíveis, incluindo obrigatoriamente a cadeia vazia (ε).",
+                "É um subconjunto de Σ* que contém apenas as cadeias reconhecidas por um Autômato Finito Determinístico."
+            ],
+            answer: 1,
+            resolution: "A definição de alfabeto é estritamente vinculada à finitude. O alfabeto deve ser finito; o que pode ser infinito é o conjunto de cadeias geradas por ele (Σ*). ε (cadeia vazia) não é um símbolo do alfabeto, mas uma cadeia de comprimento zero construída sobre o alfabeto."
+        },
+        {
+            id: 2,
+            q: "Sobre a cadeia vazia (frequentemente representada por ε ou λ), analise as seguintes afirmações:\nI. O comprimento da cadeia vazia é igual a zero (|ε| = 0).\nII. A cadeia vazia é um símbolo que deve pertencer a todo alfabeto Σ.\nIII. Para qualquer cadeia w, a concatenação wε é igual a w.\nIV. A cadeia vazia pertence ao conjunto Σ* para qualquer alfabeto Σ.",
+            options: [
+                "I, II e III.",
+                "I, III e IV.",
+                "II, III e IV.",
+                "I e IV apenas."
+            ],
+            answer: 1,
+            resolution: "A afirmação II está incorreta porque ε não é um símbolo (elemento de Σ), mas sim uma cadeia (elemento de Σ*). I, III e IV são propriedades fundamentais de ε."
+        },
+        {
+            id: 3,
+            q: "Considere o alfabeto Σ = {a, b, c}. Qual das seguintes cadeias NÃO pertence ao Fecho de Kleene (Σ*) deste alfabeto?",
+            options: [
+                "ε",
+                "aabbcc",
+                "abc",
+                "abcd"
+            ],
+            answer: 3,
+            resolution: "O Fecho de Kleene (Σ*) representa o conjunto de todas as cadeias que podem ser formadas utilizando exclusivamente os símbolos presentes em Σ. Como o símbolo 'd' não pertence ao alfabeto original, a cadeia 'abcd' é inválida."
+        },
+        {
+            id: 4,
+            q: "Dada a cadeia w = '0110', o resultado das operações de reversa (w^R) e potência (w^2), respectivamente, são:",
+            options: [
+                "0110 e 01100110",
+                "0110 e 00110011",
+                "1001 e 01100110",
+                "0110 e 11001100"
+            ],
+            answer: 0,
+            resolution: "Reversa (w^R): lendo de trás para frente, obtemos 0110 (é um palíndromo). Potência (w^2): é a concatenação da cadeia com ela mesma (ww), resultando em 01100110."
+        },
+        {
+            id: 5,
+            q: "Se um alfabeto Σ possui exatamente um símbolo, Σ = {0}, qual é a característica do conjunto Σ*?",
+            options: [
+                "É um conjunto finito contendo apenas {ε, 0}.",
+                "É um conjunto infinito contendo cadeias de '0's de todos os comprimentos finitos, incluindo a cadeia vazia.",
+                "É um conjunto vazio, pois não é possível gerar combinações com apenas um símbolo.",
+                "É um conjunto que contém apenas a cadeia vazia, pois |Σ| = 1."
+            ],
+            answer: 1,
+            resolution: "Σ* é a união de todas as potências (Σ^0 ∪ Σ^1 ∪ Σ^2...). Mesmo com um único símbolo, as cadeias podem ter comprimentos crescentes infinitamente: {ε, 0, 00, 000, ...}."
+        },
+        {
+            id: 6,
+            q: "Uma linguagem formal L sobre um alfabeto Σ é definida matematicamente como:",
+            options: [
+                "Uma função de transição δ: Q x Σ → Q.",
+                "O conjunto de todas as cadeias possíveis de comprimento par.",
+                "Qualquer subconjunto do Fecho de Kleene do alfabeto Σ.",
+                "O conjunto de símbolos que compõem o dicionário de uma máquina de Turing."
+            ],
+            answer: 2,
+            resolution: "Definição formal pura: L ⊆ Σ*. Uma linguagem é simplesmente um subconjunto do universo de cadeias possíveis."
+        },
+        {
+            id: 7,
+            q: "Considere a cadeia w no alfabeto binário Σ = {0, 1}. Se o comprimento de w é n (|w| = n), qual será o comprimento da cadeia resultante da operação w^k?",
+            options: [
+                "n + k",
+                "n x k",
+                "n^k",
+                "k^n"
+            ],
+            answer: 1,
+            resolution: "Pela propriedade da concatenação, |uv| = |u| + |v|. Para w^k, somamos n exatamente k vezes, resultando em n * k."
+        },
+        {
+            id: 8,
+            q: "Qual o papel fundamental de uma linguagem formal no processamento de dados?",
+            options: [
+                "Definir a velocidade de clock do processador necessária.",
+                "Atuar como um filtro que separa cadeias aceitáveis de cadeias rejeitadas com base em regras gramaticais.",
+                "Garantir que todo problema computacional tenha uma solução em tempo polinomial.",
+                "Substituir o hardware por modelos matemáticos abstratos."
+            ],
+            answer: 1,
+            resolution: "O reconhecimento de cadeias é o processo de determinar se uma entrada segue as regras gramaticais. O modelo funciona como um filtro sintático."
+        },
+        {
+            id: 9,
+            q: "Se L = {w ∈ Σ* | |w| = 2} e Σ = {0, 1}, quais são os elementos da linguagem L?",
+            options: [
+                "{0, 1, 00, 11}",
+                "{00, 01, 10, 11}",
+                "{0, 1, ε}",
+                "{01, 10}"
+            ],
+            answer: 1,
+            resolution: "L é definida por todas as cadeias de comprimento exatamente 2. Combinando os símbolos {0,1}, temos as 4 possibilidades: 00, 01, 10, 11."
+        },
+        {
+            id: 10,
+            q: "Na analogia da 'Informática Teórica como a Física da Computação', a Teoria da Complexidade foca em:",
+            options: [
+                "Determinar se um problema é decidível ou indecidível.",
+                "Estudar a estrutura das gramáticas livres de contexto.",
+                "Analisar a eficiência dos algoritmos em relação ao consumo de tempo e memória.",
+                "Definir o conjunto de símbolos atômicos de um sistema."
+            ],
+            answer: 2,
+            resolution: "A Complexidade categoriza problemas conforme sua dificuldade intrínseca e analisa o crescimento do uso de recursos (tempo/espaço) via notação Big-O."
+        }
+    ];
+
+    function renderQuestions() {
+        const container = document.getElementById('questions-container');
+        questions.forEach((q, index) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-block';
+            qDiv.innerHTML = `
+                <span class="question-text">Questão ${index + 1}:</span>
+                <p>${q.q.replace(/\n/g, '<br>')}</p>
+                <ul class="options">
+                    ${q.options.map((opt, i) => `
+                        <li onclick="selectOption(${index}, ${i})">
+                            <input type="radio" name="q${index}" id="q${index}o${i}" value="${i}">
+                            <label for="q${index}o${i}">${opt}</label>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            container.appendChild(qDiv);
+        });
+    }
+
+    window.selectOption = function(qIndex, oIndex) {
+        document.getElementById(`q${qIndex}o${oIndex}`).checked = true;
+    }
+
+    function gradeQuiz() {
+        let score = 0;
+        const resolutionsContainer = document.getElementById('resolutions-container');
+        resolutionsContainer.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const isCorrect = selected && parseInt(selected.value) === q.answer;
+            if (isCorrect) score++;
+
+            // Criar resolução
+            const resDiv = document.createElement('div');
+            resDiv.className = 'resolution-item';
+            resDiv.style.borderLeft = isCorrect ? '5px solid #27ae60' : '5px solid #e74c3c';
+            resDiv.innerHTML = `
+                <h4>Questão ${index + 1} - ${isCorrect ? 'Correta' : 'Incorreta'}</h4>
+                <p><strong>Sua resposta:</strong> ${selected ? q.options[selected.value] : 'Nenhuma'}</p>
+                <p><strong>Gabarito:</strong> ${q.options[q.answer]}</p>
+                <p><strong>Comentário:</strong> ${q.resolution}</p>
+            `;
+            resolutionsContainer.appendChild(resDiv);
+        });
+
+        document.getElementById('score-text').innerHTML = `Você acertou <strong>${score}</strong> de <strong>${questions.length}</strong> questões.`;
+        document.getElementById('result-section').style.display = 'block';
+        
+        // Scroll suave para o resultado
+        document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.onload = renderQuestions;
+</script>
+
+</body>
+</html>

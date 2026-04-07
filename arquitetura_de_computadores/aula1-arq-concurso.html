@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Técnico: Arquitetura e Manutenção - IF</title>
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --container-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-secondary: #546e7a;
+            --accent-color: #27ae60;
+            --accent-hover: #219150;
+            --border-color: #e0e6ed;
+            --correct-bg: #e8f5e9;
+            --wrong-bg: #ffebee;
+            --shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .question-card {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option:hover {
+            background-color: #f8f9fa;
+        }
+
+        .option input {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-hover);
+        }
+
+        #results-section {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .score-box {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .score-box h2 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .resolution-card {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .resolution-card.correct-res {
+            border-left: 5px solid #27ae60;
+            background-color: var(--correct-bg);
+        }
+
+        .resolution-card.wrong-res {
+            border-left: 5px solid #e74c3c;
+            background-color: var(--wrong-bg);
+        }
+
+        .res-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .res-commentary {
+            font-size: 0.95rem;
+            color: #34495e;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulado Técnico: Arquitetura e Manutenção</h1>
+        <p class="subtitle">Estilo Instituto Federal - 10 Questões de Nível Técnico</p>
+    </header>
+
+    <div id="quiz-form">
+        <!-- As questões serão injetadas via JavaScript para facilitar a manutenção -->
+        <div id="questions-container"></div>
+        <button type="button" class="btn-submit" onclick="gradeQuiz()">Finalizar e Ver Resolução</button>
+    </div>
+
+    <div id="results-section">
+        <div class="score-box">
+            <h2 id="score-display"></h2>
+            <p id="score-message"></p>
+        </div>
+        <div id="resolutions-container"></div>
+    </div>
+</div>
+
+<footer>
+    <p>© Simulado Educacional de Informática - Baseado no Protocolo de Autópsia de Hardware</p>
+</footer>
+
+<script>
+    const questions = [
+        {
+            id: 0,
+            text: "1. Um técnico em informática está preparando sua bancada para desmontar um servidor departamental. Ele possui uma pulseira antiestática disponível, mas percebe que a bancada não possui um ponto de aterramento dedicado. De acordo com os protocolos de segurança para hardware sensível, qual deve ser a conduta correta do técnico?",
+            options: [
+                "Utilizar a pulseira antiestática conectada ao seu próprio tornozelo para garantir que a carga flua para o chão.",
+                "Manter os pés descalços em contato direto com o solo enquanto manipula as memórias RAM para dissipar a carga.",
+                "Conectar a garra jacaré da pulseira antiestática em uma parte metálica sem pintura do gabinete do computador.",
+                "Dispensar o uso da pulseira e utilizar luvas de látex comuns, que são isolantes naturais e impedem a ESD."
+            ],
+            correct: 2,
+            justification: "A alternativa correta é a C. O objetivo da pulseira antiestática é equalizar o potencial elétrico entre o técnico e o equipamento. Ao conectar a garra jacaré ao chassi metálico (sem pintura), qualquer carga acumulada no corpo do técnico flui com segurança para o gabinete."
+        },
+        {
+            id: 1,
+            text: "2. Durante o passo de 'Pre-Flight' descrito no manual de procedimentos, o técnico realiza a desconexão do cabo de força da tomada. No entanto, o manual afirma que o sistema ainda não está seguro para o desmonte. Qual é o procedimento técnico necessário para eliminar o risco de curto-circuito por energia residual?",
+            options: [
+                "Utilizar uma chave de fenda para fechar curto entre os pinos do conector de força da fonte de alimentação.",
+                "Pressionar o botão de Power do gabinete por cerca de 5 segundos com o cabo de energia desconectado.",
+                "Aguardar por um período de 24 horas até que todos os capacitores da placa-mãe descarreguem naturalmente.",
+                "Lavar a placa-mãe com álcool isopropílico para neutralizar os íons acumulados nos circuitos de filtragem."
+            ],
+            correct: 1,
+            justification: "Gabarito B. Este processo realiza a drenagem de capacitores. Ao pressionar o Power sem energia externa, o circuito tenta iniciar e consome a energia residual acumulada, evitando danos por remoção de componentes energizados."
+        },
+        {
+            id: 2,
+            text: "3. Na montagem de um computador, o técnico deve instalar os chamados 'espaçadores dourados' no chassi do gabinete antes de posicionar a placa-mãe. Qual é a função técnica crítica desse componente na preservação do hardware?",
+            options: [
+                "Atuar como um dissipador de calor passivo para a parte inferior do processador.",
+                "Facilitar o fluxo de ar sob a placa-mãe para resfriar os componentes do VRM.",
+                "Servir como barreira física e isolante para evitar que os pontos de solda da placa-mãe toquem o metal do gabinete.",
+                "Proporcionar altura suficiente para que cabos de dados SATA passem por baixo da placa."
+            ],
+            correct: 2,
+            justification: "Gabarito C. O chassi é condutor. A placa-mãe possui trilhas e soldas expostas embaixo. Sem os espaçadores, a placa tocaria o metal, gerando curtos-circuitos imediatos ao ligar o sistema."
+        },
+        {
+            id: 3,
+            text: "4. A 'Regra de Ouro' de manuseio afirma que componentes como memórias RAM e processadores devem ser segurados estritamente pelas bordas plásticas ou metálicas. Qual o principal risco técnico associado ao toque direto nos contatos dourados (fingers) desses componentes?",
+            options: [
+                "Risco de quebra física dos contatos por pressão excessiva dos dedos do técnico.",
+                "Oxidação prematura causada pela acidez e umidade do suor, prejudicando a condutividade elétrica.",
+                "Aumento da temperatura do componente devido ao calor transferido pelo corpo humano.",
+                "Alteração da frequência de clock do processador por interferência bioelétrica."
+            ],
+            correct: 1,
+            justification: "Gabarito B. O suor contém sais e ácidos. A gordura e umidade iniciam um processo de oxidação nos contatos, gerando 'maus contatos' que degradam a condutividade do sinal ao longo do tempo."
+        },
+        {
+            id: 4,
+            text: "5. Ao remover uma fonte de alimentação em um gabinete onde ela está posicionada na parte superior, o técnico deve aplicar o 'Protocolo de Queda'. Qual é a descrição correta dessa prática de segurança?",
+            options: [
+                "Colocar uma almofada no fundo do gabinete para amortecer a queda da fonte.",
+                "Sustentar a fonte com uma das mãos por dentro do gabinete enquanto remove o último parafuso externo.",
+                "Deixar a fonte cair propositalmente para testar a resistência do chassi metálico.",
+                "Remover a placa-mãe antes da fonte para que não haja nada embaixo em caso de queda."
+            ],
+            correct: 1,
+            justification: "Gabarito B. A fonte é pesada. Se cair sobre a placa-mãe, pode esmagar capacitores ou romper trilhas vitais. Segurá-la internamente durante a retirada dos parafusos é o procedimento padrão."
+        },
+        {
+            id: 5,
+            text: "6. Um aluno do curso técnico está tentando remover uma placa de vídeo (GPU) de um slot PCIe, mas a peça oferece resistência incomum, mesmo após a retirada do parafuso de fixação no gabinete. Seguindo a 'Matriz do Nunca Force', qual deve ser a investigação do aluno?",
+            options: [
+                "Verificar se a placa está colada ao slot devido ao superaquecimento da pasta térmica.",
+                "Procurar por uma trava de retenção plástica na extremidade do slot na placa-mãe que precisa ser pressionada.",
+                "Aplicar óleo lubrificante nos contatos para facilitar o deslizamento da placa de vídeo.",
+                "Utilizar uma alavanca metálica para desencaixar a placa com maior torque mecânico."
+            ],
+            correct: 1,
+            justification: "Gabarito B. Devido ao peso das GPUs modernas, os slots PCIe x16 possuem travas de retenção mecânicas. Tentar remover a placa sem liberar a trava pode destruir fisicamente o slot da placa-mãe."
+        },
+        {
+            id: 6,
+            text: "7. O uso de uma folha A4 e fita adesiva para organizar parafusos durante o desmonte é uma prática recomendada no manual de aula. Qual problema sistêmico essa organização visa prevenir na etapa de remontagem?",
+            options: [
+                "O aumento do peso final do gabinete devido ao excesso de parafusos novos.",
+                "O esquecimento de parafusos soltos dentro do gabinete, que podem causar curtos-circuitos.",
+                "A falha estrutural causada pelo uso de parafusos de rosca incorreta em furos sensíveis, como os da placa-mãe.",
+                "A perda da garantia dos componentes, que exige que os parafusos originais sejam mantidos."
+            ],
+            correct: 2,
+            justification: "Gabarito C. Existem diferentes padrões de rosca (fina/grossa). Forçar o parafuso errado pode espanar os suportes ou soltar os espaçadores, dificultando manutenções futuras e comprometendo a fixação."
+        },
+        {
+            id: 7,
+            text: "8. Ao realizar o desmonte da Camada 07 (Núcleo), o técnico depara-se com um cooler de processador que parece estar 'colado' à CPU. Qual é o procedimento seguro para realizar a extração sem danificar o processador ou o socket?",
+            options: [
+                "Puxar o cooler verticalmente com um solavanco rápido para vencer a resistência.",
+                "Realizar um leve movimento de giro para quebrar o selo da pasta térmica antes de suspender a peça.",
+                "Utilizar uma espátula de metal para raspar a pasta térmica entre as duas peças enquanto ainda estão presas.",
+                "Jogar água destilada sobre o cooler para amolecer a pasta térmica ressecada."
+            ],
+            correct: 1,
+            justification: "Gabarito B. A pasta térmica ressecada cria um efeito de ventosa. Puxar bruscamente pode arrancar o processador do socket travado, entortando pinos. O giro rompe a adesão lateral."
+        },
+        {
+            id: 8,
+            text: "9. Por que o manual técnico do curso recomenda que o técnico remova sempre ambas as tampas laterais do gabinete logo no início do processo de desmonte?",
+            options: [
+                "Para facilitar a ventilação natural do laboratório e evitar o acúmulo de poeira na bancada.",
+                "Para permitir o registro fotográfico dos cabos que passam pelo painel traseiro e o acesso aos parafusos opostos das baías de disco.",
+                "Porque a tampa direita é geralmente soldada à placa-mãe em gabinetes de padrão industrial.",
+                "Para que o técnico possa visualizar a logomarca do fabricante em ambos os lados do chassi para o inventário."
+            ],
+            correct: 1,
+            justification: "Gabarito B. A abertura bilateral é essencial para o 'Cable Management' e para acessar parafusos de fixação de HDs/SSDs que ficam escondidos atrás da chapa de suporte da placa-mãe."
+        },
+        {
+            id: 9,
+            text: "10. Na analogia proposta na 'Matriz de Identificação: O Inventário Anatômico', qual componente é relacionado ao 'Sistema Nervoso' e qual sua função técnica primordial?",
+            options: [
+                "O Processador (CPU), responsável por executar os cálculos e instruções fundamentais.",
+                "A Memória RAM, responsável pelo armazenamento temporário de altíssima velocidade.",
+                "A Placa-Mãe, responsável por interconectar e sincronizar todas as peças do sistema.",
+                "A Fonte de Alimentação, responsável por transformar e distribuir a energia da tomada."
+            ],
+            correct: 2,
+            justification: "Gabarito C. A placa-mãe atua como o sistema nervoso central, provendo as trilhas de comunicação e sincronia (barramentos) para que todos os outros componentes possam trocar dados."
+        }
+    ];
+
+    function initQuiz() {
+        const container = document.getElementById('questions-container');
+        questions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${index}`;
+            
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                optionsHtml += `
+                    <label class="option">
+                        <input type="radio" name="q${index}" value="${optIndex}">
+                        ${String.fromCharCode(65 + optIndex)}) ${opt}
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <span class="question-text">${q.text}</span>
+                <div class="options-group">
+                    ${optionsHtml}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function gradeQuiz() {
+        let score = 0;
+        const resContainer = document.getElementById('resolutions-container');
+        resContainer.innerHTML = '<h3>Resolução Comentada</h3>';
+
+        questions.forEach((q, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const isCorrect = selected && parseInt(selected.value) === q.correct;
+            
+            if (isCorrect) score++;
+
+            // Criar card de resolução
+            const resCard = document.createElement('div');
+            resCard.className = `resolution-card ${isCorrect ? 'correct-res' : 'wrong-res'}`;
+            
+            resCard.innerHTML = `
+                <span class="res-title">Questão ${index + 1}: ${isCorrect ? '✓ Correta' : '✗ Incorreta'}</span>
+                <p><strong>Sua resposta:</strong> ${selected ? String.fromCharCode(65 + parseInt(selected.value)) : 'Não respondida'}</p>
+                <p><strong>Gabarito:</strong> ${String.fromCharCode(65 + q.correct)}</p>
+                <div class="res-commentary"><strong>Comentário:</strong> ${q.justification}</div>
+            `;
+            resContainer.appendChild(resCard);
+
+            // Estilizar o card da questão original para feedback visual
+            const qCard = document.getElementById(`q-card-${index}`);
+            qCard.style.backgroundColor = isCorrect ? 'var(--correct-bg)' : 'var(--wrong-bg)';
+        });
+
+        // Mostrar resultados
+        const scoreDisplay = document.getElementById('score-display');
+        scoreDisplay.innerText = `Você acertou ${score} de 10 questões`;
+        
+        const scoreMsg = document.getElementById('score-message');
+        const percent = (score / 10) * 100;
+        if (percent >= 70) scoreMsg.innerText = "Excelente desempenho! Você demonstra domínio dos protocolos técnicos.";
+        else if (percent >= 50) scoreMsg.innerText = "Bom trabalho. Revise os pontos onde houve erro para consolidar o conhecimento.";
+        else scoreMsg.innerText = "Atenção! Recomendamos uma nova leitura do manual de Arquitetura e Manutenção.";
+
+        document.getElementById('results-section').style.display = 'block';
+        
+        // Scroll suave para os resultados
+        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Inicializar ao carregar
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
