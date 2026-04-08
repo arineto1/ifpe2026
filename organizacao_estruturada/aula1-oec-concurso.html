@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado EBTT - Arquitetura e Interconexão</title>
+    <style>
+        :root {
+            --bg-color: #f9f9f7;
+            --text-color: #2c3e50;
+            --primary-color: #27ae60;
+            --secondary-color: #2980b9;
+            --error-color: #e74c3c;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .intro {
+            font-style: italic;
+            color: #7f8c8d;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 12px;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-item:hover {
+            background-color: #f0f7ff;
+        }
+
+        .option-item input {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .option-item label {
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        button#submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+            transition: all 0.3s;
+        }
+
+        button#submit-btn:hover {
+            background-color: #219150;
+            transform: translateY(-2px);
+        }
+
+        /* Feedback Styles */
+        .resolution {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f1f8ff;
+            border-left: 5px solid var(--secondary-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .correct {
+            background-color: #d4edda !important;
+            border-color: #c3e6cb !important;
+        }
+
+        .wrong {
+            background-color: #f8d7da !important;
+            border-color: #f5c6cb !important;
+        }
+
+        #result-summary {
+            display: none;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 30px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .score-circle {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 20px 0;
+        }
+
+        footer {
+            margin-top: 50px;
+            color: #95a5a6;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .question-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Simulado Concurso Professor EBTT</h1>
+            <p class="intro">Tópico: Arquitetura de Interconexão e Barramentos</p>
+        </header>
+
+        <form id="quiz-form">
+            <!-- Questions will be injected here by JS -->
+            <div id="questions-container"></div>
+
+            <div class="submit-container">
+                <button type="button" id="submit-btn" onclick="checkAnswers()">Finalizar Simulado</button>
+            </div>
+        </form>
+
+        <div id="result-summary">
+            <h2>Resultado Final</h2>
+            <div id="score-display" class="score-circle">0/10</div>
+            <p id="result-message"></p>
+            <button onclick="window.location.reload()" style="background: var(--secondary-color); border:none; color:white; padding: 10px 20px; border-radius: 5px; cursor:pointer;">Reiniciar Simulado</button>
+        </div>
+
+        <footer>
+            <p>Material de Estudo para a carreira do Magistério EBTT - Institutos Federais</p>
+        </footer>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                text: "No contexto da arquitetura de barramentos de um computador, o sistema é subdividido em linhas de dados, endereços e controle. Sobre a funcionalidade e as características dessas linhas, assinale a alternativa CORRETA:",
+                options: [
+                    "O barramento de dados é tipicamente unidirecional da CPU para a memória, enquanto o de endereços é bidirecional para permitir o mapeamento de interrupções.",
+                    "A largura do barramento de controle é o fator principal que determina a capacidade máxima de endereçamento de memória RAM do sistema.",
+                    "O barramento de endereços é utilizado para designar a origem ou o destino dos dados, e sua largura determina a capacidade máxima de memória que o processador consegue acessar diretamente.",
+                    "O barramento de dados transporta sinais de comando e temporização, sendo responsável pela sincronização entre dispositivos síncronos e assíncronos."
+                ],
+                correct: 2,
+                resolution: "O barramento de endereços tem a função lógica de seleção. Ao colocar um padrão de bits nas linhas de endereço, a CPU 'aponta' para um local específico. O número de combinações binárias possíveis nessas linhas ($2^n$) dita o limite de endereçamento. O barramento de dados é bidirecional e o de controle lida com temporização."
+            },
+            {
+                id: 2,
+                text: "A taxa de transferência (largura de banda) é uma métrica fundamental para avaliar o desempenho de um barramento. Considere um barramento de dados com largura de 64 bits operando a uma frequência de 800 MHz. Qual a taxa de transferência teórica deste barramento em Gigabytes por segundo (GB/s)?",
+                options: [
+                    "5,12 GB/s.",
+                    "6,40 GB/s.",
+                    "12,80 GB/s.",
+                    "51,20 GB/s."
+                ],
+                correct: 1,
+                resolution: "Cálculo: (1) Converta a largura de bits para bytes: 64 / 8 = 8 bytes. (2) Multiplique pela frequência: 8 bytes * 800.000.000 Hz = 6.400.000.000 bytes/s. (3) Converta para GB/s: 6,4 GB/s."
+            },
+            {
+                id: 3,
+                text: "Em relação à temporização de eventos em barramentos, a literatura técnica de Stallings e Tanenbaum diferencia os métodos síncronos e assíncronos. Sobre esses métodos, assinale a alternativa CORRETA:",
+                options: [
+                    "Em um barramento síncrono, a ocorrência de um evento segue e depende da ocorrência de um evento anterior, sem a necessidade de um clock centralizado.",
+                    "O barramento assíncrono utiliza um sinal de relógio (clock) global para garantir que todos os dispositivos operem no mesmo ritmo fixo.",
+                    "O método de handshaking (aperto de mão) é uma característica central da temporização assíncrona, permitindo a comunicação entre dispositivos de velocidades diferentes.",
+                    "Barramentos síncronos são preferencialmente utilizados para conectar periféricos externos lentos devido à sua flexibilidade de temporização."
+                ],
+                correct: 2,
+                resolution: "O handshaking é o mecanismo que substitui o clock em sistemas assíncronos. Ele garante que a transferência só avance quando ambos os lados confirmarem prontidão. Sistemas síncronos dependem de um relógio global."
+            },
+            {
+                id: 4,
+                text: "O 'gargalo de barramento' é um problema clássico de desempenho em sistemas computacionais. Este fenômeno ocorre principalmente quando:",
+                options: [
+                    "A capacidade de processamento da CPU é significativamente inferior à largura de banda oferecida pelo barramento de sistema.",
+                    "O barramento de endereços possui mais linhas que o necessário para o total de memória RAM instalada, causando desperdício de ciclos.",
+                    "A taxa de transferência do barramento não consegue acompanhar a demanda de dados da CPU, forçando o processador a inserir ciclos de espera (wait states).",
+                    "Dispositivos seriais modernos, como o PCI Express, são conectados a barramentos de controle síncronos de baixa frequência."
+                ],
+                correct: 2,
+                resolution: "O gargalo ocorre pela disparidade de velocidades. Se a CPU processa muito mais rápido do que o barramento consegue entregar dados, o processador fica ocioso (esperando), o que reduz a eficiência global."
+            },
+            {
+                id: 5,
+                text: "A hierarquia de barramentos é uma solução de design para integrar componentes de alta performance com periféricos de baixa velocidade. Sobre o papel do Chipset nesta organização, é CORRETO afirmar:",
+                options: [
+                    "O Chipset atua como uma ponte que isola o tráfego de alta velocidade entre CPU e RAM do tráfego mais lento dos periféricos de entrada e saída.",
+                    "A função primária do Chipset é converter o barramento de dados bidirecional em uma via unidirecional para aumentar a segurança do processamento.",
+                    "O Chipset elimina a necessidade de um barramento de controle, centralizando todas as operações de sincronismo no barramento de endereços.",
+                    "Em arquiteturas modernas, o Chipset substitui integralmente o barramento de dados, conectando a CPU diretamente ao disco rígido sem passar pela RAM."
+                ],
+                correct: 0,
+                resolution: "O Chipset funciona como um gerente de logística, servindo de ponte entre componentes de velocidades distintas (ex: Northbridge para componentes rápidos e Southbridge para lentos)."
+            },
+            {
+                id: 6,
+                text: "O padrão PCI Express (PCIe) introduziu uma mudança fundamental na forma como os dados são transferidos internamente no computador. Qual das alternativas abaixo descreve CORRETAMENTE uma característica do PCIe?",
+                options: [
+                    "Ele é um barramento paralelo de 128 bits que utiliza temporização assíncrona para evitar colisões em frequências de Gigahertz.",
+                    "Utiliza uma arquitetura ponto-a-ponto com transmissões seriais de alta velocidade organizadas em 'lanes' (vias) independentes.",
+                    "É um barramento compartilhado onde todos os dispositivos dividem a mesma largura de banda, similar ao antigo padrão PCI de 32 bits.",
+                    "O PCIe depende exclusivamente de sinalização analógica para superar o problema do desalinhamento de bits (skew) em trilhas longas."
+                ],
+                correct: 1,
+                resolution: "O PCIe abandonou o modelo compartilhado paralelo em favor de conexões dedicadas seriais (ponto-a-ponto), organizadas em lanes, o que permite frequências muito maiores sem problemas de desalinhamento de bits."
+            },
+            {
+                id: 7,
+                text: "Ao analisar o fluxo de dados durante a operação de 'Salvar' um arquivo em um editor de textos, diversos barramentos são acionados. Identifique a sequência lógica CORRETA das ações da CPU e dos barramentos envolvidos:",
+                options: [
+                    "A CPU coloca o dado no barramento de endereços, o endereço no barramento de controle e o sinal de escrita no barramento de dados.",
+                    "A CPU envia o comando de escrita pelo barramento de controle, indica o endereço de destino pelo barramento de endereços e os dados viajam pelo barramento de dados.",
+                    "O barramento de dados define o endereço, o de controle transporta o dado e o de endereço sincroniza o clock entre a RAM e o HD.",
+                    "A CPU solicita o barramento de dados para enviar o endereço e utiliza o barramento de controle para transportar o conteúdo do documento Word."
+                ],
+                correct: 1,
+                resolution: "A sequência lógica é: 1. Controle (avisa que vai gravar); 2. Endereço (indica para onde vai); 3. Dados (a informação em si viaja pelas linhas de dados)."
+            },
+            {
+                id: 8,
+                text: "A largura do barramento de endereços de um processador hipotético é de 36 bits. Qual é a quantidade máxima de endereços de memória distintos que este processador pode acessar diretamente?",
+                options: [
+                    "36 Gigabytes.",
+                    "4 Gigabytes.",
+                    "64 Gigabytes.",
+                    "128 Gigabytes."
+                ],
+                correct: 2,
+                resolution: "Cálculo: $2^{36}$ endereços. Sabendo que $2^{10}=1K$, $2^{20}=1M$, $2^{30}=1G$, temos $2^{36} = 2^6 \\times 2^{30} = 64 \\times 1G = 64$ Gigabytes."
+            },
+            {
+                id: 9,
+                text: "Sobre a integridade de sinal e as restrições físicas em barramentos de alta frequência, por que as trilhas de memória RAM em placas-mãe modernas são projetadas para serem o mais curtas possível e localizadas próximas à CPU?",
+                options: [
+                    "Para permitir que a CPU utilize o barramento de controle de forma assíncrona, economizando energia.",
+                    "Para minimizar a latência de propagação e reduzir a degradação do sinal, permitindo frequências de operação mais elevadas.",
+                    "Para evitar que o barramento de endereços sofra interferência das linhas de energia da fonte ATX.",
+                    "Para que a memória RAM possa atuar como mestre do barramento de dados durante ciclos de instrução complexos."
+                ],
+                correct: 1,
+                resolution: "Trilhas curtas e próximas garantem que os pulsos elétricos mantenham sua integridade (forma) e cheguem com o mínimo de atraso, o que é vital para frequências de Gigahertz onde o tempo de voo da eletricidade importa."
+            },
+            {
+                id: 10,
+                text: "Os sinais de controle em um barramento são vitais para a arbitragem do sistema. O sinal de reconhecimento conhecido como ACK (Acknowledge) tem como função primordial:",
+                options: [
+                    "Indicar que uma interrupção foi negada pela CPU devido a um conflito de prioridade no barramento de endereços.",
+                    "Confirmar que um dispositivo aceitou um comando ou colocou os dados solicitados no barramento de dados.",
+                    "Reiniciar o relógio do sistema em barramentos síncronos após uma colisão de dados no barramento de controle.",
+                    "Definir a largura da palavra de dados que será transmitida no próximo ciclo de clock."
+                ],
+                correct: 1,
+                resolution: "ACK é o sinal universal de reconhecimento em protocolos de comunicação e controle, confirmando que a ação solicitada foi realizada ou recebida."
+            }
+        ];
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = questions.map((q, idx) => `
+                <div class="question-card" id="q-card-${idx}">
+                    <span class="question-text">${idx + 1}. ${q.text}</span>
+                    <ul class="options-list">
+                        ${q.options.map((opt, optIdx) => `
+                            <li class="option-item" onclick="selectOption(${idx}, ${optIdx})">
+                                <input type="radio" name="q${idx}" id="q${idx}o${optIdx}" value="${optIdx}">
+                                <label for="q${idx}o${optIdx}">${String.fromCharCode(65 + optIdx)}) ${opt}</label>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <div class="resolution" id="res-${idx}">
+                        <strong>Resolução Comentada:</strong><br>
+                        ${q.resolution}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectOption(qIdx, optIdx) {
+            document.getElementById(`q${qIdx}o${optIdx}`).checked = true;
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            let unanswered = false;
+
+            questions.forEach((q, idx) => {
+                const selected = document.querySelector(`input[name="q${idx}"]:checked`);
+                const resolutionBox = document.getElementById(`res-${idx}`);
+                const optionsElements = document.querySelectorAll(`#q-card-${idx} .option-item`);
+                
+                if (!selected) {
+                    unanswered = true;
+                }
+
+                // Show resolution
+                resolutionBox.style.display = 'block';
+
+                // Color options
+                optionsElements.forEach((el, optIdx) => {
+                    el.classList.remove('correct', 'wrong');
+                    if (optIdx === q.correct) {
+                        el.classList.add('correct');
+                    }
+                    if (selected && parseInt(selected.value) === optIdx && optIdx !== q.correct) {
+                        el.classList.add('wrong');
+                    }
+                });
+
+                if (selected && parseInt(selected.value) === q.correct) {
+                    score++;
+                }
+            });
+
+            // Summary
+            const summary = document.getElementById('result-summary');
+            const scoreDisplay = document.getElementById('score-display');
+            const msgDisplay = document.getElementById('result-message');
+            
+            scoreDisplay.textContent = `${score}/10`;
+            summary.style.display = 'block';
+            
+            if(score >= 7) {
+                msgDisplay.textContent = "Excelente desempenho! Você demonstra um sólido conhecimento na arquitetura de interconexão.";
+                msgDisplay.style.color = "var(--primary-color)";
+            } else if (score >= 5) {
+                msgDisplay.textContent = "Bom desempenho, mas revise os pontos onde houve erro para garantir a aprovação.";
+                msgDisplay.style.color = "var(--secondary-color)";
+            } else {
+                msgDisplay.textContent = "Atenção! Recomenda-se a leitura atenta da bibliografia clássica (Stallings/Tanenbaum).";
+                msgDisplay.style.color = "var(--error-color)";
+            }
+
+            // Scroll to summary
+            summary.scrollIntoView({ behavior: 'smooth' });
+            
+            // Disable inputs
+            document.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
+            document.getElementById('submit-btn').disabled = true;
+            document.getElementById('submit-btn').style.opacity = "0.5";
+            document.getElementById('submit-btn').style.cursor = "not-allowed";
+        }
+
+        // Initialize
+        window.onload = renderQuestions;
+    </script>
+</body>
+</html>
