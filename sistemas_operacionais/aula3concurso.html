@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado SO - Carreira EBTT</title>
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --text-color: #2c3e50;
+            --accent-color: #27ae60;
+            --error-color: #e74c3c;
+            --border-color: #e0e0e0;
+            --card-bg: #ffffff;
+            --resolution-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        main {
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px 60px 20px;
+            box-sizing: border-box;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #111;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option:hover {
+            background-color: #f0f7f4;
+            border-color: var(--accent-color);
+        }
+
+        .option input {
+            margin-right: 15px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .option.selected {
+            background-color: #e8f5e9;
+            border-color: var(--accent-color);
+        }
+
+        .resolution {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: var(--resolution-bg);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 4px;
+            display: none; /* Escondido por padrão */
+        }
+
+        .resolution h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+
+        #submit-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+
+        #submit-btn:hover {
+            background-color: #219150;
+        }
+
+        #results-summary {
+            display: none;
+            background-color: #fff;
+            border: 2px solid var(--accent-color);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .score-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .correct-answer {
+            background-color: #d4edda !important;
+            border-color: #c3e6cb !important;
+        }
+
+        .wrong-answer {
+            background-color: #f8d7da !important;
+            border-color: #f5c6cb !important;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            .question-text { font-size: 1.1rem; }
+            .question-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Simulado: Sistemas Operacionais</h1>
+    <p>Concurso para Professor EBTT - Institutos Federais</p>
+</header>
+
+<main>
+    <div id="results-summary">
+        <div class="score-text" id="score-display"></div>
+        <p>Veja abaixo a resolução detalhada de cada questão.</p>
+    </div>
+
+    <form id="quiz-form">
+        <div id="quiz-container">
+            <!-- As questões serão inseridas aqui via JavaScript -->
+        </div>
+        <button type="button" id="submit-btn" onclick="checkAnswers()">Finalizar Simulado e Ver Resoluções</button>
+    </form>
+</main>
+
+<script>
+    const questions = [
+        {
+            id: 1,
+            question: "No que tange ao gerenciamento de processos pelo sistema operacional, o componente encarregado de decidir qual processo em estado de pronto será o próximo a ocupar a CPU, bem como definir a duração de sua execução, é o:",
+            options: [
+                "Gerenciador de interrupções.",
+                "Escalonador de processos.",
+                "Módulo de swap de memória.",
+                "Driver de dispositivo de E/S."
+            ],
+            correct: 1,
+            resolution: "O escalonador (scheduler) é a entidade lógica responsável por aplicar algoritmos de decisão para a partilha do tempo de processador em sistemas multiprogramados. O gerenciador de interrupções trata eventos urgentes de hardware, o swap gerencia a troca de processos entre RAM e disco, e os drivers fazem a interface com periféricos."
+        },
+        {
+            id: 2,
+            question: "Algoritmos de escalonamento apresentam diferentes trade-offs entre justiça e eficiência. Sobre o algoritmo Shortest Job First (SJF), é correto afirmar que sua principal deficiência em ambientes de uso geral é:",
+            options: [
+                "A alta frequência de trocas de contexto desnecessárias.",
+                "A possibilidade de inanição (starvation) de processos longos.",
+                "O efeito comboio causado por processos curtos.",
+                "A dependência excessiva de um quantum de tempo muito pequeno."
+            ],
+            correct: 1,
+            resolution: "O SJF prioriza tarefas curtas para minimizar o tempo de espera médio, o que pode fazer com que tarefas longas nunca recebam tempo de CPU se houver um fluxo contínuo de novas tarefas curtas. O efeito comboio é típico do FIFO, e a sensibilidade ao quantum é característica do Round Robin."
+        },
+        {
+            id: 3,
+            question: "Uma condição de corrida (race condition) ocorre quando múltiplos fluxos de execução manipulam um recurso compartilhado e o resultado final é inconsistente. Segundo a literatura técnica, para evitar esse problema, o sistema deve garantir a:",
+            options: [
+                "Preempção por prioridade estática.",
+                "Exclusão mútua na seção crítica.",
+                "Alocação de memória virtual paginada.",
+                "Segmentação de dados em buffers circulares."
+            ],
+            correct: 1,
+            resolution: "A exclusão mútua assegura que apenas um processo acesse a seção crítica por vez, eliminando a imprevisibilidade inerente às condições de corrida. As outras alternativas descrevem técnicas de gerência de memória ou processos que não resolvem diretamente o problema da integridade de dados."
+        },
+        {
+            id: 4,
+            question: "Considere o uso de semáforos para sincronização. Quando um processo executa a operação primitiva P(s) (também conhecida como wait) em um semáforo cujo valor atual é zero, o resultado esperado é:",
+            options: [
+                "O processo incrementa o semáforo e continua sua execução.",
+                "O processo é bloqueado e colocado em uma fila de espera.",
+                "O semáforo é reiniciado para seu valor original de inicialização.",
+                "O sistema operacional encerra o processo por violação de acesso."
+            ],
+            correct: 1,
+            resolution: "A operação P (do holandês proberen) testa o valor; se for 0 ou menor, indica que o recurso está ocupado ou indisponível, forçando o bloqueio do processo solicitante até que ocorra uma operação V."
+        },
+        {
+            id: 5,
+            question: "No clássico 'Problema do Produtor-Consumidor', o uso de buffers é essencial. Qual a principal função de um buffer no contexto da comunicação entre processos?",
+            options: [
+                "Aumentar permanentemente a capacidade de armazenamento do disco rígido.",
+                "Proteger a CPU contra picos de tensão elétrica do hardware.",
+                "Mediar a comunicação assíncrona, compensando diferenças de velocidade entre processos.",
+                "Executar o código-fonte do produtor em modo kernel para maior velocidade."
+            ],
+            correct: 2,
+            resolution: "Buffers são áreas de memória temporária que permitem que processos que operam em velocidades distintas (ex: um teclado lento enviando dados para uma CPU rápida) troquem informações sem perda de dados e sem travar o sistema."
+        },
+        {
+            id: 6,
+            question: "O algoritmo de escalonamento Round Robin (RR) é amplamente utilizado em sistemas de tempo compartilhado. Qual parâmetro é crítico para o seu desempenho?",
+            options: [
+                "O número de registros do processador.",
+                "A capacidade total do disco rígido.",
+                "O tamanho da fatia de tempo (quantum).",
+                "A velocidade de rotação das ventoinhas de resfriamento."
+            ],
+            correct: 2,
+            resolution: "O quantum define o equilíbrio do sistema: se for muito curto, o tempo gasto em trocas de contexto (overhead) anula o progresso dos processos; se for muito longo, a interatividade é prejudicada, assemelhando-se ao FIFO."
+        },
+        {
+            id: 7,
+            question: "Sobre a exclusão mútua implementada via Mutex, qual a analogia mais adequada para explicar o conceito a alunos de cursos técnicos?",
+            options: [
+                "Uma via de mão dupla onde carros podem cruzar a qualquer momento.",
+                "O sinalizador de 'Ocupado' na porta de um banheiro individual.",
+                "Um buffet de restaurante onde todos se servem simultaneamente.",
+                "Uma rede social onde todos publicam mensagens ao mesmo tempo."
+            ],
+            correct: 1,
+            resolution: "O Mutex é binário: ou o recurso está disponível (Livre) ou está sendo usado (Ocupado). A analogia do banheiro ilustra que, enquanto um está dentro (seção crítica), os outros devem aguardar fora (fila de prontos/bloqueados)."
+        },
+        {
+            id: 8,
+            question: "Em um cenário onde 10 conexões de rede são permitidas simultaneamente para um banco de dados, qual o mecanismo de sincronização mais eficiente para controlar esse limite?",
+            options: [
+                "Um semáforo de contagem iniciado com o valor 10.",
+                "Um Mutex binário iniciado com o valor 1.",
+                "Um algoritmo de escalonamento SJF.",
+                "Uma tabela de partições de memória fixa."
+            ],
+            correct: 0,
+            resolution: "Semáforos de contagem são projetados especificamente para gerenciar recursos com múltiplas instâncias. Se o contador chegar a zero, a 11ª conexão será bloqueada automaticamente pelo SO até que uma vaga surja."
+        },
+        {
+            id: 9,
+            question: "O 'Efeito Comboio' (Convoy Effect) é uma distorção de desempenho que ocorre especificamente em qual algoritmo de escalonamento?",
+            options: [
+                "Round Robin.",
+                "Filas Multinível com Realimentação.",
+                "First-In, First-Out (FIFO).",
+                "Shortest Job First (SJF)."
+            ],
+            correct: 2,
+            resolution: "No FIFO, como não há preempção, se um processo intensivo em CPU chega primeiro, todos os processos subsequentes (mesmo os muito curtos) ficam presos atrás dele, resultando em baixa utilização de dispositivos e alto tempo de espera."
+        },
+        {
+            id: 10,
+            question: "Em sistemas Windows, o bloqueio de arquivos (file locking) impede que dois usuários salvem alterações em um mesmo documento ao mesmo tempo. Esse comportamento visa prevenir qual fenômeno de Sistemas Operacionais?",
+            options: [
+                "Fragmentação externa da memória RAM.",
+                "Condição de corrida (race condition) em nível de arquivo.",
+                "Falta de páginas (page fault) no disco.",
+                "Erro de barramento no endereçamento físico."
+            ],
+            correct: 1,
+            resolution: "O bloqueio de arquivos é uma implementação de exclusão mútua que evita que a última gravação sobrescreva atualizações anteriores de forma imprevisível, preservando a integridade dos dados compartilhados."
+        }
+    ];
+
+    const quizContainer = document.getElementById('quiz-container');
+
+    // Inicializar o Quiz
+    function renderQuiz() {
+        questions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${index}`;
+
+            card.innerHTML = `
+                <span class="question-number">Questão ${q.id}</span>
+                <div class="question-text">${q.question}</div>
+                <div class="options-container">
+                    ${q.options.map((opt, optIndex) => `
+                        <label class="option" id="label-${index}-${optIndex}">
+                            <input type="radio" name="question-${index}" value="${optIndex}">
+                            <span>${opt}</span>
+                        </label>
+                    `).join('')}
+                </div>
+                <div class="resolution" id="res-${index}">
+                    <h4>Resolução Comentada</h4>
+                    <p>${q.resolution}</p>
+                </div>
+            `;
+            quizContainer.appendChild(card);
+        });
+
+        // Adicionar listener para marcar visualmente a opção selecionada
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const name = this.querySelector('input').name;
+                document.querySelectorAll(`input[name="${name}"]`).forEach(input => {
+                    input.parentElement.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+    }
+
+    function checkAnswers() {
+        let score = 0;
+        const form = document.getElementById('quiz-form');
+        const data = new FormData(form);
+
+        questions.forEach((q, index) => {
+            const userAnswer = data.get(`question-${index}`);
+            const resDiv = document.getElementById(`res-${index}`);
+            
+            // Mostrar resolução
+            resDiv.style.display = 'block';
+
+            // Destacar respostas
+            if (userAnswer !== null) {
+                const userOptIndex = parseInt(userAnswer);
+                const selectedLabel = document.getElementById(`label-${index}-${userOptIndex}`);
+                
+                if (userOptIndex === q.correct) {
+                    score++;
+                    selectedLabel.classList.add('correct-answer');
+                } else {
+                    selectedLabel.classList.add('wrong-answer');
+                }
+            }
+
+            // Sempre destacar a correta
+            document.getElementById(`label-${index}-${q.correct}`).classList.add('correct-answer');
+        });
+
+        // Mostrar resumo
+        const summary = document.getElementById('results-summary');
+        const scoreDisplay = document.getElementById('score-display');
+        summary.style.display = 'block';
+        scoreDisplay.innerText = `Você acertou ${score} de ${questions.length} questões!`;
+        
+        // Rolar para o topo suavemente
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Desabilitar botão e inputs
+        document.getElementById('submit-btn').style.display = 'none';
+        document.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
+    }
+
+    renderQuiz();
+</script>
+
+</body>
+</html>
