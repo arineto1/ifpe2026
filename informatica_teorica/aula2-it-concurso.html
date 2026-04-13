@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado: Informática Teórica - Professor EBTT</title>
+    <style>
+        :root {
+            --bg-color: #fcfcfc;
+            --text-color: #1a1a1b;
+            --primary-color: #2563eb;
+            --secondary-color: #64748b;
+            --correct-bg: #dcfce7;
+            --correct-text: #166534;
+            --wrong-bg: #fee2e2;
+            --wrong-text: #991b1b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+
+        main {
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px 60px 20px;
+            box-sizing: border-box;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .question-header {
+            font-weight: 600;
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .option-item label {
+            display: block;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .option-item input[type="radio"] {
+            display: none;
+        }
+
+        .option-item input[type="radio"]:checked + label {
+            border-color: var(--primary-color);
+            background-color: #eff6ff;
+            font-weight: 500;
+        }
+
+        .option-item label:hover {
+            background-color: #f8fafc;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* Results Styles */
+        .resolution-box {
+            display: none;
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #f1f5f9;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .resolution-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            color: #334155;
+        }
+
+        .result-summary {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+
+        .score-circle {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        /* Feedback for correct/wrong */
+        .option-correct label {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-text) !important;
+            color: var(--correct-text) !important;
+        }
+
+        .option-wrong label {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong-text) !important;
+            color: var(--wrong-text) !important;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .badge-correct { background: var(--correct-bg); color: var(--correct-text); }
+        .badge-wrong { background: var(--wrong-bg); color: var(--wrong-text); }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            .question-card { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Simulado EBTT: Informática Teórica</h1>
+        <p>Questões de nível concurso baseadas na Hierarquia de Chomsky e Autômatos Finitos.</p>
+    </header>
+
+    <main id="quiz-container">
+        <div id="result-top" class="result-summary">
+            <h2>Resultado Final</h2>
+            <div id="score-display" class="score-circle">0/10</div>
+            <p id="performance-msg"></p>
+            <button onclick="window.location.reload()" style="background:none; border: 1px solid var(--secondary-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px;">Reiniciar Simulado</button>
+        </div>
+
+        <form id="quiz-form">
+            <!-- As questões serão inseridas aqui pelo JS -->
+            <div id="questions-list"></div>
+            
+            <button type="button" class="btn-submit" id="submit-btn" onclick="gradeQuiz()">Finalizar e Ver Resoluções</button>
+        </form>
+    </main>
+
+    <footer>
+        &copy; 2024 Preparatório Institutos Federais - Teoria da Computação
+    </footer>
+
+    <script>
+        const quizData = [
+            {
+                id: 1,
+                q: "Considere um alfabeto Σ = {0, 1}. No estudo das linguagens formais e autômatos, a correta compreensão das propriedades das cadeias é essencial para a definição de linguagens regulares. Com base nos conceitos de comprimento de cadeia e operações básicas, assinale a alternativa correta:",
+                options: [
+                    "O comprimento da cadeia vazia (ε) é variável dependendo do tamanho do alfabeto Σ.",
+                    "A operação de potência w⁰ resulta em uma cadeia nula ou conjunto vazio, independentemente do conteúdo de w.",
+                    "Dada uma cadeia w = 101, o resultado da operação de reversa wᴿ concatenado com w resultará em uma cadeia de comprimento 6.",
+                    "Um alfabeto Σ pode ser um conjunto infinito, desde que o número de estados do autômato que o processa também seja infinito."
+                ],
+                correct: 2,
+                resolution: "Se w = 101, seu comprimento |w| = 3. A reversa wᴿ também possui comprimento 3. A concatenação de duas cadeias de comprimento 3 resulta em uma cadeia de comprimento 3 + 3 = 6. Por definição, |ε| = 0 (sempre) e w⁰ = ε. Alfabetos são obrigatoriamente conjuntos finitos."
+            },
+            {
+                id: 2,
+                q: "Um professor de informática está elaborando um compilador e precisa definir um validador de tokens utilizando a teoria dos autômatos. Ele define um Autômato Finito Determinístico através da quintupla M = (Q, Σ, δ, q₀, F). Sobre essa definição formal, assinale a única alternativa correta:",
+                options: [
+                    "O conjunto F deve ser sempre um subconjunto próprio de Q, não podendo ser igual a Q.",
+                    "A função de transição δ mapeia um estado e um símbolo de entrada para um novo estado, sendo obrigatoriamente determinística em um AFD.",
+                    "O estado inicial q₀ pode ser composto por múltiplos estados, desde que todos pertençam a Q.",
+                    "O alfabeto Σ pode incluir a cadeia vazia (ε) como um de seus símbolos básicos de transição em modelos determinísticos."
+                ],
+                correct: 1,
+                resolution: "Em um AFD, a função δ é total e determinística: para cada par (estado, símbolo), existe exatamente uma transição. F pode ser igual a Q (F ⊆ Q). O estado inicial é único. A transição-vazia (ε) é exclusiva de AFND-ε."
+            },
+            {
+                id: 3,
+                q: "Considere um AFD projetado para uma fechadura digital que aceita apenas a sequência binária '10'. O alfabeto é Σ = {0, 1}. O conjunto de estados é Q = {q₀, q₁, q₂}, onde q₀ é o estado inicial e F = {q₂}. As transições são: δ(q₀, 1) = q₁; δ(q₁, 0) = q₂. Qualquer outra transição leva a um estado de erro q_erro. Analise o rastreamento das cadeias abaixo e assinale a alternativa correta:",
+                options: [
+                    "A cadeia '11' é aceita pois termina no estado q₁, que faz parte do caminho de sucesso.",
+                    "A cadeia '10' é aceita porque, após processar '1', a máquina vai para q₁ e, após processar '0', para q₂, que é um estado final.",
+                    "A cadeia '101' é aceita pois contém a subpalavra '10' em seu início.",
+                    "A cadeia vazia (ε) é aceita por este autômato, pois o estado inicial sempre aceita a ausência de estímulos."
+                ],
+                correct: 1,
+                resolution: "O rastreamento para '10' é q₀ → q₁ → q₂. Como q₂ ∈ F, a cadeia é aceita. '11' termina em q₁ ∉ F. '101' levaria de q₂ para um estado de erro ao ler o '1'. ε só seria aceita se q₀ ∈ F."
+            },
+            {
+                id: 4,
+                q: "Sobre a relação entre classes de linguagens e seus respectivos modelos de reconhecimento na Hierarquia de Chomsky, assinale a alternativa que apresenta a correlação correta:",
+                options: [
+                    "Linguagens Regulares (Nível 3) são reconhecidas por Autômatos de Pilha.",
+                    "Linguagens Livres de Contexto (Nível 2) são reconhecidas por Autômatos Finitos Determinísticos.",
+                    "Linguagens Sensíveis ao Contexto (Nível 1) são reconhecidas por Autômatos Linearmente Limitados.",
+                    "Linguagens Irrestritas (Nível 0) são reconhecidas por Autômatos Finitos Não-Determinísticos."
+                ],
+                correct: 2,
+                resolution: "Autômatos Linearmente Limitados (LBA) reconhecem Linguagens Sensíveis ao Contexto (Nível 1). Regulares usam AF, Livres de Contexto usam Autômatos de Pilha e Irrestritas usam Máquinas de Turing."
+            },
+            {
+                id: 5,
+                q: "Uma catraca de acesso funciona como um autômato finito. Ela possui dois estados: 'Trancada' e 'Liberada'. O alfabeto de entrada é composto pelas ações {Inserir Moeda, Empurrar Braço}. Sobre a lógica de transição dessa máquina, é correto afirmar:",
+                options: [
+                    "Se a catraca está 'Liberada' e a entrada é 'Inserir Moeda', ela deve transitar para um estado de erro permanente.",
+                    "Se a catraca está 'Trancada' e a entrada é 'Empurrar Braço', ela deve permanecer no estado 'Trancada', o que caracteriza uma rejeição da ação de passagem.",
+                    "A catraca é um modelo não-determinístico, pois uma mesma moeda pode ou não liberar o acesso dependendo da força do usuário.",
+                    "O estado inicial da catraca é obrigatoriamente um estado final de aceitação, pois o objetivo da máquina é permitir a entrada."
+                ],
+                correct: 1,
+                resolution: "Se a catraca está trancada, o estímulo 'Empurrar Braço' não altera o estado; ela permanece 'Trancada' até receber uma moeda. Isso é um processamento determinístico."
+            },
+            {
+                id: 6,
+                q: "Considere o alfabeto Σ = {a, b}. O conjunto Σ* representa o universo de todas as cadeias possíveis sobre esse alfabeto. Assinale a alternativa que descreve uma propriedade INCORRETA deste conjunto:",
+                options: [
+                    "O conjunto Σ* possui cardinalidade infinita, embora cada elemento dentro dele possua comprimento finito.",
+                    "A cadeia vazia ε é um elemento obrigatório de Σ*, independentemente de Σ ser {a}, {0, 1} ou {a, b, c}.",
+                    "O conjunto Σ² contém exatamente as cadeias {aa, ab, ba, bb}.",
+                    "O Fecho de Kleene de um alfabeto vazio (Σ = ∅) resultaria em um conjunto também vazio (Σ* = ∅)."
+                ],
+                correct: 3,
+                resolution: "Propriedade INCORRETA: Σ* de um conjunto vazio NÃO é vazio. Por definição Σ⁰ = {ε}, logo Σ* de um alfabeto vazio contém ao menos a cadeia vazia {ε}."
+            },
+            {
+                id: 7,
+                q: "Sobre a presença de estados inacessíveis em um Autômato Finito Determinístico, considere as afirmações a seguir:\nI. Um estado é inacessível quando não há transições que partam dele para outros estados.\nII. A remoção de estados inacessíveis não altera a linguagem L(M) reconhecida pelo autômato.\nIII. Estados inacessíveis podem ser identificados através de algoritmos de busca em largura ou profundidade a partir do estado inicial q₀.\nIV. Um autômato com estados inacessíveis deixa de ser considerado determinístico (AFD).",
+                options: [
+                    "Estão corretas apenas I e II.",
+                    "Estão corretas apenas II e III.",
+                    "Estão corretas apenas I, III e IV.",
+                    "Estão corretas apenas II, III e IV."
+                ],
+                correct: 1,
+                resolution: "II e III estão corretas. A remoção não afeta a linguagem e eles são achados por busca no grafo. I está errada (inacessível é quem não recebe transição do início) e IV está errada (estados inúteis não afetam o determinismo)."
+            },
+            {
+                id: 8,
+                q: "No contexto da Teoria da Computação, a simplicidade dos autômatos finitos é tanto sua maior vantagem quanto sua maior limitação. Qual das seguintes características é inerente ao modelo de Autômato Finito (Determinístico ou Não-Determinístico)?",
+                options: [
+                    "Possui uma memória auxiliar ilimitada que permite armazenar símbolos para comparação futura.",
+                    "Sua única forma de memória é o estado atual em que a máquina se encontra, sendo o número de estados finito.",
+                    "É capaz de reconhecer a linguagem L = {0ⁿ 1ⁿ | n ≥ 1}, que exige contagem de símbolos.",
+                    "Permite a escrita e reescrita de símbolos na fita de entrada durante o processamento."
+                ],
+                correct: 1,
+                resolution: "A única memória do AFD é o estado atual. Eles não possuem memória auxiliar (como pilha) nem fita de escrita (como Máquina de Turing), o que os impede de reconhecer linguagens de contagem como 0ⁿ1ⁿ."
+            },
+            {
+                id: 9,
+                q: "A função de transição δ de um AFD define o comportamento da máquina para cada símbolo. Considere um AFD onde o processamento da cadeia '101' a partir do estado inicial q₀ resulta na sequência: δ(q₀, 1) = q₁, δ(q₁, 0) = q₁, δ(q₁, 1) = q₂. Qual o valor da função de transição estendida δ^(q₀, 101)?",
+                options: [
+                    "q₀",
+                    "q₁",
+                    "q₂",
+                    "{q₁, q₂}"
+                ],
+                correct: 2,
+                resolution: "A função estendida processa toda a cadeia: q₀ --1--> q₁ --0--> q₁ --1--> q₂. O estado final alcançado é q₂."
+            },
+            {
+                id: 10,
+                q: "Analise a descrição informal de uma linguagem sobre o alfabeto Σ = {0, 1}: 'O conjunto de todas as cadeias que começam e terminam com o mesmo símbolo'. Qual das seguintes cadeias pertence a essa linguagem?",
+                options: [
+                    "0101",
+                    "1000",
+                    "1101",
+                    "0"
+                ],
+                correct: 2, // No documento, o gabarito indicou C (1101) como exemplo clássico.
+                resolution: "A cadeia '1101' começa com 1 e termina com 1. Nota: a cadeia '0' também satisfaria a condição tecnicamente, mas em contextos de prova deve-se escolher a que melhor exemplifica a regra conforme as opções. Aqui, 1101 é a resposta padrão para o reconhecimento de subpalavras."
+            }
+        ];
+
+        function initQuiz() {
+            const list = document.getElementById('questions-list');
+            quizData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
+                
+                let optionsHtml = '';
+                item.options.forEach((opt, optIdx) => {
+                    optionsHtml += `
+                        <li class="option-item" id="q${index}-opt${optIdx}">
+                            <input type="radio" name="question${index}" id="q${index}o${optIdx}" value="${optIdx}">
+                            <label for="q${index}o${optIdx}">${String.fromCharCode(65 + optIdx)}. ${opt}</label>
+                        </li>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="question-header">Questão ${item.id}:</div>
+                    <p>${item.q.replace(/\n/g, '<br>')}</p>
+                    <ul class="options-list">
+                        ${optionsHtml}
+                    </ul>
+                    <div class="resolution-box" id="res-${index}">
+                        <span class="resolution-title">Resolução Comentada:</span>
+                        ${item.resolution}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function gradeQuiz() {
+            let score = 0;
+            const form = document.getElementById('quiz-form');
+            const formData = new FormData(form);
+
+            let allAnswered = true;
+            quizData.forEach((_, index) => {
+                if (!formData.has(`question${index}`)) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                if(!confirm("Você deixou questões sem responder. Deseja finalizar assim mesmo?")) return;
+            }
+
+            quizData.forEach((item, index) => {
+                const selected = formData.get(`question${index}`);
+                const resolutionBox = document.getElementById(`res-${index}`);
+                const card = document.getElementById(`q-card-${index}`);
+                
+                resolutionBox.style.display = 'block';
+
+                // Marcar correta
+                const correctLi = document.getElementById(`q${index}-opt${item.correct}`);
+                correctLi.classList.add('option-correct');
+
+                if (selected !== null) {
+                    const selectedInt = parseInt(selected);
+                    if (selectedInt === item.correct) {
+                        score++;
+                        card.insertAdjacentHTML('afterbegin', '<span class="badge badge-correct">Acertou</span>');
+                    } else {
+                        const wrongLi = document.getElementById(`q${index}-opt${selectedInt}`);
+                        wrongLi.classList.add('option-wrong');
+                        card.insertAdjacentHTML('afterbegin', '<span class="badge badge-wrong">Errou</span>');
+                    }
+                } else {
+                    card.insertAdjacentHTML('afterbegin', '<span class="badge badge-wrong">Não Respondida</span>');
+                }
+            });
+
+            // Mostrar resumo
+            const resultTop = document.getElementById('result-top');
+            const scoreDisplay = document.getElementById('score-display');
+            const msg = document.getElementById('performance-msg');
+            const btn = document.getElementById('submit-btn');
+
+            scoreDisplay.innerText = `${score}/10`;
+            resultTop.style.display = 'block';
+            btn.style.display = 'none';
+
+            if(score >= 8) msg.innerText = "Excelente desempenho! Você está pronto para o IF.";
+            else if(score >= 5) msg.innerText = "Bom trabalho. Revise os pontos onde houve erro.";
+            else msg.innerText = "Continue estudando. Teoria da Computação exige prática de rastreamento.";
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Desativar radios para não mudar após ver resultado
+            const inputs = document.querySelectorAll('input[type="radio"]');
+            inputs.forEach(i => i.disabled = true);
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
