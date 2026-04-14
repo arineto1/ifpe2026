@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado EBTT - Manutenção de Hardware</title>
+    <style>
+        :root {
+            --bg-color: #fafafa;
+            --text-color: #1a1a1a;
+            --accent-color: #2563eb;
+            --correct-bg: #dcfce7;
+            --correct-text: #166534;
+            --wrong-bg: #fee2e2;
+            --wrong-text: #991b1b;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Georgia, serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #4b5563;
+            margin-bottom: 30px;
+        }
+
+        #quiz-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 12px;
+        }
+
+        .option-item label {
+            display: block;
+            padding: 15px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item input {
+            display: none;
+        }
+
+        .option-item input:checked + label {
+            border-color: var(--accent-color);
+            background-color: #eff6ff;
+            font-weight: 600;
+        }
+
+        .option-item label:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* Classes de Resultado */
+        .option-item.correct label {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-text) !important;
+            color: var(--correct-text) !important;
+        }
+
+        .option-item.wrong label {
+            background-color: var(--wrong-bg) !important;
+            border-color: var(--wrong-text) !important;
+            color: var(--wrong-text) !important;
+        }
+
+        .resolution {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--accent-color);
+            border-radius: 4px;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        #submit-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 40px auto;
+            padding: 15px;
+            background-color: var(--text-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        #submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        #results-summary {
+            display: none;
+            text-align: center;
+            background: #fff;
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .score-box {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.6rem; }
+            .question-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Simulado Concurso Professor EBTT</h1>
+    <p class="description">Questões sobre Manutenção de Hardware e Procedimentos Técnicos</p>
+</header>
+
+<div id="results-summary">
+    <h2>Resultado Final</h2>
+    <div class="score-box" id="score-display">0/10</div>
+    <p>Confira abaixo a resolução comentada de cada questão.</p>
+</div>
+
+<div id="quiz-container">
+    <form id="quiz-form">
+        <!-- Questão 01 -->
+        <div class="question-card" data-correct="B">
+            <div class="question-text">01. Em uma atividade laboratorial de manutenção preventiva, um técnico deparou-se com resíduos de pasta térmica solidificada em um processador de alto desempenho. Para a remoção segura desses resíduos sem comprometer a integridade física do componente e garantir a máxima eficiência da nova interface térmica, o procedimento correto envolve:</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q1" value="A" id="q1a"><label for="q1a">A) A raspagem mecânica com espátula metálica, seguida de limpeza com água destilada para remover impurezas condutoras.</label></div>
+                <div class="option-item"><input type="radio" name="q1" value="B" id="q1b"><label for="q1b">B) A aplicação de Álcool Isopropílico 99% com papel toalha de alta densidade, buscando o brilho metálico total da superfície.</label></div>
+                <div class="option-item"><input type="radio" name="q1" value="C" id="q1c"><label for="q1c">C) O uso de acetona comercial para dissolver a pasta, secando a superfície com ar quente de uma estação de retrabalho.</label></div>
+                <div class="option-item"><input type="radio" name="q1" value="D" id="q1d"><label for="q1d">D) A utilização de Limpa Contatos diretamente sobre o die do processador, friccionando com escova de cerdas duras para remover incrustações.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> A resolução baseia-se na propriedade química do Álcool Isopropílico 99% de dissolver resíduos de pasta térmica sem introduzir umidade excessiva que causaria oxidação. O uso de papel toalha de alta densidade garante a limpeza sem deixar fiapos.
+            </div>
+        </div>
+
+        <!-- Questão 02 -->
+        <div class="question-card" data-correct="B">
+            <div class="question-text">02. A aplicação da pasta térmica é um procedimento que exige precisão para evitar o superaquecimento do sistema. Sobre a técnica de aplicação e o comportamento físico deste insumo, assinale a alternativa correta:</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q2" value="A" id="q2a"><label for="q2a">A) A pasta térmica deve ser aplicada em excesso para garantir que o dissipador flutue sobre o processador, minimizando a pressão mecânica.</label></div>
+                <div class="option-item"><input type="radio" name="q2" value="B" id="q2b"><label for="q2b">B) Deve-se aplicar uma única gota de tamanho aproximado ao de uma ervilha no centro do processador, deixando que a pressão do dissipador realize o espalhamento radial.</label></div>
+                <div class="option-item"><input type="radio" name="q2" value="C" id="q2c"><label for="q2c">C) O espalhamento manual com o dedo é o método mais eficaz, pois a gordura natural da pele ajuda na condutividade térmica da mistura.</label></div>
+                <div class="option-item"><input type="radio" name="q2" value="D" id="q2d"><label for="q2d">D) A pasta térmica branca deve ser obrigatoriamente misturada à pasta de prata para obter uma viscosidade ideal para sockets do tipo LGA.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> O método da gota única central é o padrão-ouro na montagem moderna, pois utiliza a pressão mecânica do cooler para expelir o ar de dentro para fora, garantindo uma interface homogênea.
+            </div>
+        </div>
+
+        <!-- Questão 03 -->
+        <div class="question-card" data-correct="C">
+            <div class="question-text">03. Durante a fase de ancoragem da placa-mãe no interior do gabinete, o técnico deve estar atento aos espaçadores metálicos. Qual a função técnica primordial destes componentes e qual o risco associado ao seu uso incorreto?</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q3" value="A" id="q3a"><label for="q3a">A) Função de dissipação térmica passiva; risco de superaquecimento da ponte sul (chipset).</label></div>
+                <div class="option-item"><input type="radio" name="q3" value="B" id="q3b"><label for="q3b">B) Função de isolamento galvânico entre o gabinete e a placa; risco de perda de sinal nas portas USB frontais.</label></div>
+                <div class="option-item"><input type="radio" name="q3" value="C" id="q3c"><label for="q3c">C) Função de sustentação e prevenção de contato elétrico com o chassi; risco de curto-circuito e queima de componentes.</label></div>
+                <div class="option-item"><input type="radio" name="q3" value="D" id="q3d"><label for="q3d">D) Função de redução de vibração mecânica; risco de ruído excessivo durante a operação do HD.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> Espaçadores metálicos servem para elevar a placa-mãe. O chassi do gabinete é aterrado e metálico; se a placa encostar nele, ocorre um curto-circuito instantâneo nas trilhas de dados ou de energia.
+            </div>
+        </div>
+
+        <!-- Questão 04 -->
+        <div class="question-card" data-correct="C">
+            <div class="question-text">04. Um computador apresenta o seguinte comportamento: ao ser ligado, todos os ventiladores (cooler da CPU, ventoinhas do gabinete e da fonte) giram normalmente, mas o sistema não emite bipes de diagnóstico, não realiza o POST e não apresenta imagem. Considerando uma falha na montagem dos cabos de alimentação, qual o componente mais provável de estar desconectado?</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q4" value="A" id="q4a"><label for="q4a">A) O cabo de energia SATA do disco rígido principal.</label></div>
+                <div class="option-item"><input type="radio" name="q4" value="B" id="q4b"><label for="q4b">B) O conector de 24 pinos da alimentação ATX principal.</label></div>
+                <div class="option-item"><input type="radio" name="q4" value="C" id="q4c"><label for="q4c">C) O conector ATX 12V de 4 ou 8 pinos dedicado ao processador.</label></div>
+                <div class="option-item"><input type="radio" name="q4" value="D" id="q4d"><label for="q4d">D) O cabo de dados do painel frontal responsável pelo Power LED.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> O conector ATX 12V é o responsável exclusivo por alimentar o VRM do processador. Sem esta alimentação, o processador não "acorda", resultando em ausência de vídeo.
+            </div>
+        </div>
+
+        <!-- Questão 05 -->
+        <div class="question-card" data-correct="C">
+            <div class="question-text">05. Na conexão dos cabos do painel frontal de um gabinete, o técnico deve observar as regras de polaridade para garantir o funcionamento dos indicadores luminosos. De acordo com os padrões de montagem, é correto afirmar:</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q5" value="A" id="q5a"><label for="q5a">A) O fio branco ou preto é geralmente o polo positivo (+), enquanto o colorido é o negativo (-).</label></div>
+                <div class="option-item"><input type="radio" name="q5" value="B" id="q5b"><label for="q5b">B) LEDs não possuem polaridade e funcionarão independentemente da posição em que forem conectados aos pinos.</label></div>
+                <div class="option-item"><input type="radio" name="q5" value="C" id="q5c"><label for="q5c">C) O fio colorido representa o polo positivo (+), enquanto o fio branco ou preto representa o polo negativo (-).</label></div>
+                <div class="option-item"><input type="radio" name="q5" value="D" id="q5d"><label for="q5d">D) A polaridade é crítica apenas para as chaves Power SW e Reset SW, não afetando o funcionamento dos LEDs.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> Esta é a regra de ouro: cores indicam o polo positivo (+), enquanto branco ou preto indicam o polo negativo ou comum (-).
+            </div>
+        </div>
+
+        <!-- Questão 06 -->
+        <div class="question-card" data-correct="B">
+            <div class="question-text">06. O roteamento de cabos (Cable Management) é uma prática que impacta diretamente a termodinâmica interna de um computador. Sobre esta prática, assinale a alternativa que descreve seu benefício técnico central:</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q6" value="A" id="q6a"><label for="q6a">A) Aumento da velocidade de processamento devido à redução da interferência eletromagnética entre os cabos de dados.</label></div>
+                <div class="option-item"><input type="radio" name="q6" value="B" id="q6b"><label for="q6b">B) Otimização do fluxo de ar, permitindo que o ar frio percorra o gabinete sem obstruções, evitando zonas de ar estagnado.</label></div>
+                <div class="option-item"><input type="radio" name="q6" value="C" id="q6c"><label for="q6c">C) Redução do peso total do gabinete ao utilizar abraçadeiras de nylon em vez de suportes metálicos originais.</label></div>
+                <div class="option-item"><input type="radio" name="q6" value="D" id="q6d"><label for="q6d">D) Proteção contra surtos elétricos, uma vez que cabos agrupados possuem maior resistência à variação de tensão da rede.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> O Cable Management visa liberar o caminho para o fluxo de ar (airflow). Componentes como VRMs e processadores dependem da velocidade do ar para dissipar calor eficientemente.
+            </div>
+        </div>
+
+        <!-- Questão 07 -->
+        <div class="question-card" data-correct="C">
+            <div class="question-text">07. No contexto da gestão de um laboratório de informática de um Instituto Federal, o professor EBTT solicita a criação de um Manual Técnico de Montagem. Segundo os pilares da documentação técnica, o que deve constar no item "Esquema Tático"?</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q7" value="A" id="q7a"><label for="q7a">A) A lista de preços atualizada de cada componente para fins de seguro patrimonial.</label></div>
+                <div class="option-item"><input type="radio" name="q7" value="B" id="q7b"><label for="q7b">B) O plano de marketing para a divulgação dos serviços de manutenção do laboratório à comunidade.</label></div>
+                <div class="option-item"><input type="radio" name="q7" value="C" id="q7c"><label for="q7c">C) A explicação lógica de como a equipe identificou a polaridade do painel frontal e a estratégia de organização de cabos.</label></div>
+                <div class="option-item"><input type="radio" name="q7" value="D" id="q7d"><label for="q7d">D) O currículo resumido de cada técnico responsável pela montagem do equipamento.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> O Esquema Tático refere-se à lógica aplicada durante a montagem, permitindo que outros técnicos entendam a metodologia de identificação e organização utilizada.
+            </div>
+        </div>
+
+        <!-- Questão 08 -->
+        <div class="question-card" data-correct="B">
+            <div class="question-text">08. O checklist final de decolagem de um sistema montado inclui o "Teste do Chacoalhão". Qual o objetivo técnico desta verificação empírica?</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q8" value="A" id="q8a"><label for="q8a">A) Verificar se a memória RAM está operando em regime de Dual Channel através da vibração dos pentes.</label></div>
+                <div class="option-item"><input type="radio" name="q8" value="B" id="q8b"><label for="q8b">B) Garantir que o dissipador está bem preso e que não há parafusos soltos dentro do gabinete que possam causar curtos-circuitos.</label></div>
+                <div class="option-item"><input type="radio" name="q8" value="C" id="q8c"><label for="q8c">C) Testar a resistência mecânica da fonte de alimentação contra quedas de tensão bruscas.</label></div>
+                <div class="option-item"><input type="radio" name="q8" value="D" id="q8d"><label for="q8d">D) Nivelar a pasta térmica entre o processador e o cooler após a fixação definitiva.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> O "Teste do Chacoalhão" é uma validação física final para evitar que um parafuso solto cause um curto-catastrófico ao tocar em componentes energizados.
+            </div>
+        </div>
+
+        <!-- Questão 09 -->
+        <div class="question-card" data-correct="B">
+            <div class="question-text">09. Sobre a manutenção de contatos e barramentos de memória, qual a sequência procedimental correta para garantir a restauração da condutividade sem danificar os componentes?</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q9" value="A" id="q9a"><label for="q9a">A) Aplicação de jato contínuo de água sob pressão, seguida de secagem natural por 48 horas.</label></div>
+                <div class="option-item"><input type="radio" name="q9" value="B" id="q9b"><label for="q9b">B) Limpeza mecânica suave dos slots com escova seca para remover pó, seguida de aplicação de Limpa Contatos nos conectores dourados.</label></div>
+                <div class="option-item"><input type="radio" name="q9" value="C" id="q9c"><label for="q9c">C) Uso de borracha escolar abrasiva nos contatos dourados até que a camada de ouro seja removida, expondo o cobre.</label></div>
+                <div class="option-item"><input type="radio" name="q9" value="D" id="q9d"><label for="q9d">D) Imersão total do módulo de memória em Álcool Etílico 70% para desinfecção biológica e química.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> A sequência correta envolve primeiro a remoção mecânica do pó isolante dos slots e depois o tratamento químico dos contatos com solvente específico.
+            </div>
+        </div>
+
+        <!-- Questão 10 -->
+        <div class="question-card" data-correct="B">
+            <div class="question-text">10. O Inventário de Consumíveis é uma parte essencial da documentação de manutenção. No que se refere à pasta térmica, qual informação é vital registrar para o controle técnico e de estoque?</div>
+            <div class="options-list">
+                <div class="option-item"><input type="radio" name="q10" value="A" id="q10a"><label for="q10a">A) A cor da embalagem da pasta térmica para fins de design do gabinete.</label></div>
+                <div class="option-item"><input type="radio" name="q10" value="B" id="q10b"><label for="q10b">B) O tipo de material base (branca/silicone ou prata/metálica) e a quantidade gasta na intervenção.</label></div>
+                <div class="option-item"><input type="radio" name="q10" value="C" id="q10c"><label for="q10c">C) O nome do fabricante do pincel utilizado para espalhar a pasta térmica manualmente.</label></div>
+                <div class="option-item"><input type="radio" name="q10" value="D" id="q10d"><label for="q10d">D) A data de validade da pasta térmica em relação ao fuso horário de fabricação do processador.</label></div>
+            </div>
+            <div class="resolution">
+                <strong>Resolução:</strong> O registro do material base é fundamental, pois cada uma possui propriedades diferentes. Registrar a quantidade gasta é essencial para o controle de estoque público.
+            </div>
+        </div>
+
+        <button type="button" id="submit-btn" onclick="calculateScore()">Finalizar e Ver Resoluções</button>
+    </form>
+</div>
+
+<footer style="padding: 40px; color: #666; font-size: 0.9rem;">
+    Baseado no Tratado Técnico-Pedagógico de Manutenção IFEBTT
+</footer>
+
+<script>
+    function calculateScore() {
+        const form = document.getElementById('quiz-form');
+        const cards = document.querySelectorAll('.question-card');
+        let score = 0;
+        const total = cards.length;
+
+        cards.forEach((card, index) => {
+            const correct = card.getAttribute('data-correct');
+            const qNum = index + 1;
+            const selected = form.querySelector(`input[name="q${qNum}"]:checked`);
+            
+            // Mostrar resoluções
+            card.querySelector('.resolution').style.display = 'block';
+
+            // Marcar opções
+            const options = card.querySelectorAll('.option-item');
+            options.forEach(option => {
+                const input = option.querySelector('input');
+                if (input.value === correct) {
+                    option.classList.add('correct');
+                }
+                if (selected && selected.value === input.value && selected.value !== correct) {
+                    option.classList.add('wrong');
+                }
+            });
+
+            if (selected && selected.value === correct) {
+                score++;
+            }
+        });
+
+        // Mostrar resumo
+        const summary = document.getElementById('results-summary');
+        const scoreDisplay = document.getElementById('score-display');
+        summary.style.display = 'block';
+        scoreDisplay.innerText = `${score} / ${total}`;
+        
+        // Desabilitar botão e inputs
+        document.getElementById('submit-btn').style.display = 'none';
+        const allInputs = form.querySelectorAll('input');
+        allInputs.forEach(input => input.disabled = true);
+
+        // Scroll para o topo para ver o resultado
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
