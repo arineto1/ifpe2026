@@ -194,18 +194,18 @@
     </main>
 
     <script>
-        // Dados extraídos da tabela fornecida na imagem
+        // Dados extraídos exatamente da imagem fornecida para "Introdução à Informática"
         const aulas = [
-            { id: 1, tema: "Word: Formatação ABNT", link: "aula01-info.html" },
-            { id: 2, tema: "Word: Estruturação de Relatórios", link: "aula02-info.html" },
-            { id: 3, tema: "Excel: Lógica e Fórmulas Básicas", link: "aula03-info.html" },
-            { id: 4, tema: "Excel: Funções Lógicas e Gráficos", link: "aula04-info.html" },
-            { id: 5, tema: "PowerPoint: Design e Identidade Visual", link: "aula05-info.html" },
-            { id: 6, tema: "PowerPoint: Recursos Multimídia", link: "aula06-info.html" },
-            { id: 7, tema: "Apresentação: Oratória e Postura", link: "aula07-info.html" },
-            { id: 8, tema: "E-mail: Comunicação e Segurança", link: "aula08-info.html" },
-            { id: 9, tema: "Google: Nuvem e Colaboração", link: "aula09-info.html" },
-            { id: 10, tema: "Gemini: IA e Produtividade", link: "aula10-info.html" }
+            { id: 1, tema: "Word: Formatação ABNT", link: "aula01-ib.html" },
+            { id: 2, tema: "Word: Estruturação de Relatórios", link: "aula02-ib.html" },
+            { id: 3, tema: "Excel: Lógica e Fórmulas Básicas", link: "aula03-ib.html" },
+            { id: 4, tema: "Excel: Funções Lógicas e Gráficos", link: "aula04-ib.html" },
+            { id: 5, tema: "PowerPoint: Design e Identidade Visual", link: "aula05-ib.html" },
+            { id: 6, tema: "PowerPoint: Recursos Multimídia", link: "aula06-ib.html" },
+            { id: 7, tema: "Apresentação: Oratória e Postura", link: "aula07-ib.html" },
+            { id: 8, tema: "E-mail: Comunicação e Segurança", link: "aula08-ib.html" },
+            { id: 9, tema: "Google: Nuvem e Colaboração", link: "aula09-ib.html" },
+            { id: 10, tema: "Gemini: IA e Produtividade", link: "aula10-ib.html" }
         ];
 
         const gridContainer = document.getElementById('aulasGrid');
@@ -244,14 +244,17 @@
         // Renderiza tudo inicialmente
         renderCards(aulas);
 
-        // Lógica de filtro (Busca em tempo real)
+        // Lógica de filtro (Busca em tempo real ignorando acentos e maiúsculas)
         searchInput.addEventListener('input', (e) => {
             const termoBusca = e.target.value.toLowerCase();
             
             const filtradas = aulas.filter(aula => {
-                return aula.tema.toLowerCase().includes(termoBusca) || 
-                       `aula ${aula.id}`.includes(termoBusca) ||
-                       `aula 0${aula.id}`.includes(termoBusca);
+                const temaNormalizado = aula.tema.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                const termoNormalizado = termoBusca.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+                return temaNormalizado.includes(termoNormalizado) || 
+                       `aula ${aula.id}`.includes(termoNormalizado) ||
+                       `aula 0${aula.id}`.includes(termoNormalizado);
             });
             
             renderCards(filtradas);

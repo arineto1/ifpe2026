@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado EBTT - Informática e ABNT</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-secondary: #636e72;
+            --accent-color: #0984e3;
+            --success-color: #00b894;
+            --error-color: #d63031;
+            --border-color: #dfe6e9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .intro-text {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        label:hover {
+            background-color: #f1f2f6;
+            border-color: var(--accent-color);
+        }
+
+        input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        .btn-finish {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 40px;
+        }
+
+        .btn-finish:hover {
+            background-color: #0773c5;
+        }
+
+        #results-section {
+            display: none;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 4px solid var(--accent-color);
+        }
+
+        .score-box {
+            text-align: center;
+            padding: 30px;
+            background: #e1f5fe;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+
+        .resolution-card {
+            background: #fff;
+            border-left: 5px solid var(--accent-color);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .resolution-title {
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .correct-answer-label {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .wrong-answer-label {
+            color: var(--error-color);
+            text-decoration: line-through;
+        }
+
+        .tag-correct { background: #dff9fb; color: #009432; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
+        .tag-wrong { background: #fab1a0; color: #b71515; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
+
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            .quiz-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulado EBTT: Informática e ABNT</h1>
+        <p class="intro-text">Baseado na aula de estruturação documental e normas técnicas.</p>
+    </header>
+
+    <div id="quiz-container">
+        <!-- Questões serão geradas via JS -->
+    </div>
+
+    <button class="btn-finish" onclick="showResults()">Finalizar Simulado</button>
+
+    <div id="results-section">
+        <div class="score-box">
+            <h2 id="score-display">Você acertou 0 de 10 questões!</h2>
+            <p>Confira abaixo a resolução detalhada de cada item.</p>
+        </div>
+
+        <div id="resolutions-container">
+            <!-- Resoluções serão geradas via JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            id: 1,
+            question: "No Microsoft Word, a configuração inicial de um trabalho acadêmico deve respeitar as normas de margens para garantir a padronização e a possibilidade de encadernação. De acordo com os padrões ABNT frequentemente ensinados nos Institutos Federais, quais devem ser as medidas das margens superior e esquerda, respectivamente?",
+            options: ["2 cm e 3 cm", "3 cm e 3 cm", "3 cm e 2 cm", "2,5 cm e 2,5 cm"],
+            correct: 1, // B
+            resolution: "A configuração de margens conforme a ABNT (NBR 14724) segue o padrão de 3 cm para as bordas Superior e Esquerda, e 2 cm para as bordas Inferior e Direita. A margem esquerda de 3 cm é necessária para a encadernação, evitando que o texto fique oculto após o grampeamento."
+        },
+        {
+            id: 2,
+            question: "Um professor está orientando seus alunos na criação de uma capa para um relatório de pesquisa. Segundo a estrutura básica de um trabalho acadêmico (Aula 2), quais informações devem constar, obrigatoriamente, na parte central (meio) da capa?",
+            options: ["Nome da Escola e do Curso", "Cidade e Ano de entrega", "Nome do Aluno e Título do Trabalho", "Resumo e Palavras-chave"],
+            correct: 2, // C
+            resolution: "A capa é a identidade do trabalho. A hierarquia visual clara é: Topo (Instituição e Curso), Meio (Autor e Título do Trabalho em destaque) e Fim (Cidade e Ano)."
+        },
+        {
+            id: 3,
+            question: "Ao redigir o corpo de um texto acadêmico no Word, o usuário deve aplicar um alinhamento que distribua o texto uniformemente entre as margens laterais, conferindo um aspecto profissional ao documento. Qual o nome desse alinhamento e qual o seu atalho de teclado padrão no Word em português?",
+            options: ["Alinhamento Centralizado (Ctrl + E)", "Alinhamento Justificado (Ctrl + J)", "Alinhamento à Direita (Ctrl + G)", "Alinhamento à Esquerda (Ctrl + Q)"],
+            correct: 1, // B
+            resolution: "O alinhamento Justificado ajusta o espaçamento entre as palavras para que o texto termine exatamente na margem direita. No Word em português, o atalho é Ctrl + J (Justificar)."
+        },
+        {
+            id: 4,
+            question: "Para garantir que um novo capítulo (ex: '2 REFERENCIAL TEÓRICO') comece sempre no topo de uma nova página, mesmo que o texto do capítulo anterior seja editado, a ferramenta mais produtiva e correta a ser utilizada no Microsoft Word é:",
+            options: ["Pressionar a tecla 'Enter' sucessivas vezes", "Inserir uma Quebra de Seção contínua", "Utilizar a ferramenta 'Pincel de Formatação'", "Inserir uma Quebra de Página através do atalho Ctrl + Enter"],
+            correct: 3, // D
+            resolution: "A Quebra de Página (Ctrl + Enter) é a forma correta de gerenciar o fluxo. Usar vários 'Enters' cria parágrafos vazios que desformatam o documento se o texto anterior for editado."
+        },
+        {
+            id: 5,
+            question: "No contexto da inserção de ilustrações em documentos acadêmicos, a Aula 2 destaca a importância da correta identificação de imagens. Sobre a legenda e a fonte de uma imagem, assinale a alternativa correta:",
+            options: ["A legenda deve ficar abaixo da imagem e a fonte omitida", "A legenda deve ficar acima da imagem e a indicação da fonte logo abaixo", "Ambas devem aparecer centralizadas dentro da própria imagem", "A legenda deve ser inserida como nota de rodapé"],
+            correct: 1, // B
+            resolution: "Segundo as normas, a identificação da ilustração deve ser completa: a legenda (ex: Figura 1 - Título) fica acima da imagem e a fonte (ex: Fonte: Autor, 2024) fica logo abaixo."
+        },
+        {
+            id: 6,
+            question: "Sobre a formatação de fontes em trabalhos acadêmicos seguindo as normas ABNT, qual a recomendação padrão para o corpo do texto quanto ao tipo e tamanho da fonte?",
+            options: ["Fontes decorativas como Comic Sans, tamanho 12", "Exclusivamente a fonte Calibri, tamanho 11", "Fontes sóbrias como Arial ou Times New Roman, tamanho 12", "Fonte Arial, tamanho 14, para facilitar leitura"],
+            correct: 2, // C
+            resolution: "Arial e Times New Roman são as fontes padrão por serem neutras e facilitarem a leitura acadêmica. O tamanho 12 é o equilíbrio ideal entre economia de papel e conforto visual."
+        },
+        {
+            id: 7,
+            question: "O recurso 'Estilos', localizado na guia Página Inicial do Microsoft Word, desempenha um papel fundamental na organização de documentos extensos. Qual a principal vantagem técnica de aplicar o estilo 'Título 1' nos nomes dos capítulos de um trabalho?",
+            options: ["Alterar a cor de fundo de toda a página", "Permitir a geração automática do Sumário", "Bloquear o arquivo para edição", "Converter o texto em uma imagem protegida"],
+            correct: 1, // B
+            resolution: "O uso de Estilos transforma o texto em um objeto estruturado. Quando os títulos usam 'Título 1', o Word consegue ler esses marcadores e criar o sumário automático na guia Referências."
+        },
+        {
+            id: 8,
+            question: "Durante a formatação de um relatório técnico no Word, o usuário deseja copiar todas as características de formatação de um parágrafo (fonte, tamanho, negrito e cor) para aplicá-las em outro parágrafo. Qual ferramenta deve ser utilizada?",
+            options: ["Pincel de Formatação", "Colar Especial", "Recortar", "AutoTexto"],
+            correct: 0, // A
+            resolution: "O Pincel de Formatação permite copiar a formatação de um texto e aplicá-la em outro instantaneamente. Um clique duplo permite aplicar a formatação em múltiplos locais sem desativar a ferramenta."
+        },
+        {
+            id: 9,
+            question: "A ABNT define regras específicas para o espaçamento entre linhas no corpo do texto de trabalhos acadêmicos. Qual o espaçamento padrão exigido para o texto convencional?",
+            options: ["Espaçamento Simples (1,0)", "Espaçamento Duplo (2,0)", "Espaçamento de 1,5 linhas", "Espaçamento de 1,15 linhas"],
+            correct: 2, // C
+            resolution: "O espaçamento de 1,5 linhas é o padrão ABNT para o texto principal. Espaçamento simples é reservado para citações longas, notas de rodapé e referências."
+        },
+        {
+            id: 10,
+            question: "Um trabalho acadêmico de qualidade deve primar pela originalidade. De acordo com a Aula 2, como se define a prática correta de utilização de informações da internet em um trabalho original?",
+            options: ["Copiar e colar integralmente", "Utilizar imagens e textos citando a fonte", "Traduzir textos e apresentá-los como autor", "Omitir a bibliografia"],
+            correct: 1, // B
+            resolution: "A ética na pesquisa é fundamental. O 'Copia e Cola' sem crédito é plágio. A forma correta é a Citação, onde se utiliza a ideia de outrem identificando claramente o autor e o ano."
+        }
+    ];
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-container');
+        quizData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'quiz-card';
+            card.innerHTML = `
+                <span class="question-text">${item.id}. ${item.question}</span>
+                <ul class="options-list">
+                    ${item.options.map((opt, i) => `
+                        <li class="option-item">
+                            <label>
+                                <input type="radio" name="q${index}" value="${i}">
+                                ${String.fromCharCode(65 + i)}) ${opt}
+                            </label>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function showResults() {
+        let score = 0;
+        const resContainer = document.getElementById('resolutions-container');
+        resContainer.innerHTML = '';
+
+        quizData.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const selectedValue = selected ? parseInt(selected.value) : null;
+            const isCorrect = selectedValue === item.correct;
+
+            if (isCorrect) score++;
+
+            const resCard = document.createElement('div');
+            resCard.className = 'resolution-card';
+            
+            let userStatus = '';
+            if (selectedValue === null) {
+                userStatus = '<span class="tag-wrong">Não respondida</span>';
+            } else if (isCorrect) {
+                userStatus = '<span class="tag-correct">Você acertou!</span>';
+            } else {
+                userStatus = '<span class="tag-wrong">Você errou</span>';
+            }
+
+            resCard.innerHTML = `
+                <span class="resolution-title">Questão ${item.id} - Resolução ${userStatus}</span>
+                <p><strong>Sua resposta:</strong> ${selectedValue !== null ? String.fromCharCode(65 + selectedValue) : 'Nenhuma'}</p>
+                <p><strong>Gabarito:</strong> <span class="correct-answer-label">${String.fromCharCode(65 + item.correct)}</span></p>
+                <p><em>${item.resolution}</em></p>
+            `;
+            resContainer.appendChild(resCard);
+        });
+
+        document.getElementById('score-display').innerText = `Você acertou ${score} de ${quizData.length} questões!`;
+        document.getElementById('results-section').style.display = 'block';
+        
+        // Scroll suave para os resultados
+        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Inicializar o quiz
+    window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
