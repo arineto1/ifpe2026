@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado EBTT - Sistemas Operacionais</title>
+    <style>
+        :root {
+            --bg-color: #fcfcfc;
+            --container-bg: #ffffff;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --accent: #0984e3;
+            --success: #27ae60;
+            --error: #d63031;
+            --border: #dfe6e9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        header {
+            border-bottom: 2px solid var(--accent);
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--accent);
+        }
+
+        .intro {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        .question-card {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            border-left: 5px solid var(--border);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 12px;
+        }
+
+        .option-item label {
+            display: block;
+            padding: 12px 15px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item label:hover {
+            border-color: var(--accent);
+            background: #f0f7ff;
+        }
+
+        .option-item input {
+            display: none;
+        }
+
+        .option-item input:checked + label {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        button:hover {
+            background-color: #0773c5;
+            transform: translateY(-2px);
+        }
+
+        #results {
+            display: none;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 3px double var(--border);
+        }
+
+        .score-box {
+            text-align: center;
+            padding: 30px;
+            background: #f0f7ff;
+            border-radius: 12px;
+            margin-bottom: 40px;
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent);
+            display: block;
+        }
+
+        .resolution-card {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .res-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .correct { color: var(--success); }
+        .incorrect { color: var(--error); }
+
+        .explanation {
+            font-size: 0.95rem;
+            background: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px dashed var(--border);
+            margin-top: 10px;
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulado IF: Sistemas Operacionais</h1>
+        <p class="intro">Tópicos: Sincronização, Condição de Corrida e Deadlocks. <br>Estilo Concurso Professor EBTT - Nível Superior.</p>
+    </header>
+
+    <div id="quiz-area">
+        <!-- Questões serão geradas aqui -->
+    </div>
+
+    <div class="actions">
+        <button id="submit-btn" onclick="calculateResults()">Finalizar Quiz e Ver Resolução</button>
+    </div>
+
+    <div id="results">
+        <div class="score-box">
+            <span class="score-number" id="score-text">0/10</span>
+            <p id="feedback-msg">Você concluiu o simulado!</p>
+        </div>
+        
+        <h2 style="color: var(--accent); margin-bottom: 30px;">Gabarito Comentado</h2>
+        <div id="resolutions-area">
+            <!-- Resoluções serão geradas aqui -->
+        </div>
+
+        <div class="actions">
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Voltar ao Topo</button>
+        </div>
+    </div>
+
+    <footer>
+        Desenvolvido para fins didáticos - Preparatório Concurso IF / EBTT
+    </footer>
+</div>
+
+<script>
+    const questions = [
+        {
+            q: "No contexto da execução concorrente de processos, o conceito de \"Condição de Corrida\" (Race Condition) é fundamental para entender a necessidade de sincronização. Segundo a literatura de Silberschatz, Galvin e Gagne, assinale a alternativa que define corretamente esse fenômeno:",
+            options: [
+                "É a situação em que dois processos são executados em CPUs diferentes, mas compartilham o mesmo barramento de dados.",
+                "Ocorre quando vários processos acessam e manipulam os mesmos dados simultaneamente, e o resultado da execução depende da ordem específica em que o acesso ocorre.",
+                "Representa o estado de um processo que, devido à baixa prioridade, nunca recebe tempo de CPU para concluir sua tarefa.",
+                "É o mecanismo pelo qual o sistema operacional alterna o contexto entre threads de um mesmo processo para simular paralelismo."
+            ],
+            correct: 1,
+            explanation: "A essência da condição de corrida não é a existência de múltiplas CPUs, mas a falta de controle sobre o acesso a um recurso compartilhado. Quando o resultado depende da ordem de execução (imprevisível), temos uma condição de corrida."
+        },
+        {
+            q: "O problema do Produtor-Consumidor é um clássico da computação utilizado para ilustrar a coordenação de processos. De acordo com Machado e Maia, para garantir que um produtor não insira itens em um buffer cheio e um consumidor não retire de um buffer vazio, são necessários três semáforos específicos. Assinale a alternativa que identifica esses semáforos e suas funções:",
+            options: [
+                "Mutex (exclusão mútua), Quantum (tempo de CPU) e Priority (prioridade de execução).",
+                "Wait (espera), Signal (sinalização) e Interrupt (interrupção de hardware).",
+                "Mutex (exclusão mútua), Empty (contagem de espaços vazios) e Full (contagem de espaços ocupados).",
+                "Base (limite inferior da memória), Limit (limite superior) e Offset (deslocamento de endereço)."
+            ],
+            correct: 2,
+            explanation: "O sistema deve gerenciar três preocupações: exclusão mútua (Mutex), controle de espaço vazio (Empty, para impedir o produtor de transbordar) e controle de itens prontos (Full, para impedir o consumidor de ler o vazio)."
+        },
+        {
+            q: "Um impasse, ou deadlock, é frequentemente descrito como um erro de logística do Sistema Operacional. Para que tal situação ocorra, quatro condições de Coffman devem estar presentes simultaneamente. Sobre a condição de \"Posse e Espera\" (Hold and Wait), é correto afirmar:",
+            options: [
+                "Pelo menos um recurso deve ser mantido em modo não compartilhável, ou seja, apenas um processo por vez pode utilizá-lo.",
+                "Um processo deve estar segurando pelo menos um recurso e esperando para adquirir recursos adicionais que estão sendo retidos por outros processos.",
+                "Os recursos não podem ser liberados à força; um processo só libera seu recurso voluntariamente após concluir sua tarefa.",
+                "Deve existir um conjunto de processos esperando, onde cada processo aguarda por um recurso retido pelo próximo membro da cadeia."
+            ],
+            correct: 1,
+            explanation: "A Posse e Espera caracteriza o comportamento de um processo que não abre mão do que já possui (posse) enquanto faz novas requisições (espera)."
+        },
+        {
+            q: "Considere o Grafo de Alocação de Recursos (RAG), uma ferramenta visual utilizada para detectar deadlocks em sistemas operacionais. Sobre a interpretação deste grafo, assinale a opção correta:",
+            options: [
+                "Um círculo no grafo representa um recurso de hardware, enquanto um quadrado representa um processo em execução.",
+                "Uma seta partindo de um processo em direção a um recurso indica que o recurso já foi alocado com sucesso para aquele processo.",
+                "Em um sistema onde cada tipo de recurso possui apenas uma instância, a presença de um ciclo no grafo é uma condição necessária e suficiente para a existência de um deadlock.",
+                "O grafo de alocação de recursos é utilizado exclusivamente em sistemas de tempo real para garantir que o escalonamento seja preemptivo."
+            ],
+            correct: 2,
+            explanation: "Em sistemas com instâncias únicas de recursos, o ciclo é o diagnóstico definitivo de deadlock. Em sistemas com múltiplas instâncias, o ciclo é necessário, mas pode não ser suficiente."
+        },
+        {
+            q: "O Algoritmo do Banqueiro, proposto por Dijkstra, é uma das técnicas mais conhecidas para lidar com deadlocks através da estratégia de Evasão (Avoidance). Qual é o princípio fundamental de funcionamento deste algoritmo?",
+            options: [
+                "Ele quebra preventivamente a condição de espera circular ao ordenar todos os recursos do sistema numericamente.",
+                "O sistema operacional concede um recurso apenas se puder garantir que o sistema permanecerá em um estado seguro após a alocação.",
+                "O algoritmo monitora o tempo de execução de cada processo e encerra aqueles que excedem o limite de tempo pré-definido.",
+                "Ele ignora a possibilidade de deadlock para priorizar o desempenho, agindo apenas após o travamento total do sistema."
+            ],
+            correct: 1,
+            explanation: "O Banqueiro atua na evasão. Ele simula a alocação e verifica se existe uma sequência de execução onde todos os processos terminam (Estado Seguro). Se levar a um Estado Inseguro, o pedido é negado."
+        },
+        {
+            q: "Em sistemas operacionais modernos, a estratégia de gerenciamento de deadlocks conhecida como \"Algoritmo do Avestruz\" é frequentemente adotada. Assinale a alternativa que apresenta a justificativa correta para a utilização desta abordagem:",
+            options: [
+                "É a técnica mais segura disponível, garantindo que nenhum impasse ocorra durante a vida útil do hardware.",
+                "Baseia-se na ideia de que deadlocks são muito frequentes e, portanto, o sistema deve ser reiniciado automaticamente a cada hora.",
+                "Assume que o custo de evitar ou prevenir impasses é maior do que o prejuízo causado por ocorrências raras, sendo mais eficiente ignorar o problema.",
+                "Trata-se de um algoritmo de inteligência artificial que prevê falhas de hardware antes que elas causem bloqueios no kernel."
+            ],
+            correct: 2,
+            explanation: "O Algoritmo do Avestruz é pragmático: como deadlocks são raros em sistemas domésticos e o custo de evitá-los é alto, é melhor ignorar e reiniciar o sistema se o travamento ocorrer."
+        },
+        {
+            q: "A condição de \"Não Preempção\" é um dos requisitos para a ocorrência de deadlocks. Se um sistema operacional decide implementar uma política de recuperação de impasses através da preempção de recursos, ele está agindo para:",
+            options: [
+                "Forçar um processo a liberar um recurso para que este possa ser entregue a outro processo, quebrando o ciclo de espera.",
+                "Impedir que novos processos entrem na fila de execução até que o sistema retorne a um estado de baixa carga.",
+                "Aumentar a prioridade de processos que detêm muitos recursos para que eles terminem mais rápido.",
+                "Desativar a exclusão mútua em dispositivos de entrada e saída, como impressoras e scanners."
+            ],
+            correct: 0,
+            explanation: "Recuperação por preempção significa retirar um recurso à força de um processo para entregá-lo a outro que possa concluir a tarefa, quebrando assim o impasse."
+        },
+        {
+            q: "O problema clássico do \"Jantar dos Filósofos\" é uma analogia utilizada para estudar o comportamento de processos concorrentes e deadlocks. Em um cenário onde todos os filósofos pegam simultaneamente o garfo à sua esquerda e ficam esperando eternamente pelo garfo à sua direita, qual condição de Coffman está sendo exemplificada pela cadeia de espera formada?",
+            options: [
+                "Exclusão Mútua de Software.",
+                "Posse e Espera de Memória.",
+                "Não Preempção de CPU.",
+                "Espera Circular."
+            ],
+            correct: 3,
+            explanation: "A Espera Circular é a alma do Jantar dos Filósofos. Cada membro da cadeia detém um recurso e espera pelo recurso detido pelo vizinho, fechando um ciclo ininterrupto."
+        },
+        {
+            q: "Durante uma aula prática de Sistemas Operacionais, um aluno observa que seu script de loop infinito monopolizou a CPU, mas ele ainda consegue movimentar o mouse. De acordo com os conceitos de sincronização, o SO interveio para manter a responsividade através de:",
+            options: [
+                "Um escalonador não preemptivo que prioriza o driver do mouse.",
+                "Uma intervenção via escalonador preemptivo que aloca fatias de tempo (quantum) para diferentes processos.",
+                "A desativação completa da exclusão mútua na CPU para permitir acesso simultâneo.",
+                "O uso do algoritmo do banqueiro para garantir que o mouse sempre tenha \"crédito\" de processamento."
+            ],
+            correct: 1,
+            explanation: "O escalonador preemptivo garante que processos essenciais recebam fatias de tempo (quantum), impedindo que um único loop infinito trave todo o hardware."
+        },
+        {
+            q: "Sobre a diferença entre Prevenção e Evasão de deadlocks, assinale a alternativa correta:",
+            options: [
+                "A prevenção tenta garantir que pelo menos uma das condições de Coffman nunca ocorra, enquanto a evasão analisa dinamicamente se o estado futuro do sistema é seguro.",
+                "A evasão é aplicada apenas a sistemas de arquivos, enquanto a prevenção foca exclusivamente no gerenciamento de memória RAM.",
+                "Prevenção é uma técnica de hardware (circuitos lógicos), enquanto evasão é uma técnica de software (sistema operacional).",
+                "Ambas as estratégias são idênticas e baseiam-se na detecção de ciclos no grafo de alocação de recursos após o travamento do sistema."
+            ],
+            correct: 0,
+            explanation: "A prevenção é um conjunto de regras estáticas (ex: impedir posse e espera). A evasão é um cálculo dinâmico feito em tempo de execução para verificar a segurança da alocação."
+        }
+    ];
+
+    function initQuiz() {
+        const quizArea = document.getElementById('quiz-area');
+        questions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            
+            let optionsHTML = '';
+            q.options.forEach((opt, optIndex) => {
+                optionsHTML += `
+                    <li class="option-item">
+                        <input type="radio" name="q${index}" id="q${index}o${optIndex}" value="${optIndex}">
+                        <label for="q${index}o${optIndex}">${String.fromCharCode(65 + optIndex)}) ${opt}</label>
+                    </li>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-text">${index + 1}. ${q.q}</div>
+                <ul class="options">${optionsHTML}</ul>
+            `;
+            quizArea.appendChild(card);
+        });
+    }
+
+    function calculateResults() {
+        let score = 0;
+        const resArea = document.getElementById('resolutions-area');
+        resArea.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const selectedVal = selected ? parseInt(selected.value) : -1;
+            const isCorrect = selectedVal === q.correct;
+
+            if (isCorrect) score++;
+
+            const resCard = document.createElement('div');
+            resCard.className = 'resolution-card';
+            
+            const statusClass = isCorrect ? 'correct' : 'incorrect';
+            const statusText = isCorrect ? '✓ Acertou' : '✗ Errou';
+            const userChoiceText = selectedVal !== -1 ? String.fromCharCode(65 + selectedVal) : "Não respondida";
+
+            resCard.innerHTML = `
+                <div class="res-header">
+                    <span>Questão ${index + 1}</span>
+                    <span class="${statusClass}">${statusText}</span>
+                </div>
+                <div><strong>Sua resposta:</strong> ${userChoiceText}</div>
+                <div><strong>Gabarito:</strong> <span class="correct">${String.fromCharCode(65 + q.correct)}</span></div>
+                <div class="explanation">
+                    <strong>Resolução Comentada:</strong><br>
+                    ${q.explanation}
+                </div>
+            `;
+            resArea.appendChild(resCard);
+        });
+
+        document.getElementById('score-text').innerText = `${score}/10`;
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('submit-btn').style.display = 'none';
+        
+        // Feedback visual
+        if(score >= 8) {
+            document.getElementById('feedback-msg').innerText = "Excelente desempenho! Você está pronto para o IF!";
+        } else if (score >= 6) {
+            document.getElementById('feedback-msg').innerText = "Bom resultado, mas revise os pontos de atenção.";
+        } else {
+            document.getElementById('feedback-msg').innerText = "Atenção: Revise os conceitos de Silberschatz e Tanenbaum.";
+        }
+
+        window.scrollTo({
+            top: document.getElementById('results').offsetTop - 50,
+            behavior: 'smooth'
+        });
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
