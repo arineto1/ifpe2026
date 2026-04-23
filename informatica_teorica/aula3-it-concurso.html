@@ -3,391 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador EBTT - Teoria da Computação</title>
+    <title>Simulado EBTT - Autômatos Finitos</title>
     <style>
         :root {
-            --bg-color: #fcfcfc;
-            --text-color: #2c3e50;
-            --accent-color: #27ae60;
-            --error-color: #e74c3c;
-            --border-color: #e0e0e0;
-            --card-bg: #ffffff;
-            --secondary-text: #546e7a;
+            --bg-color: #fdfdfd;
+            --container-bg: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #576574;
+            --accent-color: #3498db;
+            --correct-color: #27ae60;
+            --incorrect-color: #e74c3c;
+            --border-color: #ecf0f1;
+            --resolution-bg: #f8f9fa;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
         }
 
         .container {
             max-width: 850px;
             width: 100%;
-            margin-bottom: 50px;
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         header {
-            text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid var(--accent-color);
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 30px;
             padding-bottom: 20px;
         }
 
         h1 {
             font-size: 1.8rem;
+            color: var(--text-primary);
             margin-bottom: 10px;
-            color: var(--text-color);
         }
 
-        .subtitle {
-            color: var(--secondary-text);
-            font-style: italic;
+        .intro {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
         }
 
         .question-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            transition: all 0.3s ease;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .question-text {
+        .question-title {
             font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
+            font-size: 1.15rem;
+            margin-bottom: 15px;
             display: block;
         }
 
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .options-list {
+            list-style: none;
+            padding: 0;
         }
 
-        .option-label {
-            display: flex;
-            align-items: flex-start;
+        .option-item {
+            margin-bottom: 12px;
             padding: 12px 15px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
         }
 
-        .option-label:hover {
-            background-color: #f0f7f4;
+        .option-item:hover {
+            background-color: #f1f8ff;
+            border-color: var(--accent-color);
         }
 
-        .option-label input {
+        .option-item input {
             margin-right: 15px;
-            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .option-item.selected {
+            background-color: #ebf5ff;
+            border-color: var(--accent-color);
+        }
+
+        .option-item.correct {
+            background-color: #d4edda;
+            border-color: var(--correct-color);
+            color: #155724;
+        }
+
+        .option-item.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--incorrect-color);
+            color: #721c24;
+        }
+
+        .btn-submit {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #2980b9;
+        }
+
+        .results-section {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            background-color: var(--resolution-bg);
+            border: 2px solid var(--accent-color);
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
 
         .resolution {
             display: none;
-            margin-top: 20px;
+            margin-top: 15px;
             padding: 15px;
-            background-color: #f8f9fa;
+            background-color: var(--resolution-bg);
             border-left: 4px solid var(--accent-color);
             font-size: 0.95rem;
-            color: var(--secondary-text);
+            color: var(--text-secondary);
         }
 
-        .resolution strong {
-            color: var(--text-color);
+        .show-resolution .resolution {
+            display: block;
         }
 
-        /* Classes de Feedback */
-        .correct {
-            background-color: #d4edda !important;
-            border-color: #c3e6cb !important;
-        }
-
-        .incorrect {
-            background-color: #f8d7da !important;
-            border-color: #f5c6cb !important;
-        }
-
-        .missed {
-            border: 2px solid var(--accent-color) !important;
-        }
-
-        #submit-btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-
-        #submit-btn:hover {
-            background-color: #219150;
-        }
-
-        #result-section {
-            display: none;
+        footer {
+            margin-top: 50px;
             text-align: center;
-            padding: 30px;
-            background: var(--card-bg);
-            border-radius: 8px;
-            border: 2px solid var(--accent-color);
-            margin-bottom: 40px;
-        }
-
-        .score {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent-color);
+            color: #95a5a6;
+            font-size: 0.8rem;
         }
 
         @media (max-width: 600px) {
-            body { padding: 10px; }
-            h1 { font-size: 1.4rem; }
-            .question-card { padding: 15px; }
+            .container {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>Simulado: Professor EBTT - Institutos Federais</h1>
-            <p class="subtitle">Teoria da Computação e Autômatos (Baseado na Aula 3)</p>
-        </header>
+<div class="container">
+    <header>
+        <h1>Simulado: Autômatos Finitos</h1>
+        <p class="intro">Prepare-se para o concurso de Professor EBTT com estas 10 questões fundamentais sobre Teoria da Computação.</p>
+    </header>
 
-        <div id="quiz-form">
-            <!-- As questões serão inseridas aqui via JS -->
-            <div id="questions-container"></div>
-            
-            <button type="button" id="submit-btn" onclick="checkAnswers()">Finalizar Simulado e Ver Resoluções</button>
+    <form id="quiz-form">
+        <div id="questions-container">
+            <!-- As questões serão inseridas aqui via JavaScript -->
         </div>
 
-        <div id="result-section">
-            <h2>Resultado Final</h2>
-            <div class="score" id="final-score">0 / 10</div>
-            <p id="feedback-text"></p>
-            <button onclick="window.location.reload()" style="margin-top:15px; padding:10px; cursor:pointer;">Reiniciar Teste</button>
-        </div>
+        <button type="button" id="submit-btn" class="btn-submit">Finalizar Quiz e Ver Resoluções</button>
+    </form>
+
+    <div id="results-area" class="results-section">
+        <div class="score-display" id="score-text"></div>
+        <p>As resoluções detalhadas foram desbloqueadas abaixo de cada questão.</p>
     </div>
 
-    <script>
-        const quizData = [
-            {
-                id: 1,
-                question: "Um Autômato Finito Determinístico (AFD) é definido pela quíntupla M = (Q, Σ, δ, q₀, F). De acordo com os critérios de Sipser (2007), qual das seguintes afirmações descreve corretamente uma característica intrínseca e obrigatória da função de transição δ em um AFD?",
-                options: [
-                    "A função de transição permite que, a partir de um estado q, o autômato alcance múltiplos estados ao ler um único símbolo σ ∈ Σ, permitindo o paralelismo.",
-                    "Para cada estado q ∈ Q e cada símbolo σ ∈ Σ, deve haver exatamente uma transição definida, garantindo que a função seja total e unívoca.",
-                    "A função de transição pode incluir o símbolo vazio ε, permitindo que o autômato mude de estado sem o consumo de caracteres da fita de entrada.",
-                    "A função de transição é opcional em estados finais, permitindo que o autômato encerre o processamento sem transitar para outros estados caso a entrada continue."
-                ],
-                correct: 1,
-                resolution: "A alternativa correta define os pilares do determinismo: unicidade e totalidade. Em um AFD, não pode haver ambiguidade nem omissão. As outras opções descrevem características de AFN ou conceitos inexistentes em AFDs puros."
-            },
-            {
-                id: 2,
-                question: "O Autômato Finito Não-Determinístico (AFN) é uma ferramenta poderosa de modelagem. Sobre o seu critério de aceitação de uma cadeia de entrada, assinale a alternativa que reflete a teoria clássica de Hopcroft e Sipser:",
-                options: [
-                    "Uma cadeia é aceita se, e somente se, todos os caminhos possíveis gerados pela leitura dos símbolos terminarem em um estado pertencente ao conjunto F.",
-                    "Uma cadeia é aceita se pelo menos um caminho de computação levar a um estado final após o processamento completo da cadeia, independentemente de outros ramos terem falhado ou 'morrido'.",
-                    "O AFN aceita uma cadeia somente se ela não contiver transições vazias (ε) em seu percurso de execução até o estado final.",
-                    "A aceitação em um AFN é determinada pela maioria simples dos ramos de execução; se mais de 50% dos caminhos terminarem em F, a palavra é válida."
-                ],
-                correct: 1,
-                resolution: "No não-determinismo, a aceitação é existencial. Basta que exista uma 'versão' da máquina que alcance o destino final. É a lógica do 'pelo menos um caminho de sucesso'."
-            },
-            {
-                id: 3,
-                question: "As transições vazias (ε) são comumente utilizadas em AFNs para simplificar a modelagem de linguagens complexas. Qual das alternativas abaixo descreve uma utilidade prática dessas transições segundo a literatura técnica?",
-                options: [
-                    "Elas permitem que o AFD reduza o seu número de estados ao eliminar caminhos redundantes durante a minimização.",
-                    "Elas possibilitam que o autômato mude de estado sem consumir nenhum caractere, sendo fundamentais para representar a união de duas ou mais linguagens em um único modelo inicial.",
-                    "Elas servem para aumentar a memória auxiliar da máquina, permitindo que ela reconheça linguagens livres de contexto, como parênteses balanceados.",
-                    "Elas são utilizadas para indicar que a máquina de estados atingiu um erro de hardware e deve ser reiniciada imediatamente."
-                ],
-                correct: 1,
-                resolution: "A transição ε permite ao autômato explorar novas possibilidades sem gastar itens da entrada, sendo crucial para unir decisões ou ramificar o estado inicial para sub-linguagens."
-            },
-            {
-                id: 4,
-                question: "Ao converter um AFN em um AFD equivalente para garantir a eficiência na implementação em software, utiliza-se o algoritmo de construção de subconjuntos. Sobre esse processo, assinale a alternativa correta:",
-                options: [
-                    "O AFD resultante sempre terá exatamente o mesmo número de estados que o AFN original, mudando apenas a direção das setas.",
-                    "Cada estado do novo AFD representa um conjunto de estados do AFN original, podendo haver uma explosão de estados onde o AFD resultante tenha até 2ⁿ estados para um AFN de n estados.",
-                    "O processo de conversão elimina permanentemente a capacidade do autômato de reconhecer a linguagem original, gerando uma linguagem mais restrita.",
-                    "A conversão é opcional em compiladores, pois os computadores modernos processam não-determinismo de forma nativa em seus núcleos de CPU."
-                ],
-                correct: 1,
-                resolution: "O Teorema da Explosão de Estados explica que o AFD precisa mapear todas as combinações possíveis do AFN, resultando no conjunto das partes (2ⁿ) no pior caso."
-            },
-            {
-                id: 5,
-                question: "A análise léxica é a primeira fase de um compilador e utiliza autômatos finitos para agrupar caracteres em tokens. Qual das seguintes características torna o AFD a escolha preferencial para esta fase em detrimento do AFN?",
-                options: [
-                    "O AFD permite que o compilador faça suposições e 'apostas' sobre o código do programador, corrigindo erros automaticamente.",
-                    "O AFD garante que o tempo de processamento de cada token seja linear e previsível, evitando a necessidade de backtracking ou gerenciamento de múltiplas instâncias de busca.",
-                    "O AFN é proibido em sistemas operacionais modernos como Linux e Windows devido a falhas de segurança intrínsecas ao não-determinismo.",
-                    "Apenas o AFD consegue lidar com alfabetos grandes, como o Unicode ou UTF-8."
-                ],
-                correct: 1,
-                resolution: "A eficiência computacional é o motivo principal. Um AFD permite leitura em passagem única com tempo linear O(n), ideal para a performance exigida em compiladores."
-            },
-            {
-                id: 6,
-                question: "Dada a definição formal de um Autômato Finito Não-Determinístico (AFN), qual componente da quíntupla sofre a alteração mais significativa em comparação ao AFD?",
-                options: [
-                    "O conjunto de estados finais F, que passa a permitir estados negativos.",
-                    "O alfabeto Σ, que deixa de ser finito para suportar strings de tamanho infinito.",
-                    "A função de transição δ, que passa a mapear para o conjunto das partes de estados P(Q) e inclui o símbolo ε em seu domínio.",
-                    "O estado inicial q₀, que no AFN pode ser um conjunto de múltiplos estados simultâneos logo no início do processamento."
-                ],
-                correct: 2,
-                resolution: "A grande diferença formal reside na função δ. No AFN, ela retorna um conjunto (P(Q)) em vez de um único estado, e seu domínio inclui a transição vazia ε."
-            },
-            {
-                id: 7,
-                question: "No material de revisão da Aula 3, é utilizada a analogia do 'GPS com Clones' para explicar o funcionamento de um modelo de autômato. A qual modelo essa analogia se refere e qual conceito ela pretende ilustrar?",
-                options: [
-                    "Ao AFD, ilustrando que existe apenas um caminho correto e qualquer erro leva à perda do trajeto.",
-                    "Ao AFN, ilustrando que a máquina se divide em múltiplas versões de si mesma para explorar todos os caminhos possíveis simultaneamente.",
-                    "À Máquina de Turing, ilustrando a capacidade de ler e escrever em uma fita infinita.",
-                    "Ao AFD Minimizado, ilustrando a economia de recursos ao unificar ruas e trajetos redundantes."
-                ],
-                correct: 1,
-                resolution: "A analogia dos 'clones' explica o não-determinismo: em vez de uma única escolha (AFD), a máquina explora todos os ramos simultaneamente, como se várias cópias de si mesma estivessem em caminhos diferentes."
-            },
-            {
-                id: 8,
-                question: "Sobre a relação entre AFDs, AFNs e Expressões Regulares (ER), assinale a alternativa que descreve corretamente a equivalência entre esses modelos de computação:",
-                options: [
-                    "As Expressões Regulares são mais potentes que os AFDs, pois conseguem reconhecer linguagens que necessitam de contagem, como aⁿ bⁿ.",
-                    "AFDs, AFNs e Expressões Regulares são modelos equivalentes que descrevem e reconhecem exatamente a mesma classe de linguagens: as Linguagens Regulares.",
-                    "O AFN é o único modelo capaz de representar a repetição de caracteres (fecho de Kleene, representado pelo asterisco *).",
-                    "AFDs são modelos de hardware, enquanto AFNs são modelos de software, e por isso não podem ser comparados matematicamente."
-                ],
-                correct: 1,
-                resolution: "Os três modelos são equivalentes e definem as Linguagens Regulares. Qualquer padrão em um pode ser convertido para os outros sem perda de poder expressivo."
-            },
-            {
-                id: 9,
-                question: "Em um Autômato Finito Determinístico, o que ocorre quando uma cadeia de entrada contém um símbolo para o qual a lógica de aceitação não previu um caminho para o sucesso?",
-                options: [
-                    "A máquina entra em um laço infinito tentando encontrar uma transição vazia que a salve do erro.",
-                    "O autômato deve transitar para um estado de erro (ou 'ramo morto'), que é um estado de não-aceitação de onde a máquina não consegue mais sair (estado sumidouro).",
-                    "O autômato simplesmente ignora o símbolo inválido e continua o processamento a partir do caractere seguinte.",
-                    "O autômato se transforma automaticamente em um AFN para tentar encontrar um caminho alternativo de aceitação."
-                ],
-                correct: 1,
-                resolution: "Pela propriedade de totalidade do AFD, deve haver um destino para todo símbolo. Se o símbolo é inválido para o padrão, ele deve levar a um 'trap state' (estado de erro)."
-            },
-            {
-                id: 10,
-                question: "O processo padrão de transformar uma intenção humana em um código de alta performance envolve várias etapas. Qual é a ordem correta desse fluxo de trabalho?",
-                options: [
-                    "Código de Execução → Minimização → AFD → AFN → Expressão Regular.",
-                    "Expressão Regular → AFN → AFD → Minimização → Código de Execução.",
-                    "AFN → Minimização → Expressão Regular → Código de Execução.",
-                    "AFD → AFN → Código de Execução → Minimização."
-                ],
-                correct: 1,
-                resolution: "O fluxo ideal começa com a abstração (ER), passa pelo design intuitivo (AFN), conversão para execução (AFD), otimização (Minimização) e finalmente implementação (Código)."
-            }
-        ];
+    <footer>
+        Desenvolvido para fins didáticos - Estilo Concurso Instituto Federal
+    </footer>
+</div>
 
-        function renderQuestions() {
-            const container = document.getElementById('questions-container');
-            quizData.forEach((q, index) => {
-                const card = document.createElement('div');
-                card.className = 'question-card';
-                card.id = `q-card-${index}`;
-                
-                let optionsHtml = '';
-                q.options.forEach((opt, optIndex) => {
-                    optionsHtml += `
-                        <label class="option-label" id="label-${index}-${optIndex}">
-                            <input type="radio" name="question-${index}" value="${optIndex}">
-                            <span>${String.fromCharCode(65 + optIndex)}) ${opt}</span>
-                        </label>
-                    `;
-                });
-
-                card.innerHTML = `
-                    <span class="question-text">Questão ${index + 1}: ${q.question}</span>
-                    <div class="options-container">
-                        ${optionsHtml}
-                    </div>
-                    <div class="resolution" id="res-${index}">
-                        <strong>Resolução Comentada:</strong><br>
-                        ${q.resolution}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+<script>
+    const questionsData = [
+        {
+            id: 1,
+            text: "A teoria dos autômatos é fundamental para o estudo de modelos abstratos de computação. No que diz respeito aos Autômatos Finitos Determinísticos (AFD), é uma condição OBRIGATÓRIA para a sua definição formal que:",
+            options: [
+                "Exista pelo menos uma transição vazia (ε) para garantir a flexibilidade do processamento.",
+                "Para cada estado e para cada símbolo do alfabeto, exista exatamente uma transição de saída definida.",
+                "O autômato possua memória auxiliar ilimitada para o processamento de cadeias recursivas.",
+                "O número de estados iniciais seja igual ao número de símbolos do alfabeto Σ."
+            ],
+            correct: 1,
+            resolution: "O AFD é regido pelo princípio da unicidade e da totalidade. A função de transição δ: Q × Σ → Q exige que para cada par (estado, símbolo) haja um único estado de destino. Isso elimina a ambiguidade e garante a previsibilidade do modelo."
+        },
+        {
+            id: 2,
+            text: "No contexto dos Autômatos Finitos Não-Determinísticos (AFN), o processamento de uma cadeia de entrada pode gerar múltiplas ramificações. Segundo o critério de aceitação padrão para este modelo, uma cadeia w é considerada ACEITA pelo AFN se:",
+            options: [
+                "Todas as ramificações geradas pela leitura da cadeia w terminarem em um estado de aceitação.",
+                "Pelo menos uma ramificação da computação terminar em um estado de aceitação após a leitura completa de w.",
+                "O número de ramificações que atingem estados finais for maior que o número de ramificações que 'morrem' por falta de transição.",
+                "A máquina realizar pelo menos uma transição vazia (ε) durante o processamento da cadeia."
+            ],
+            correct: 1,
+            resolution: "No AFN basta que um único 'explorador' da árvore de computação chegue ao estado de aceitação após consumir toda a entrada para que a palavra inteira seja validada. O não-determinismo investiga todos os caminhos possíveis simultaneamente."
+        },
+        {
+            id: 3,
+            text: "Transições vazias, denotadas por epsilon (ε), são recursos que permitem ao autômato mudar de estado sem consumir nenhum símbolo da entrada. Sobre o impacto do uso de ε no poder de reconhecimento de um autômato finito, assinale a alternativa correta:",
+            options: [
+                "Aumenta o poder de reconhecimento da máquina, permitindo que ela reconheça linguagens livres de contexto.",
+                "Torna a máquina mais lenta, porém capaz de reconhecer linguagens sensíveis ao contexto.",
+                "Não altera o poder de reconhecimento da máquina, que continua restrita às linguagens regulares.",
+                "Permite que o autômato funcione com um alfabeto infinito de símbolos."
+            ],
+            correct: 2,
+            resolution: "Um dos teoremas fundamentais afirma que AFDs, AFNs e AFNs-ε são todos equivalentes em poder de expressão. Todos reconhecem as linguagens regulares. O ε é apenas uma facilidade de modelagem."
+        },
+        {
+            id: 4,
+            text: "O algoritmo de Construção de Subconjuntos é utilizado para converter um AFN em um AFD equivalente. Se um AFN possui um conjunto de estados Q com n elementos, qual é o número máximo teórico de estados que o AFD correspondente pode vir a ter?",
+            options: [
+                "n²",
+                "2n",
+                "2ⁿ",
+                "n! (fatorial de n)"
+            ],
+            correct: 2,
+            resolution: "Cada estado do novo AFD representa uma combinação possível de estados onde o AFN original poderia estar. Matematicamente, isso é o Conjunto das Partes, cujo tamanho é 2ⁿ para um conjunto de n elementos."
+        },
+        {
+            id: 5,
+            text: "Ao analisar visualmente um diagrama de estados de um autômato, como um professor EBTT pode identificar que se trata de um Autômato Finito Determinístico (AFD) e não de um AFN?",
+            options: [
+                "Pela presença de transições rotuladas com o símbolo ε.",
+                "Pela existência de estados que possuem mais de uma seta de saída com o mesmo rótulo.",
+                "Pela ausência de transições vazias e pelo fato de que cada estado possui exatamente uma transição de saída para cada símbolo do alfabeto.",
+                "Pela presença de múltiplos círculos com contorno duplo, indicando vários estados iniciais."
+            ],
+            correct: 2,
+            resolution: "O AFD é um grafo onde o grau de saída de cada nó para cada símbolo do alfabeto é exatamente 1. Não há ambiguidade (mesmo rótulo saindo para lugares diferentes) nem movimentos espontâneos (ε)."
+        },
+        {
+            id: 6,
+            text: "Um autômato finito é definido pela quíntupla (Q, Σ, δ, q₀, F). Em um cenário onde a função de transição é definida como δ(q, a) = ∅ (conjunto vazio) para um determinado estado q e símbolo a, pode-se afirmar que:",
+            options: [
+                "O autômato é obrigatoriamente um AFD.",
+                "O autômato é um AFN, e esse ramo da computação 'morre' ao tentar ler o símbolo 'a' no estado q.",
+                "O autômato entrará em um laço infinito ao encontrar o símbolo 'a'.",
+                "A cadeia de entrada será aceita automaticamente, independentemente do estado ser final ou não."
+            ],
+            correct: 1,
+            resolution: "No AFN, a ausência de uma transição (conjunto vazio) leva ao descarte daquele ramo específico. No AFD, a função deve ser total, logo isso não ocorreria sem um estado de erro explícito."
+        },
+        {
+            id: 7,
+            text: "Qual é a principal vantagem de se utilizar um AFN durante a fase de design, sabendo que ele será posteriormente convertido em um AFD para implementação?",
+            options: [
+                "O AFN consome menos energia elétrica quando implementado diretamente em silício.",
+                "O AFN permite descrever padrões complexos de forma mais intuitiva e compacta, facilitando o trabalho do designer humano e reduzindo erros de lógica.",
+                "O AFN garante que o AFD final terá o menor número possível de estados sem necessidade de algoritmos de minimização.",
+                "O AFN ignora as regras do alfabeto, permitindo o reconhecimento de símbolos desconhecidos."
+            ],
+            correct: 1,
+            resolution: "O AFN permite focar no 'o que' reconhecer (o padrão), enquanto o AFD exige lidar com 'como' tratar todas as exceções e erros em cada estado. O AFN é muito mais próximo do raciocínio humano."
+        },
+        {
+            id: 8,
+            text: "Sobre as Linguagens Regulares, classe de linguagens reconhecida pelos Autômatos Finitos, assinale a afirmação correta:",
+            options: [
+                "Elas podem reconhecer o balanceamento de parênteses em expressões matemáticas de profundidade arbitrária.",
+                "Elas são a classe mais alta na Hierarquia de Chomsky, contendo todas as linguagens possíveis.",
+                "Elas podem ser descritas alternativamente por Expressões Regulares e Gramáticas Regulares.",
+                "Elas exigem obrigatoriamente um autômato de pilha para serem processadas."
+            ],
+            correct: 2,
+            resolution: "As Linguagens Regulares (Nível 3) possuem múltiplas representações equivalentes: AFDs, AFNs, Expressões Regulares e Gramáticas Regulares. Parênteses balanceados exigem Autômatos de Pilha (Linguagens Livres de Contexto)."
+        },
+        {
+            id: 9,
+            text: "No fluxo de trabalho prático que vai de uma Expressão Regular até o código de execução, qual é o papel desempenhado pelo AFD (Autômato Finito Determinístico)?",
+            options: [
+                "Atuar como um esboço inicial e intuitivo para o programador.",
+                "Permitir que o sistema realize 'apostas' lógicas sobre o sufixo da cadeia.",
+                "Prover uma estrutura puramente mecânica e sem ambiguidades que pode ser traduzida eficientemente em uma matriz de transição no código.",
+                "Substituir a necessidade de uma Expressão Regular, tornando o código mais legível para humanos."
+            ],
+            correct: 2,
+            resolution: "O AFD é a 'máquina' final. Sua ausência de ambiguidade permite que o processador execute saltos de estado em tempo constante usando matrizes de adjacência ou switch-cases otimizados."
+        },
+        {
+            id: 10,
+            text: "O que acontece quando um Autômato Finito Não-Determinístico (AFN) encontra um símbolo de entrada para o qual existem duas ou mais transições definidas a partir do estado atual?",
+            options: [
+                "O autômato trava e emite um erro de execução.",
+                "O autômato escolhe aleatoriamente uma das transições e descarta as outras.",
+                "O autômato se 'clona' ou se ramifica em múltiplas instâncias, explorando todos os caminhos em paralelo.",
+                "O autômato ignora o símbolo e permanece no estado atual até encontrar um símbolo unívoco."
+            ],
+            correct: 2,
+            resolution: "Esta é a definição de não-determinismo: a capacidade de investigar múltiplas ramificações. Se qualquer um desses 'clones' atingir um estado final ao fim da fita, a palavra é aceita."
         }
+    ];
 
-        function checkAnswers() {
-            let score = 0;
-            const total = quizData.length;
+    const questionsContainer = document.getElementById('questions-container');
+    const submitBtn = document.getElementById('submit-btn');
+    const resultsArea = document.getElementById('results-area');
+    const scoreText = document.getElementById('score-text');
 
-            quizData.forEach((q, index) => {
-                const selected = document.querySelector(`input[name="question-${index}"]:checked`);
-                const resolutionDiv = document.getElementById(`res-${index}`);
-                
-                // Mostrar a resolução
-                resolutionDiv.style.display = 'block';
+    // Renderizar questões
+    questionsData.forEach((q, index) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `q-card-${index}`;
+        
+        const title = document.createElement('span');
+        title.className = 'question-title';
+        title.innerText = `${index + 1}. ${q.text}`;
+        card.appendChild(title);
 
-                if (selected) {
-                    const answer = parseInt(selected.value);
-                    if (answer === q.correct) {
-                        score++;
-                        document.getElementById(`label-${index}-${answer}`).classList.add('correct');
-                    } else {
-                        document.getElementById(`label-${index}-${answer}`).classList.add('incorrect');
-                        document.getElementById(`label-${index}-${q.correct}`).classList.add('missed');
-                    }
-                } else {
-                    // Se não respondeu, destaca a correta
-                    document.getElementById(`label-${index}-${q.correct}`).classList.add('missed');
+        const optionsList = document.createElement('div');
+        optionsList.className = 'options-list';
+
+        q.options.forEach((opt, optIndex) => {
+            const label = document.createElement('label');
+            label.className = 'option-item';
+            label.innerHTML = `
+                <input type="radio" name="q${index}" value="${optIndex}">
+                <span>${opt}</span>
+            `;
+            
+            label.addEventListener('click', () => {
+                if(!submitBtn.disabled) {
+                    const siblings = optionsList.querySelectorAll('.option-item');
+                    siblings.forEach(s => s.classList.remove('selected'));
+                    label.classList.add('selected');
                 }
             });
 
-            // Mostrar resultados
-            document.getElementById('result-section').style.display = 'block';
-            document.getElementById('final-score').innerText = `${score} / ${total}`;
-            
-            let feedback = "";
-            if (score === 10) feedback = "Excelente! Você dominou todos os conceitos da aula.";
-            else if (score >= 7) feedback = "Muito bom! Você tem uma base sólida, mas revise os pontos onde houve dúvida.";
-            else feedback = "Continue estudando! A teoria dos autômatos exige prática na conversão e nas definições formais.";
-            
-            document.getElementById('feedback-text').innerText = feedback;
-            
-            // Rolar para o topo do resultado
-            document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
-            
-            // Desabilitar o botão de enviar
-            document.getElementById('submit-btn').disabled = true;
-            document.getElementById('submit-btn').innerText = "Simulado Finalizado";
-            document.getElementById('submit-btn').style.opacity = "0.5";
-        }
+            optionsList.appendChild(label);
+        });
 
-        // Inicializar
-        window.onload = renderQuestions;
-    </script>
+        card.appendChild(optionsList);
+
+        const resolutionDiv = document.createElement('div');
+        resolutionDiv.className = 'resolution';
+        resolutionDiv.innerHTML = `<strong>Resolução Comentada:</strong><br>${q.resolution}`;
+        card.appendChild(resolutionDiv);
+
+        questionsContainer.appendChild(card);
+    });
+
+    // Lógica do Submit
+    submitBtn.addEventListener('click', () => {
+        let score = 0;
+        const total = questionsData.length;
+
+        questionsData.forEach((q, index) => {
+            const selectedInput = document.querySelector(`input[name="q${index}"]:checked`);
+            const card = document.getElementById(`q-card-${index}`);
+            const options = card.querySelectorAll('.option-item');
+            
+            card.classList.add('show-resolution');
+
+            if (selectedInput) {
+                const answer = parseInt(selectedInput.value);
+                if (answer === q.correct) {
+                    score++;
+                    options[answer].classList.add('correct');
+                } else {
+                    options[answer].classList.add('incorrect');
+                    options[q.correct].classList.add('correct');
+                }
+            } else {
+                // Se não respondeu, apenas mostra a correta
+                options[q.correct].classList.add('correct');
+            }
+        });
+
+        // Mostrar resultados
+        scoreText.innerText = `Você acertou ${score} de ${total} questões! (${(score/total*100).toFixed(0)}%)`;
+        resultsArea.style.display = 'block';
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Simulado Concluído";
+        submitBtn.style.backgroundColor = "#95a5a6";
+        submitBtn.style.cursor = "default";
+
+        // Scroll suave para o resultado
+        resultsArea.scrollIntoView({ behavior: 'smooth' });
+    });
+
+</script>
+
 </body>
 </html>

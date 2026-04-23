@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado EBTT - Arquitetura de Computadores</title>
+    <style>
+        :root {
+            --bg-color: #f9f7f2;
+            --text-color: #2c3e50;
+            --accent-color: #1a5fb4;
+            --correct-color: #26a269;
+            --incorrect-color: #c01c28;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Georgia, serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            padding: 40px 20px;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .quiz-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            transition: background 0.2s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-item:hover {
+            background-color: #f0f4f8;
+        }
+
+        .option-item input {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: filter 0.2s;
+            align-self: center;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            filter: brightness(1.2);
+        }
+
+        /* Seção de Resultados */
+        #results-section {
+            display: none;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 3px double var(--border-color);
+        }
+
+        .score-box {
+            text-align: center;
+            background: var(--accent-color);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .score-box h2 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .resolution-card {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--accent-color);
+            border-radius: 4px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+
+        .resolution-card.correct {
+            border-left-color: var(--correct-color);
+        }
+
+        .resolution-card.incorrect {
+            border-left-color: var(--incorrect-color);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .badge-correct { background: #d1e7dd; color: #0f5132; }
+        .badge-incorrect { background: #f8d7da; color: #842029; }
+
+        .res-text {
+            font-size: 0.95rem;
+            color: #444;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #eee;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px 15px; }
+            h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulado: Arquitetura de Computadores</h1>
+        <p class="intro-text">Preparação para Concurso de Professor EBTT - Instituto Federal</p>
+    </header>
+
+    <div id="quiz-content">
+        <form id="quiz-form" class="quiz-form">
+            <!-- Questões serão inseridas aqui pelo JS -->
+        </form>
+        <div style="text-align: center;">
+            <button type="button" class="submit-btn" onclick="calculateResults()">Finalizar Quiz e Ver Resoluções</button>
+        </div>
+    </div>
+
+    <section id="results-section">
+        <div class="score-box">
+            <p>Seu desempenho final:</p>
+            <h2 id="final-score">0 / 10</h2>
+            <p id="score-comment"></p>
+        </div>
+
+        <div id="resolutions-list">
+            <!-- Resoluções detalhadas aqui -->
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="submit-btn" onclick="window.location.reload()">Reiniciar Simulado</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 - Material de Estudo para Carreira EBTT</p>
+    </footer>
+</div>
+
+<script>
+    const questionsData = [
+        {
+            id: 1,
+            q: "Com base na arquitetura de microprocessadores modernos, a tecnologia que permite a um único núcleo físico gerenciar dois fluxos lógicos de execução simultaneamente, otimizando a utilização das unidades funcionais da CPU, é denominada:",
+            options: ["Overclocking Dinâmico.", "Hyper-Threading ou SMT (Simultaneous Multithreading).", "Pipeline Multinível.", "Dual-Channel Interleaving."],
+            correct: 1,
+            res: "A tecnologia Hyper-Threading (Intel) ou SMT (AMD) permite que um núcleo físico apareça como dois núcleos lógicos. Isso otimiza a performance global ao utilizar unidades de cálculo ociosas enquanto uma thread aguarda dados da RAM."
+        },
+        {
+            id: 2,
+            q: "No contexto da hierarquia de memória, a memória RAM (Random Access Memory) é essencial para o funcionamento do sistema operacional. Sobre as suas propriedades fundamentais, assinale a alternativa correta:",
+            options: [
+                "É uma memória não volátil, o que garante a permanência dos dados após o desligamento do equipamento.",
+                "Funciona como uma memória secundária de alta capacidade, substituindo o papel do SSD.",
+                "Caracteriza-se pela volatilidade e pelo acesso aleatório, permitindo leitura e escrita com tempos de acesso uniformes.",
+                "Sua principal função é armazenar o firmware da placa-mãe (BIOS/UEFI)."
+            ],
+            correct: 2,
+            res: "A RAM é a memória principal: volátil (perde dados sem energia) e de acesso aleatório (o tempo de acesso é o mesmo para qualquer bit, independente da localização física)."
+        },
+        {
+            id: 3,
+            q: "A evolução dos dispositivos de armazenamento permanente trouxe o padrão NVMe (Non-Volatile Memory Express). Comparado ao padrão SATA tradicional, a principal vantagem técnica do NVMe é:",
+            options: [
+                "A utilização de partes móveis magnéticas que aumentam a durabilidade.",
+                "O uso do barramento PCI Express (PCIe) para comunicação direta com a CPU, reduzindo a latência.",
+                "A capacidade de armazenar dados temporários para acelerar a conexão Wi-Fi.",
+                "A dependência de um cabo físico exclusivo similar aos antigos cabos IDE."
+            ],
+            correct: 1,
+            res: "O NVMe utiliza o barramento PCI Express, muito mais rápido que o barramento SATA. Ele permite milhares de filas de comandos paralelos, aproveitando a natureza eletrônica dos SSDs."
+        },
+        {
+            id: 4,
+            q: "A placa-mãe é o componente que unifica todos os órgãos do computador. O circuito integrado responsável por gerenciar a comunicação entre a CPU e os periféricos de baixa velocidade, como USB e áudio, é conhecido como:",
+            options: ["Northbridge (Ponte Norte).", "Southbridge (Ponte Sul).", "Socket LGA.", "Memória VRAM."],
+            correct: 1,
+            res: "O Southbridge gerencia componentes mais lentos (USB, áudio, rede, barramentos legados). O Northbridge (hoje integrado à CPU) cuidava dos componentes rápidos (RAM e Vídeo)."
+        },
+        {
+            id: 5,
+            q: "Sobre a Unidade de Processamento Gráfico (GPU), é correto afirmar que sua arquitetura interna difere da CPU por ser:",
+            options: [
+                "Otimizada para execução de tarefas lógicas seriais e complexas através de poucos núcleos.",
+                "Composta por milhares de núcleos menores projetados para processar cálculos matemáticos paralelos massivos.",
+                "Exclusivamente integrada ao processador central, sem modelos independentes.",
+                "Incapaz de processar qualquer dado que não seja relacionado estritamente à renderização de pixels."
+            ],
+            correct: 1,
+            res: "Enquanto a CPU foca em lógica complexa serial, a GPU possui milhares de núcleos simples para processamento paralelo, ideal para gráficos e hoje muito usada em IA e simulações."
+        },
+        {
+            id: 6,
+            q: "A Fonte de Alimentação (PSU) realiza a conversão de energia necessária. Qual é a principal transformação elétrica realizada por este componente?",
+            options: [
+                "Converte Corrente Contínua (DC) da tomada em Corrente Alternada (AC).",
+                "Transforma sinal digital em sinal analógico para rede elétrica.",
+                "Converte Corrente Alternada (AC) da rede elétrica em Corrente Contínua (DC) estável em diferentes voltagens.",
+                "Atua como um transformador de alta frequência que aumenta a tensão para 1000V."
+            ],
+            correct: 2,
+            res: "A PSU recebe AC (da rede) e entrega DC (para os chips) em tensões específicas (12V, 5V, 3.3V). Os componentes eletrônicos internos funcionam apenas com corrente contínua estável."
+        },
+        {
+            id: 7,
+            q: "Em sistemas de alto desempenho, o fenômeno do 'Thermal Throttling' é uma medida de segurança do hardware. Ele consiste em:",
+            options: [
+                "Aumentar a rotação das ventoinhas além do limite de fábrica.",
+                "Reduzir automaticamente a frequência de operação (clock) do processador para evitar danos físicos.",
+                "Desligar o monitor de vídeo para economizar energia quando a temperatura sobe.",
+                "Transferir todos os dados da memória RAM para o HD para aliviar a carga térmica."
+            ],
+            correct: 1,
+            res: "Throttling é o 'estrangulamento' da performance. Quando o chip atinge temperaturas críticas, ele diminui sua voltagem e frequência para gerar menos calor e evitar a queima do componente."
+        },
+        {
+            id: 8,
+            q: "Classifique os seguintes componentes como Periféricos de Entrada (E), Saída (S) ou Entrada/Saída (E/S), respectivamente: Teclado, Monitor, Placa de Rede.",
+            options: ["E, S, E/S.", "S, E, E/S.", "E, E, S.", "E/S, S, E."],
+            correct: 0,
+            res: "Teclado = Entrada (envia dados); Monitor = Saída (exibe dados); Placa de Rede = Entrada/Saída (envia e recebe pacotes de dados pela rede)."
+        },
+        {
+            id: 9,
+            q: "Ao abrir um software pesado, os dados percorrem um caminho lógico entre os componentes. Assinale a sequência correta deste fluxo:",
+            options: [
+                "CPU -> Monitor -> RAM -> SSD.",
+                "SSD -> RAM -> CPU -> GPU.",
+                "RAM -> SSD -> GPU -> CPU.",
+                "Teclado -> GPU -> Fonte -> RAM."
+            ],
+            correct: 1,
+            res: "Os arquivos saem do armazenamento (SSD), são carregados na RAM (mesa de trabalho), processados pela CPU (lógica) e, se houver demanda visual, renderizados pela GPU."
+        },
+        {
+            id: 10,
+            q: "No contexto técnico de hardware, a falta de 'Memória' e a falta de 'Espaço' referem-se, respectivamente, a:",
+            options: [
+                "HD lotado e Processador lento.",
+                "RAM totalmente ocupada e Unidade de Armazenamento (SSD/HDD) cheia.",
+                "Monitor com baixa resolução e Fonte de alimentação fraca.",
+                "Placa de vídeo antiga e Teclado sem resposta."
+            ],
+            correct: 1,
+            res: "Tecnicamente, 'Memória' refere-se à memória de trabalho (RAM), cuja falta causa lentidão. 'Espaço' refere-se à capacidade de armazenamento permanente (SSD/HD), cuja falta impede salvar novos arquivos."
+        }
+    ];
+
+    function renderQuiz() {
+        const form = document.getElementById('quiz-form');
+        questionsData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <span class="question-text">Questão ${item.id}: ${item.q}</span>
+                <ul class="options-list">
+                    ${item.options.map((opt, i) => `
+                        <label class="option-item">
+                            <input type="radio" name="q${item.id}" value="${i}">
+                            ${String.fromCharCode(65 + i)}) ${opt}
+                        </label>
+                    `).join('')}
+                </ul>
+            `;
+            form.appendChild(card);
+        });
+    }
+
+    function calculateResults() {
+        let score = 0;
+        const resList = document.getElementById('resolutions-list');
+        resList.innerHTML = '';
+        
+        questionsData.forEach((item) => {
+            const selected = document.querySelector(`input[name="q${item.id}"]:checked`);
+            const isCorrect = selected && parseInt(selected.value) === item.correct;
+            
+            if (isCorrect) score++;
+
+            const resCard = document.createElement('div');
+            resCard.className = `resolution-card ${isCorrect ? 'correct' : 'incorrect'}`;
+            
+            resCard.innerHTML = `
+                <div class="status-badge ${isCorrect ? 'badge-correct' : 'badge-incorrect'}">
+                    ${isCorrect ? 'Acertou' : 'Errou'}
+                </div>
+                <div style="font-weight: bold; margin-bottom: 5px;">Questão ${item.id}</div>
+                <div><strong>Sua resposta:</strong> ${selected ? item.options[selected.value] : 'Não respondida'}</div>
+                <div><strong>Gabarito:</strong> ${item.options[item.correct]}</div>
+                <div class="res-text">
+                    <strong>Resolução Comentada:</strong><br>
+                    ${item.res}
+                </div>
+            `;
+            resList.appendChild(resCard);
+        });
+
+        document.getElementById('final-score').innerText = `${score} / ${questionsData.length}`;
+        const comment = score >= 7 ? "Excelente desempenho! Você está no caminho certo para o concurso." : "Bom esforço. Revise as resoluções comentadas para reforçar os pontos fracos.";
+        document.getElementById('score-comment').innerText = comment;
+        
+        document.getElementById('results-section').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('results-section').offsetTop, behavior: 'smooth' });
+    }
+
+    window.onload = renderQuiz;
+</script>
+
+</body>
+</html>
