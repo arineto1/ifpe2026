@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado: Arquitetura e Memória - Professor EBTT</title>
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --text-color: #2c3e50;
+            --primary-blue: #2980b9;
+            --secondary-blue: #3498db;
+            --accent-green: #27ae60;
+            --error-red: #e74c3c;
+            --border-color: #e0e0e0;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 12px;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-item:hover {
+            background-color: #f0f7fb;
+            border-color: var(--secondary-blue);
+        }
+
+        .option-item input {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .option-item.selected {
+            background-color: #e1f0fa;
+            border-color: var(--primary-blue);
+        }
+
+        .btn-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        button {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #1c5980;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #results {
+            display: none;
+            margin-top: 50px;
+        }
+
+        .score-banner {
+            text-align: center;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 2px solid var(--primary-blue);
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .resolution {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f1f8e9;
+            border-left: 5px solid var(--accent-green);
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .correct-answer {
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .wrong-answer {
+            color: var(--error-red);
+            font-weight: bold;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .badge-correct { background-color: #d4edda; color: #155724; }
+        .badge-wrong { background-color: #f8d7da; color: #721c24; }
+
+        @media (max-width: 600px) {
+            .container { padding: 10px; margin: 20px auto; }
+            h1 { font-size: 1.5rem; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulado EBTT: Arquitetura de Memória</h1>
+        <p class="subtitle">Questões nível Concurso de Instituto Federal (IFEBTT)</p>
+    </header>
+
+    <div id="quiz-container">
+        <!-- Questões serão injetadas via JS -->
+    </div>
+
+    <div class="btn-container">
+        <button id="submit-btn" onclick="finishQuiz()">Finalizar e Ver Resolução</button>
+    </div>
+
+    <div id="results">
+        <div class="score-banner">
+            <h2>Resultado Final</h2>
+            <div class="score-number" id="score-display">0/10</div>
+            <p id="feedback-text">Veja abaixo a revisão detalhada de cada questão.</p>
+        </div>
+
+        <div id="review-container">
+            <!-- Revisão detalhada aqui -->
+        </div>
+
+        <div class="btn-container">
+            <button onclick="window.location.reload()">Refazer Simulado</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            q: "01. Em relação à arquitetura e ao funcionamento da memória RAM do tipo dinâmica (DRAM), comumente utilizada como memória principal nos computadores modernos, assinale a alternativa que descreve corretamente o seu mecanismo de armazenamento e manutenção de dados.",
+            options: [
+                "Cada bit é armazenado em um circuito biestável (flip-flop) composto por seis transistores, o que dispensa a necessidade de circuitos de atualização.",
+                "Os dados são armazenados na forma de carga elétrica em capacitores microscópicos, exigindo um processo periódico de recarga chamado refresh para evitar a perda da informação.",
+                "A DRAM é uma tecnologia não volátil que utiliza células de porta flutuante para reter elétrons mesmo após a interrupção da energia elétrica.",
+                "A velocidade de acesso da DRAM é superior à da memória cache L1, pois utiliza barramentos dedicados que operam na mesma frequência interna do núcleo do processador."
+            ],
+            correct: 1,
+            explanation: "A memória DRAM (Dynamic RAM) baseia-se na simplicidade física de um capacitor e um transistor por bit. Como capacitores perdem carga ao longo do tempo (vazamento), o controlador de memória deve realizar o ciclo de refresh milhares de vezes por segundo para manter a integridade do bit. A alternativa A descreve a SRAM. A alternativa C está incorreta (é volátil). A alternativa D está incorreta (SRAM é mais rápida)."
+        },
+        {
+            q: "02. Um processador hipotético possui um barramento de endereços de 32 bits e organiza sua memória em células endereçáveis por byte. Considerando exclusivamente a largura do barramento de endereços, qual é o limite teórico máximo de memória RAM que este sistema pode endereçar?",
+            options: [
+                "2 GB",
+                "4 GB",
+                "16 GB",
+                "64 GB"
+            ],
+            correct: 1,
+            explanation: "A capacidade de endereçamento é determinada pela fórmula 2^n. Para 32 bits, temos 2^32 combinações. 2^30 = 1GB, portanto 2^32 = 2^2 * 2^30 = 4 * 1GB = 4 GB."
+        },
+        {
+            q: "03. No ciclo de execução de uma instrução de leitura na memória principal, a CPU utiliza registradores específicos para se comunicar com o barramento do sistema. Assinale a alternativa que identifica corretamente a função do MAR (Memory Address Register) e do MDR (Memory Data Register).",
+            options: [
+                "O MAR armazena o dado lido da memória, enquanto o MDR armazena o endereço da próxima instrução a ser executada.",
+                "O MAR armazena o endereço da posição de memória que será acessada, e o MDR armazena temporariamente o dado que está sendo transferido entre a CPU e a memória.",
+                "O MAR gerencia os sinais de controle de leitura/escrita, enquanto o MDR decodifica a instrução para a Unidade de Controle.",
+                "Ambos os registradores residem dentro da memória RAM e servem para acelerar o processo de paginação do sistema operacional."
+            ],
+            correct: 1,
+            explanation: "O MAR (Memory Address Register) é encarregado de indicar 'onde' o dado está na memória, e o MDR (Memory Data Register) segura o 'o quê' (o conteúdo lido ou a ser gravado)."
+        },
+        {
+            q: "04. A memória virtual permite que o sistema operacional execute programas cujo tamanho excede a memória RAM física disponível. Qual é o componente de hardware responsável por traduzir os endereços virtuais gerados pelo software em endereços físicos na RAM em tempo de execução?",
+            options: [
+                "ULA (Unidade Lógica e Aritmética)",
+                "Unidade de Busca de Instruções",
+                "MMU (Memory Management Unit)",
+                "Controlador de DMA (Direct Memory Access)"
+            ],
+            correct: 2,
+            explanation: "A MMU (Memory Management Unit) é o dispositivo de hardware (embutido na CPU) que realiza a tradução de endereços virtuais (lógicos) para endereços físicos de forma transparente ao software."
+        },
+        {
+            q: "05. No gerenciamento de memória por paginação, ocorre uma exceção de hardware denominada Page Fault (falha de página). Assinale a opção que descreve corretamente a causa desse evento.",
+            options: [
+                "Ocorre quando a CPU tenta acessar uma página virtual que já está presente na memória RAM física, mas o bit de proteção impede o acesso.",
+                "Ocorre quando o programa referencia uma página virtual que não está carregada em nenhuma moldura (frame) da memória RAM física.",
+                "Ocorre quando há um erro de paridade nos barramentos de dados durante a transferência entre a cache L1 e a cache L2.",
+                "Ocorre quando a memória RAM atinge sua capacidade máxima e o sistema operacional desativa permanentemente o arquivo de paginação."
+            ],
+            correct: 1,
+            explanation: "Uma falha de página (Page Fault) acontece quando a MMU detecta que a página solicitada não possui uma moldura física correspondente carregada na RAM (bit de validade na tabela de páginas está como zero)."
+        },
+        {
+            q: "06. Considere a hierarquia de memória de um sistema computacional. Assinale a alternativa que apresenta a ordem correta dos tipos de memória, da base para o topo da pirâmide, considerando o critério de velocidade de acesso crescente (do mais lento para o mais rápido).",
+            options: [
+                "Registradores, Memória Cache, Memória Principal, Memória Secundária.",
+                "Memória Secundária, Memória Principal, Memória Cache, Registradores.",
+                "Memória Principal, Registradores, Memória Secundária, Memória Cache.",
+                "Memória Cache, Registradores, Memória Principal, Memória Secundária."
+            ],
+            correct: 1,
+            explanation: "Na pirâmide da hierarquia, a velocidade aumenta conforme subimos. O armazenamento secundário (HD/SSD) é o mais lento, seguido pela RAM, caches e, por fim, os registradores internos da CPU."
+        },
+        {
+            q: "07. Sistemas operacionais que utilizam memória virtual podem sofrer uma queda drástica de desempenho conhecida como Thrashing. Sobre esse fenômeno, é correto afirmar que:",
+            options: [
+                "É causado por um erro físico nos módulos de memória DDR5 que impede o funcionamento do circuito PMIC.",
+                "Ocorre quando o processador entra em um loop infinito de instruções aritméticas, impedindo o acesso aos periféricos de E/S.",
+                "Caracteriza-se por uma situação em que o sistema gasta a maior parte do tempo realizando a troca de páginas (swap) entre o disco e a RAM, em vez de executar o trabalho útil dos processos.",
+                "É uma técnica utilizada propositalmente pelo sistema operacional para limpar dados obsoletos da memória RAM e acelerar a inicialização do computador."
+            ],
+            correct: 2,
+            explanation: "O Thrashing (hiperpaginação) acontece quando a soma das páginas ativas excede a RAM física disponível, forçando o SO a realizar trocas constantes com o disco lento, tornando o sistema inoperante."
+        },
+        {
+            q: "08. Ao ligar um computador, um conjunto de instruções iniciais é executado para realizar o teste de hardware (POST) e carregar o carregador de inicialização (Bootloader). Essas instruções residem em um tipo de memória não volátil classificada como:",
+            options: [
+                "RAM (Random Access Memory)",
+                "ROM (Read-Only Memory) ou Flash",
+                "SRAM (Static RAM)",
+                "Registrador de Propósito Geral"
+            ],
+            correct: 1,
+            explanation: "Instruções de firmware (como BIOS ou UEFI) devem permanecer gravadas mesmo sem energia, o que exige memórias não voláteis como a ROM ou Flash. RAM e SRAM perdem dados sem energia."
+        },
+        {
+            q: "09. A memória cache é um componente crítico para reduzir o tempo de acesso aos dados pela CPU. Sobre as tecnologias de construção de memórias voláteis, assinale a alternativa que explica por que a SRAM é usada para caches e a DRAM para a memória principal.",
+            options: [
+                "A DRAM é mais rápida que a SRAM, mas possui custo proibitivo para grandes capacidades.",
+                "A SRAM é mais veloz que a DRAM devido à sua arquitetura baseada em transistores que não necessitam de refresh, porém é mais cara e menos densa.",
+                "A DRAM não requer energia elétrica para manter os dados, sendo ideal para módulos de 16 GB ou mais.",
+                "A SRAM utiliza capacitores para armazenar dados, o que a torna mais compacta que a DRAM para integração dentro do chip do processador."
+            ],
+            correct: 1,
+            explanation: "A SRAM (Static RAM) é muito rápida pois usa flip-flops (transistores) que não precisam de refresh, mas ocupa muito espaço físico por bit, sendo cara. A DRAM usa capacitores, permitindo alta densidade (gigabytes), mas é mais lenta."
+        },
+        {
+            q: "10. No contexto da evolução das memórias DDR (Double Data Rate), a geração DDR5 introduziu mudanças significativas na arquitetura dos módulos de memória. Qual das alternativas abaixo apresenta corretamente uma dessas inovações?",
+            options: [
+                "Redução da tensão de operação para 1.1V e a integração do Gerenciador de Energia (PMIC) no próprio módulo.",
+                "Adoção de conectores de 184 pinos para compatibilidade com placas-mãe de gerações anteriores.",
+                "Eliminação definitiva do mecanismo de refresh, tornando a DRAM tão estável quanto a SRAM.",
+                "Redução da largura de banda para priorizar a economia de bateria em dispositivos móveis."
+            ],
+            correct: 0,
+            explanation: "A memória DDR5 opera em tensões menores que a DDR4 (1.1V vs 1.2V) e moveu o circuito de regulação de energia (PMIC) para o módulo DIMM, visando maior eficiência e estabilidade."
+        }
+    ];
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        questions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'quiz-card';
+            card.id = `q-card-${index}`;
+            
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                const letter = String.fromCharCode(65 + optIndex);
+                optionsHtml += `
+                    <label class="option-item" id="label-${index}-${optIndex}">
+                        <input type="radio" name="question-${index}" value="${optIndex}" onchange="selectOption(${index}, ${optIndex})">
+                        <span><strong>${letter})</strong> ${opt}</span>
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <span class="question-text">${q.q}</span>
+                <div class="options-list">
+                    ${optionsHtml}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function selectOption(qIndex, optIndex) {
+        // Remove a classe 'selected' de todas as opções daquela pergunta
+        for (let i = 0; i < 4; i++) {
+            document.getElementById(`label-${qIndex}-${i}`).classList.remove('selected');
+        }
+        // Adiciona à selecionada
+        document.getElementById(`label-${qIndex}-${optIndex}`).classList.add('selected');
+    }
+
+    function finishQuiz() {
+        let score = 0;
+        const reviewContainer = document.getElementById('review-container');
+        reviewContainer.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            const selected = document.querySelector(`input[name="question-${index}"]:checked`);
+            const selectedVal = selected ? parseInt(selected.value) : -1;
+            const isCorrect = selectedVal === q.correct;
+            
+            if (isCorrect) score++;
+
+            // Construir revisão
+            const reviewItem = document.createElement('div');
+            reviewItem.className = 'quiz-card';
+            
+            let optionsStatusHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                const letter = String.fromCharCode(65 + optIndex);
+                let styleClass = '';
+                if (optIndex === q.correct) styleClass = 'correct-answer';
+                if (optIndex === selectedVal && !isCorrect) styleClass = 'wrong-answer';
+                
+                optionsStatusHtml += `<p class="${styleClass}"><strong>${letter})</strong> ${opt} ${optIndex === q.correct ? '✓' : (optIndex === selectedVal ? '✗' : '')}</p>`;
+            });
+
+            reviewItem.innerHTML = `
+                <div class="status-badge ${isCorrect ? 'badge-correct' : 'badge-wrong'}">
+                    ${isCorrect ? 'Acertou' : 'Errou'}
+                </div>
+                <div class="question-text">${q.q}</div>
+                <div style="margin-bottom: 20px;">
+                    ${optionsStatusHtml}
+                </div>
+                <div class="resolution">
+                    <strong>Resolução Comentada:</strong><br>
+                    ${q.explanation}
+                </div>
+            `;
+            reviewContainer.appendChild(reviewItem);
+        });
+
+        // Mostrar resultados
+        document.getElementById('score-display').innerText = `${score} / ${questions.length}`;
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'none';
+        
+        // Scroll para o topo dos resultados
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Inicializar o quiz ao carregar a página
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
