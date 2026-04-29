@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado EBTT - Informática Teórica</title>
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --text-color: #2c3e50;
+            --primary-color: #27ae60;
+            --secondary-color: #2980b9;
+            --error-color: #e74c3c;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            width: 100%;
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+
+        header p {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        main {
+            max-width: 800px;
+            width: 90%;
+            padding-bottom: 5rem;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 0.8rem;
+        }
+
+        .option-item label {
+            display: block;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item label:hover {
+            background-color: #f1f8ff;
+            border-color: var(--secondary-color);
+        }
+
+        .option-item input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        /* Classes para o resultado */
+        .correct {
+            background-color: #d4edda !important;
+            border-color: #c3e6cb !important;
+            color: #155724;
+        }
+
+        .incorrect {
+            background-color: #f8d7da !important;
+            border-color: #f5c6cb !important;
+            color: #721c24;
+        }
+
+        .resolution {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--secondary-color);
+            font-size: 0.95rem;
+            display: none; /* Escondido por padrão */
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #1a5276;
+        }
+
+        #results-summary {
+            display: none;
+            background: #fff;
+            border: 2px solid var(--secondary-color);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        #score-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .math {
+            font-family: "Courier New", Courier, monospace;
+            background: #eee;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 600px) {
+            .question-card { padding: 1rem; }
+            header h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Simulado: Informática Teórica para Carreira EBTT</h1>
+    <p>Linguagens Regulares e Autômatos - 10 Questões</p>
+</header>
+
+<main id="quiz-container">
+    <div id="results-summary">
+        <h2>Resultado do Simulado</h2>
+        <div id="score-display">0 / 10</div>
+        <p id="score-text"></p>
+        <button onclick="window.location.reload()">Refazer Simulado</button>
+    </div>
+
+    <form id="quiz-form">
+        <!-- As questões serão inseridas aqui via JavaScript -->
+        <div id="questions-wrapper"></div>
+
+        <div class="btn-container">
+            <button type="button" id="submit-btn" onclick="processQuiz()">Finalizar e Ver Resoluções</button>
+        </div>
+    </form>
+</main>
+
+<script>
+    const questions = [
+        {
+            id: 1,
+            text: "No âmbito da teoria das Linguagens Regulares, as Expressões Regulares (ER) são descritas como o 'kit de construção' de padrões. Sobre as peças de base deste kit, considere a definição técnica do símbolo ∅ (Conjunto Vazio). Assinale a alternativa que descreve corretamente sua função:",
+            options: [
+                "Representa uma cadeia de caracteres composta exclusivamente por um caractere nulo ('\\0').",
+                "Representa a Cadeia Vazia (ε), que possui comprimento zero e é aceita por qualquer estado final.",
+                "Representa uma linguagem que não contém nenhuma cadeia de caracteres, indicando a impossibilidade de reconhecimento de qualquer padrão.",
+                "Representa o símbolo curinga nas expressões regulares modernas que aceita qualquer caractere do alfabeto."
+            ],
+            answer: 2,
+            resolution: "O Conjunto Vazio (∅) é, por definição, uma linguagem que não contém cadeias. É o elemento neutro da operação de união em linguagens. Não confundir com a Cadeia Vazia (ε), que é uma string de comprimento zero (o 'nada'), enquanto o conjunto vazio é a ausência total de strings."
+        },
+        {
+            id: 2,
+            text: "Um sistema de validação de pedidos que aceita café ou suco, seguidos obrigatoriamente de pão. A expressão regular definida é (Café | Suco) Pão. Considerando as propriedades de união e concatenação, qual das seguintes cadeias de entrada seria REJEITADA pelo sistema?",
+            options: [
+                "Café Pão",
+                "Suco Pão",
+                "Água Pão",
+                "Café Pão (com dois espaços entre os termos, desde que o alfabeto suporte)"
+            ],
+            answer: 2,
+            resolution: "A operação de união (Café | Suco) cria um filtro que só permite esses dois termos iniciais. A cadeia 'Água Pão' é rejeitada porque 'Água' não faz parte da regra de união definida no contrato original."
+        },
+        {
+            id: 3,
+            text: "O operador estrela (*), ou Fecho de Kleene, é essencial para lidar com sequências de tamanho indefinido. Considere a expressão regular a* h!, projetada para detectar variações de um 'grito' na internet. Sobre esta expressão, é correto afirmar que:",
+            options: [
+                "A cadeia 'h!' é rejeitada, pois o símbolo 'a' deve obrigatoriamente aparecer pelo menos uma vez.",
+                "A cadeia 'aaaah!' é aceita, pois o fecho de Kleene permite múltiplas repetições do símbolo anterior.",
+                "O operador estrela limita a repetição ao tamanho máximo da memória cache do processador.",
+                "A expressão aceita a cadeia 'ah!', mas rejeita a cadeia 'h!' por não haver símbolo antes do ponto de exclamação."
+            ],
+            answer: 1,
+            resolution: "O Fecho de Kleene (*) representa a repetição de zero ou mais vezes. Portanto, 'a*' aceita a ausência de 'a' (vazio), um único 'a', ou múltiplos 'a's, como em 'aaaah!'."
+        },
+        {
+            id: 4,
+            text: "O Teorema de Kleene estabelece uma ponte fundamental entre a descrição textual (ER) e o modelo mecânico (AF). De acordo com este teorema e a bibliografia clássica de linguagens formais, assinale a alternativa correta:",
+            options: [
+                "Linguagens Regulares só podem ser descritas por Autômatos Finitos se possuírem um número par de estados.",
+                "Toda linguagem que pode ser descrita por uma Expressão Regular possui um Autômato Finito equivalente que a reconhece.",
+                "As Expressões Regulares são mais poderosas do que os Autômatos Finitos Determinísticos em termos de capacidade de reconhecimento.",
+                "O Teorema de Kleene aplica-se apenas a linguagens binárias (Σ = {0, 1}), não sendo válido para alfabetos alfanuméricos."
+            ],
+            answer: 1,
+            resolution: "O Teorema de Kleene afirma a equivalência total entre as Linguagens Regulares, as Expressões Regulares e os Autômatos Finitos. Se você pode descrever um padrão com uma ER, existe obrigatoriamente um autômato que o executa."
+        },
+        {
+            id: 5,
+            text: "A transição do 'Esboço Intuitivo' para a 'Engenharia de Precisão' envolve a conversão de um Autômato Finito Não-Determinístico (AFN) para um Autômato Finito Determinístico (AFD). Qual é a principal característica técnica que diferencia o AFD do AFN?",
+            options: [
+                "O AFD permite transições vazias (ε), facilitando o fluxo de estados.",
+                "O AFD pode estar em vários estados ao mesmo tempo perante a leitura de um único caractere.",
+                "No AFD, para cada estado e cada símbolo do alfabeto, existe exatamente uma única transição de saída obrigatória, eliminando a ambiguidade.",
+                "O AFN é sempre mais rápido para execução em tempo real do que o AFD, pois realiza menos verificações de estado."
+            ],
+            answer: 2,
+            resolution: "A essência do determinismo no AFD é que para cada entrada em um estado, há exatamente um próximo estado definido. Isso elimina a ambiguidade e as 'apostas' típicas do AFN, onde o sistema poderia seguir múltiplos caminhos ou transições vazias."
+        },
+        {
+            id: 6,
+            text: "No processo de conversão de um AFN para um AFD, o projetista utiliza a técnica de construção de subconjuntos. O objetivo primordial desta técnica é:",
+            options: [
+                "Reduzir o número total de estados para o mínimo matematicamente possível (Minimização).",
+                "Agrupar todas as incertezas (estados simultâneos onde a máquina poderia estar no AFN) em um único estado sólido e determinístico no AFD.",
+                "Transformar uma linguagem regular em uma linguagem livre de contexto.",
+                "Adicionar uma memória auxiliar (pilha) ao autômato para que ele possa reconhecer palíndromos."
+            ],
+            answer: 1,
+            resolution: "A construção de subconjuntos mapeia conjuntos de estados do AFN (onde a máquina poderia estar simultaneamente) em estados únicos e individuais no AFD, garantindo que o processamento seja linear e sem incertezas."
+        },
+        {
+            id: 7,
+            text: "Ao traduzir um Grafo AFD para código de programação de alta performance, o desenvolvedor utiliza uma abstração conhecida como Matriz de Transição de Estados. Na prática da programação, essa matriz é comumente implementada através de:",
+            options: [
+                "Estruturas de decisão como switch-case ou tabelas de busca indexadas pelo estado atual e pelo caractere lido.",
+                "Algoritmos de busca em largura (BFS) executados a cada novo caractere inserido pelo usuário.",
+                "Conexões neurais profundas que aprendem o padrão da linguagem por meio de treinamento supervisionado.",
+                "Chamadas recursivas infinitas que empilham cada caractere lido na memória principal."
+            ],
+            answer: 0,
+            resolution: "Para garantir alta performance, um AFD em código costuma ser um loop simples com um switch-case ou uma tabela (array bidimensional) onde a linha é o estado atual e a coluna é o caractere lido, resultando no próximo estado."
+        },
+        {
+            id: 8,
+            text: "As Expressões Regulares (Regex) são amplamente utilizadas em ferramentas de desenvolvimento modernas. Qual das seguintes funções NÃO é uma aplicação típica de Regex conforme discutido na teoria de autômatos e compiladores?",
+            options: [
+                "Validação de formato de campos de formulário, como e-mails e datas.",
+                "Busca e substituição de padrões complexos em milhares de arquivos de código simultaneamente.",
+                "Execução de cálculos aritméticos complexos envolvendo equações diferenciais e integração numérica.",
+                "Extração de sub-cadeias específicas (como o DDD de um telefone) de grandes volumes de texto."
+            ],
+            answer: 2,
+            resolution: "Linguagens regulares e autômatos finitos não possuem 'memória' ou capacidade de processamento para cálculos matemáticos complexos ou recursão. Eles são limitados ao reconhecimento de padrões em sequências de símbolos."
+        },
+        {
+            id: 9,
+            text: "No contexto da construção de um compilador para uma linguagem como C++ ou Java, como a teoria dos autômatos é aplicada na fase de Análise Léxica?",
+            options: [
+                "Para verificar se a lógica do programador está correta e se não há loops infinitos.",
+                "Para identificar tokens através de Expressões Regulares, transformando o texto-fonte em unidades como identificadores, palavras-chave e literais.",
+                "Para gerar o código binário final que será executado diretamente pelo processador.",
+                "Para otimizar o uso da memória RAM através da coleta de lixo (garbage collection) automática."
+            ],
+            answer: 1,
+            resolution: "A Análise Léxica usa a teoria de autômatos para escanear os caracteres do código fonte e agrupá-los em tokens (as menores unidades lógicas), como palavras reservadas ou nomes de variáveis."
+        },
+        {
+            id: 10,
+            text: "Um sistema de rede precisa processar pacotes binários que começam obrigatoriamente com a sequência '01'. Após esse início, qualquer sequência de 0s e 1s é aceitável. Qual das seguintes Expressões Regulares modela corretamente este 'Contrato'?",
+            options: [
+                "(0|1)* 01",
+                "01 (0|1)*",
+                "0* 1*",
+                "0 | 1 | 01"
+            ],
+            answer: 1,
+            resolution: "A expressão 01 (0|1)* garante que a string comece com '01' (concatenação obrigatória) e seja seguida por qualquer combinação (*) de zeros ou uns (0|1)."
+        }
+    ];
+
+    function loadQuestions() {
+        const wrapper = document.getElementById('questions-wrapper');
+        questions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${index}`;
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                optionsHtml += `
+                    <li class="option-item">
+                        <label id="label-${index}-${optIndex}">
+                            <input type="radio" name="q${index}" value="${optIndex}">
+                            ${opt}
+                        </label>
+                    </li>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="question-text">Questão ${index + 1}: ${q.text}</div>
+                <ul class="options-list">${optionsHtml}</ul>
+                <div class="resolution" id="res-${index}">
+                    <strong>Resolução:</strong> ${q.resolution}
+                </div>
+            `;
+            wrapper.appendChild(card);
+        });
+    }
+
+    function processQuiz() {
+        let score = 0;
+        const form = document.getElementById('quiz-form');
+        const formData = new FormData(form);
+
+        questions.forEach((q, index) => {
+            const userAnswer = formData.get(`q${index}`);
+            const resDiv = document.getElementById(`res-${index}`);
+            const card = document.getElementById(`q-card-${index}`);
+            
+            resDiv.style.display = 'block'; // Mostra a resolução
+
+            if (userAnswer !== null) {
+                const selectedLabel = document.getElementById(`label-${index}-${userAnswer}`);
+                const correctLabel = document.getElementById(`label-${index}-${q.answer}`);
+
+                if (parseInt(userAnswer) === q.answer) {
+                    score++;
+                    selectedLabel.classList.add('correct');
+                } else {
+                    selectedLabel.classList.add('incorrect');
+                    correctLabel.classList.add('correct');
+                }
+            } else {
+                // Se não respondeu, apenas mostra a correta
+                const correctLabel = document.getElementById(`label-${index}-${q.answer}`);
+                correctLabel.classList.add('correct');
+                card.style.borderLeft = "5px solid var(--error-color)";
+            }
+        });
+
+        // Mostrar resumo
+        const summary = document.getElementById('results-summary');
+        const scoreDisplay = document.getElementById('score-display');
+        const scoreText = document.getElementById('score-text');
+        const submitBtn = document.getElementById('submit-btn');
+
+        summary.style.display = 'block';
+        scoreDisplay.innerText = `${score} / ${questions.length}`;
+        
+        if (score >= 7) {
+            scoreText.innerText = "Excelente desempenho! Você está dominando os fundamentos de Informática Teórica.";
+            scoreText.style.color = "var(--primary-color)";
+        } else if (score >= 5) {
+            scoreText.innerText = "Bom trabalho, mas revise os pontos onde houve dúvida.";
+            scoreText.style.color = "orange";
+        } else {
+            scoreText.innerText = "Continue estudando. A teoria de autômatos exige prática e atenção aos detalhes.";
+            scoreText.style.color = "var(--error-color)";
+        }
+
+        submitBtn.style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = loadQuestions;
+</script>
+
+</body>
+</html>

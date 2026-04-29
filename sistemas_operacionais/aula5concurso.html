@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Professor EBTT - Sistemas Operacionais</title>
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --text-color: #2d3436;
+            --accent-color: #0984e3;
+            --correct-color: #27ae60;
+            --incorrect-color: #d63031;
+            --card-bg: #ffffff;
+            --border-color: #dfe6e9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 95%;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #636e72;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-label:hover {
+            background-color: #f8f9fa;
+            border-color: var(--accent-color);
+        }
+
+        input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+
+        input[type="radio"]:checked + span {
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #0773c5;
+        }
+
+        #results-section {
+            display: none;
+            margin-top: 50px;
+            padding: 30px;
+            background: #f1f2f6;
+            border-radius: 12px;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .resolution-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .res-correct { border-left-color: var(--correct-color); }
+        .res-incorrect { border-left-color: var(--incorrect-color); }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .badge-correct { background: #e2fbe8; color: var(--correct-color); }
+        .badge-incorrect { background: #ffeaea; color: var(--incorrect-color); }
+
+        .explanation {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #b2bec3;
+            font-size: 0.9rem;
+            padding-bottom: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px 10px; }
+            h1 { font-size: 1.5rem; }
+            .question-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Simulado Professor EBTT</h1>
+        <p class="description">Sistemas Operacionais: Gerência de Memória e Recursos</p>
+    </header>
+
+    <div id="quiz-container">
+        <!-- Perguntas serão inseridas via JavaScript -->
+    </div>
+
+    <button class="btn-submit" onclick="gradeQuiz()">Finalizar Simulado e Ver Resoluções</button>
+
+    <div id="results-section">
+        <div class="score-display" id="score-text"></div>
+        <div id="resolutions-container"></div>
+        <button class="btn-submit" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="background: #636e72;">Voltar ao Topo</button>
+    </div>
+
+    <footer>
+        Desenvolvido para fins didáticos - Estilo Concurso Instituto Federal
+    </footer>
+</div>
+
+<script>
+    const questions = [
+        {
+            id: 1,
+            q: "No contexto de Sistemas Operacionais, o fenômeno conhecido como deadlock ou 'Abraço Mortal' é caracterizado por um erro de logística no gerenciamento de recursos. Segundo a definição técnica consolidada, qual das alternativas abaixo descreve corretamente essa situação?",
+            options: [
+                "Ocorre quando um processo prioritário monopoliza a CPU indefinidamente, impedindo que processos de menor prioridade sejam executados.",
+                "Manifesta-se quando dois ou mais processos ficam permanentemente bloqueados por estarem aguardando recursos retidos mutuamente entre eles.",
+                "Caracteriza-se pela perda total de dados na memória RAM devido a uma falha súbita no fornecimento de energia elétrica.",
+                "Trata-se da fragmentação excessiva da memória principal, impedindo que o sistema operacional localize os endereços físicos de um programa."
+            ],
+            correct: 1,
+            explanation: "O deadlock é essencialmente uma dependência circular de recursos onde processos ficam impedidos de prosseguir porque cada um detém o que o outro necessita. A alternativa A descreve starvation; a C descreve a volatilidade da RAM; e a D refere-se à fragmentação de memória."
+        },
+        {
+            id: 2,
+            q: "Ao projetar sistemas operacionais modernos, os desenvolvedores frequentemente aplicam o 'Algoritmo do Avestruz' para lidar com o problema do impasse. Qual é a premissa fundamental dessa estratégia?",
+            options: [
+                "Implementar algoritmos complexos de detecção e recuperação automática que agem instantaneamente ao sinal de qualquer conflito.",
+                "Ignorar a possibilidade de deadlock, baseando-se na ideia de que a frequência do evento é tão baixa que o custo de prevenção superaria o prejuízo do travamento.",
+                "Realizar o reinício automático do sistema sempre que a utilização da CPU cair abaixo de um limiar crítico por mais de cinco segundos.",
+                "Proibir o compartilhamento de arquivos e recursos entre processos distintos, garantindo que cada tarefa tenha uso exclusivo de todo o hardware."
+            ],
+            correct: 1,
+            explanation: "O Algoritmo do Avestruz é uma decisão pragmática: ignora-se o risco raro para economizar os recursos que seriam gastos em proteção contínua. É a estratégia do 'menor prejuízo' em sistemas onde a agilidade é prioridade absoluta."
+        },
+        {
+            id: 3,
+            q: "A hierarquia de memória é um conceito vital para o equilíbrio entre desempenho e custo em computadores. De acordo com a pirâmide de níveis de armazenamento, qual componente apresenta a menor latência (maior velocidade) de acesso para o processador?",
+            options: [
+                "Memória RAM (Memória Principal).",
+                "Unidade de Estado Sólido (SSD).",
+                "Registradores da CPU.",
+                "Disco Rígido Magnético (HD)."
+            ],
+            correct: 2,
+            explanation: "Os registradores situam-se no topo da pirâmide (1º nível), operando na escala de nanosegundos, sendo diretamente integrados ao processador. A RAM é o 2º nível, e os discos (SSD/HD) formam a base."
+        },
+        {
+            id: 4,
+            q: "Na técnica de alocação de memória conhecida como 'Alocação Contígua', qual é a principal exigência imposta pelo sistema operacional para que um programa seja carregado na RAM?",
+            options: [
+                "O programa deve ser dividido em pequenos pedaços e distribuído em qualquer espaço livre disponível, independentemente da vizinhança.",
+                "O programa deve ocupar um bloco único e ininterrupto de endereços de memória, exigindo que o SO encontre um 'buraco' de tamanho suficiente.",
+                "O sistema operacional deve converter todos os dados do programa em memória virtual antes de enviá-los para a memória física.",
+                "A RAM deve ser totalmente limpa e todos os outros processos encerrados antes que um novo aplicativo possa ser iniciado."
+            ],
+            correct: 1,
+            explanation: "A alocação contígua baseia-se na regra de vizinhança: o espaço deve ser seguido (contíguo). Sem um bloco único de tamanho adequado, o processo não pode ser carregado."
+        },
+        {
+            id: 5,
+            q: "Um sistema operacional Windows tenta carregar um novo processo e percorre a lista de áreas livres na RAM, alocando-o no primeiro espaço que encontra que seja grande o suficiente para o programa. Como se denomina essa estratégia de encaixe?",
+            options: [
+                "Best-fit (Melhor Encaixe).",
+                "Worst-fit (Pior Encaixe).",
+                "First-fit (Primeiro Encaixe).",
+                "Next-fit (Próximo Encaixe)."
+            ],
+            correct: 2,
+            explanation: "O First-fit é a estratégia mais ágil, pois interrompe a busca assim que encontra o primeiro espaço compatível. É a preferida quando a velocidade de resposta ao usuário é o critério principal."
+        },
+        {
+            id: 6,
+            q: "A fragmentação externa é um problema comum em sistemas de gerência de memória que utilizam alocação contígua. Qual das alternativas abaixo define corretamente esse fenômeno?",
+            options: [
+                "Ocorre quando um programa não utiliza todo o espaço que lhe foi reservado dentro de uma partição, gerando desperdício interno.",
+                "Manifesta-se quando os espaços vazios na RAM estão separados por outros processos, impedindo a alocação de um novo programa mesmo que a soma total de espaço livre seja suficiente.",
+                "Trata-se da falha de comunicação entre a memória RAM e o SSD, resultando na perda de ponteiros de endereçamento.",
+                "É a necessidade de o sistema operacional utilizar o swap constantemente devido à baixa capacidade física de armazenamento."
+            ],
+            correct: 1,
+            explanation: "A fragmentação externa refere-se aos 'buracos' entre processos. É o cenário onde o 'ônibus' não estaciona porque as vagas livres não são vizinhas, embora existam em número suficiente no total."
+        },
+        {
+            id: 7,
+            q: "Para mitigar a fragmentação externa sem a necessidade de reiniciar o sistema, o Sistema Operacional pode 'deslocar' os processos na RAM para que fiquem adjacentes, unindo os espaços vazios. Como se chama essa técnica?",
+            options: [
+                "Swapping.",
+                "Paginação.",
+                "Compactação.",
+                "Segmentação."
+            ],
+            correct: 2,
+            explanation: "A compactação é o processo de 'empurrar' os processos para um canto da memória para consolidar o espaço livre. O Swapping é a troca com o disco, não a reorganização interna na RAM."
+        },
+        {
+            id: 8,
+            q: "O termo Swapping (Troca) é fundamental na gerência de memória moderna. O que acontece quando um sistema operacional realiza uma operação de swap out?",
+            options: [
+                "Ele move um processo inteiro da RAM para o armazenamento secundário (SSD/HD) para liberar espaço físico.",
+                "Ele aumenta a velocidade do processador para compensar a falta de memória RAM.",
+                "Ele duplica os dados da memória RAM em um servidor na nuvem para evitar a perda por volatilidade.",
+                "Ele apaga permanentemente os dados temporários do navegador para liberar espaço de cache."
+            ],
+            correct: 0,
+            explanation: "O Swapping é o mecanismo de movimentação entre a memória principal (rápida) e a secundária (lenta/depósito). O swap out é especificamente a saída da RAM para o disco."
+        },
+        {
+            id: 9,
+            q: "Dentre as estratégias de busca por espaços livres na memória, qual delas é conhecida por percorrer toda a lista para encontrar o menor buraco disponível que ainda comporte o processo, visando reduzir o desperdício?",
+            options: [
+                "Worst-fit.",
+                "First-fit.",
+                "Best-fit.",
+                "Quick-fit."
+            ],
+            correct: 2,
+            explanation: "O Best-fit busca o encaixe ideal, minimizando o que sobra. É mais lento que o First-fit por percorrer toda a lista, mas é mais conservador com o espaço disponível."
+        },
+        {
+            id: 10,
+            q: "Um professor de sistemas operacionais utiliza a analogia da 'Mesa do Arquiteto' para explicar a função da memória RAM. Nessa analogia, o que o 'Arquivo de Gavetas' representa?",
+            options: [
+                "O Processador (CPU), que executa as ideias.",
+                "A Memória RAM, onde o trabalho ativo é realizado.",
+                "O Armazenamento Secundário (SSD/HD), onde os projetos ficam guardados por longos períodos.",
+                "O Sistema Operacional, que organiza os papéis sobre a mesa."
+            ],
+            correct: 2,
+            explanation: "Na analogia, as gavetas são o depósito lento e de alta capacidade (SSD/HD), enquanto a mesa é a RAM (espaço de trabalho limitado e rápido). O ato de carregar um programa é tirar o papel da gaveta e pôr na mesa."
+        }
+    ];
+
+    function initQuiz() {
+        const container = document.getElementById('quiz-container');
+        questions.forEach((question, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            
+            let optionsHtml = '';
+            question.options.forEach((opt, optIndex) => {
+                optionsHtml += `
+                    <li class="option-item">
+                        <label class="option-label">
+                            <input type="radio" name="q${index}" value="${optIndex}">
+                            <span>${String.fromCharCode(65 + optIndex)}) ${opt}</span>
+                        </label>
+                    </li>
+                `;
+            });
+
+            card.innerHTML = `
+                <span class="question-text">Questão ${index + 1}:</span>
+                <p>${question.q}</p>
+                <ul class="options-list">
+                    ${optionsHtml}
+                </ul>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function gradeQuiz() {
+        let score = 0;
+        const resContainer = document.getElementById('resolutions-container');
+        resContainer.innerHTML = '';
+
+        questions.forEach((question, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const selectedValue = selected ? parseInt(selected.value) : null;
+            const isCorrect = selectedValue === question.correct;
+            
+            if (isCorrect) score++;
+
+            const resCard = document.createElement('div');
+            resCard.className = `resolution-card ${isCorrect ? 'res-correct' : 'res-incorrect'}`;
+            
+            resCard.innerHTML = `
+                <span class="status-badge ${isCorrect ? 'badge-correct' : 'badge-incorrect'}">
+                    ${isCorrect ? 'Acertou' : 'Errou'}
+                </span>
+                <p><strong>Questão ${index + 1}:</strong> ${question.q}</p>
+                <p><strong>Sua resposta:</strong> ${selectedValue !== null ? String.fromCharCode(65 + selectedValue) : 'Não respondida'}</p>
+                <p><strong>Gabarito:</strong> ${String.fromCharCode(65 + question.correct)}</p>
+                <div class="explanation">
+                    <strong>Resolução Comentada:</strong> ${question.explanation}
+                </div>
+            `;
+            resContainer.appendChild(resCard);
+        });
+
+        document.getElementById('score-text').innerText = `Resultado: Você acertou ${score} de ${questions.length} questões!`;
+        document.getElementById('results-section').style.display = 'block';
+        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
