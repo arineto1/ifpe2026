@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado EBTT - Gerenciamento de Memória</title>
+    <style>
+        :root {
+            --bg-color: #fdfdfb;
+            --text-color: #2d3436;
+            --primary-color: #2980b9;
+            --secondary-color: #ecf0f1;
+            --accent-color: #27ae60;
+            --error-color: #c0392b;
+            --border-color: #dfe6e9;
+            --max-width: 850px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .intro {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .question-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.15rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .option-item input {
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary-color);
+            background-color: #ebf5fb;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 1.2rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 3rem 0;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #1f6391;
+        }
+
+        #results-section {
+            display: none;
+            margin-top: 3rem;
+            padding-bottom: 5rem;
+        }
+
+        .score-box {
+            text-align: center;
+            padding: 2.5rem;
+            background: white;
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            margin-bottom: 3rem;
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .resolution-card {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-left: 5px solid var(--border-color);
+            background: #fff;
+        }
+
+        .resolution-card.correct {
+            border-left-color: var(--accent-color);
+        }
+
+        .resolution-card.wrong {
+            border-left-color: var(--error-color);
+        }
+
+        .resolution-header {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .explanation-text {
+            color: #555;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 0 1rem; }
+            header { padding: 2rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Simulado Técnico: Gerenciamento de Memória</h1>
+        <p>Carreira Professor EBTT - Institutos Federais</p>
+    </header>
+
+    <div class="container">
+        <div class="intro">
+            <strong>Instruções:</strong> Este simulado contém 10 questões baseadas nos conceitos de Silberschatz e Tanenbaum sobre sistemas operacionais. Selecione a alternativa correta para cada questão e clique em "Finalizar Simulado" para ver sua pontuação e as resoluções comentadas.
+        </div>
+
+        <form id="quiz-form">
+            <div id="questions-container">
+                <!-- As questões serão inseridas aqui via JavaScript -->
+            </div>
+
+            <button type="button" class="btn-submit" onclick="submitQuiz()">Finalizar Simulado</button>
+        </form>
+
+        <section id="results-section">
+            <div class="score-box">
+                <h2>Resultado Final</h2>
+                <span id="score-display" class="score-number">0/10</span>
+                <p id="score-message"></p>
+            </div>
+
+            <h3>Resoluções Comentadas</h3>
+            <div id="resolutions-container">
+                <!-- As resoluções serão inseridas aqui -->
+            </div>
+            
+            <button type="button" class="btn-submit" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Voltar ao Topo</button>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 - Material Preparatório para Concursos EBTT</p>
+    </footer>
+
+    <script>
+        const quizData = [
+            {
+                q: "1. No contexto do gerenciamento de memória em sistemas operacionais, o termo 'Swapping' refere-se a um mecanismo de preservação da multitarefa. Assinale a alternativa que descreve corretamente o funcionamento desse mecanismo conforme apresentado na aula:",
+                options: [
+                    "A fragmentação dos dados em blocos de tamanho variável para facilitar o armazenamento em cache L1.",
+                    "A movimentação de programas inteiros da memória RAM física para o SSD ou HD quando a capacidade da RAM é atingida.",
+                    "O aumento artificial da velocidade da CPU através do uso de endereços lógicos contíguos.",
+                    "A exclusão definitiva de arquivos temporários do sistema para liberar espaço no disco rígido."
+                ],
+                correct: 1,
+                explanation: "O material define Swapping explicitamente como a ação do Sistema Operacional de mover programas inteiros que não estão sendo usados para a memória secundária (SSD/HD) quando a RAM física lota. Isso libera espaço 'real' para o que você está fazendo no momento."
+            },
+            {
+                q: "2. A memória virtual é uma técnica que expande as fronteiras físicas da computação. Segundo as definições de Silberschatz e Tanenbaum citadas na aula, qual é o conceito-chave que define a memória virtual?",
+                options: [
+                    "A criação de um hardware físico adicional que é instalado automaticamente pelo Windows.",
+                    "A ilusão de uma memória contígua e ampla criada pela combinação da RAM com a memória secundária.",
+                    "A redução do tamanho dos programas para que todos caibam simultaneamente na memória cache.",
+                    "A proibição de executar programas que sejam maiores do que a memória RAM física instalada."
+                ],
+                correct: 1,
+                explanation: "O conceito técnico define a memória virtual como uma técnica avançada de gerência onde o SO combina a RAM e a memória secundária para criar a ilusão de uma memória contígua e extremamente ampla, permitindo executar programas maiores que a RAM disponível."
+            },
+            {
+                q: "3. A paginação resolve o problema da alocação de blocos de tamanhos diferentes na memória. De acordo com Silberschatz, a divisão da memória física e da memória lógica ocorre, respectivamente, em:",
+                options: [
+                    "Páginas e Quadros (frames).",
+                    "Quadros (frames) e Páginas.",
+                    "Segmentos e Partições.",
+                    "Blocos Lógicos e Áreas de Swap."
+                ],
+                correct: 1,
+                explanation: "Conforme o material de aula, Silberschatz define que a memória física é dividida em quadros (frames) e a memória lógica é dividida em páginas. Inverter esses nomes é um erro comum em provas."
+            },
+            {
+                q: "4. Sobre o mapeamento de memória virtual para física, a aula destaca a importância da 'Tabela de Páginas'. Qual é a função primordial dessa tabela segundo a visão de Tanenbaum?",
+                options: [
+                    "Armazenar os arquivos de log do sistema operacional para recuperação de desastres.",
+                    "Registrar a velocidade de rotação dos discos rígidos utilizados no swapping.",
+                    "Identificar exatamente em qual quadro da RAM física cada página da memória virtual está localizada.",
+                    "Impedir que programas pesados utilizem o recurso de memória virtual."
+                ],
+                correct: 2,
+                explanation: "Tanenbaum explica que o sistema mantém uma Tabela de Páginas para saber exatamente em qual quadro da RAM física cada página da memória virtual está 'escondida'."
+            },
+            {
+                q: "5. A técnica de paginação permite que as partes de um programa sejam espalhadas por qualquer lugar da memória RAM. Para Holcombe, essa característica garante a:",
+                options: [
+                    "Necessidade de sequência contínua de memória para todos os processos.",
+                    "Independência de alocação, eliminando a exigência de blocos contíguos.",
+                    "Exclusividade de uso da RAM apenas por processos do sistema operacional.",
+                    "Redução da capacidade total da memória virtual para aumentar a segurança."
+                ],
+                correct: 1,
+                explanation: "Para Holcombe, a paginação permite que as partes de um programa sejam espalhadas por qualquer lugar da memória RAM, sem precisarem estar em uma sequência contínua. Isso é fundamental para evitar a fragmentação externa."
+            },
+            {
+                q: "6. O fenômeno do 'Thrashing' ou hiperatividade do sistema é um estado patológico da gerência de memória. Segundo Silberschatz, esse estado é caracterizado por:",
+                options: [
+                    "Um aumento súbito na velocidade de execução de todos os programas abertos.",
+                    "O sistema gastar mais tempo realizando a troca de páginas do que executando instruções reais.",
+                    "A CPU assumir o controle total do disco rígido para fins de processamento gráfico.",
+                    "O fechamento automático de todas as abas do navegador para economizar energia."
+                ],
+                correct: 1,
+                explanation: "Thrashing ocorre quando um sistema gasta mais tempo realizando a paginação (troca entre disco e RAM) do que executando instruções reais, o que colapsa o desempenho."
+            },
+            {
+                q: "7. Tanenbaum explica a causa do Thrashing associando-a à relação entre o conjunto de páginas ativas e a memória RAM. O Thrashing acontece quando:",
+                options: [
+                    "O conjunto de páginas ativas de todos os processos é menor que a memória física.",
+                    "O sistema operacional desativa o uso de arquivos de paginação.",
+                    "O conjunto de páginas ativas de todos os processos é maior do que a memória RAM física disponível.",
+                    "A CPU opera em frequências abaixo de 1 GHz enquanto o disco está ocioso."
+                ],
+                correct: 2,
+                explanation: "O thrashing ocorre quando o conjunto de páginas ativas de todos os processos é maior do que a memória RAM física disponível. Se a RAM não comporta as páginas necessárias para a execução imediata, o sistema entra em um ciclo infinito de trocas."
+            },
+            {
+                q: "8. Dentre os algoritmos de substituição de páginas, a lógica FIFO (First-In, First-Out) é baseada em qual critério para decidir qual página deve ser removida da RAM?",
+                options: [
+                    "Remove a página que não é acessada há mais tempo (recência).",
+                    "Remove a página mais antiga que foi carregada na memória RAM.",
+                    "Remove a página que consome mais ciclos de processamento da CPU.",
+                    "Remove a página que contém o maior número de erros de sintaxe."
+                ],
+                correct: 1,
+                explanation: "O algoritmo FIFO remove a página mais antiga que foi carregada na RAM, independentemente de quão recentemente foi usada. É baseado puramente na ordem de entrada."
+            },
+            {
+                q: "9. O algoritmo LRU (Least Recently Used) é frequentemente preferido em relação ao FIFO por ser considerado mais eficiente. Qual é a premissa fundamental do LRU para a escolha da página a ser removida?",
+                options: [
+                    "A primeira página que entrou deve ser a primeira a sair para garantir a rotatividade.",
+                    "A página que não foi acessada há mais tempo deve ser removida por ter menor probabilidade de uso futuro.",
+                    "A página que está sendo mais utilizada no momento deve ser movida para o SSD.",
+                    "Somente páginas do sistema operacional Windows podem ser removidas pelo LRU."
+                ],
+                correct: 1,
+                explanation: "O LRU remove a página que não foi acessada há mais tempo (Menos Recentemente Usada), assumindo que o comportamento passado é um bom preditor do futuro imediato."
+            },
+            {
+                q: "10. No Windows, o conceito de 'Working Set' (Conjunto de Trabalho) é utilizado para otimizar o desempenho. Como o Windows decide quais páginas devem ser mantidas na RAM e quais são candidatas à substituição?",
+                options: [
+                    "Mantém na RAM o que foi clicado nos últimos segundos e descarta primeiro os dados de aplicativos inativos ou em 'espera'.",
+                    "Remove aleatoriamente qualquer processo para garantir que a CPU nunca fique ociosa.",
+                    "Prioriza a manutenção de jogos pesados na RAM, mesmo que o usuário esteja utilizando apenas o Word.",
+                    "Desativa a memória RAM física e opera exclusivamente através do arquivo pagefile.sys."
+                ],
+                correct: 0,
+                explanation: "A inteligência do Windows mantém na RAM o 'Working Set' ativo (o que foi clicado ou processado nos últimos segundos) e prioriza para substituição as páginas de aplicativos inativos ou em espera."
+            }
+        ];
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            quizData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <span class="question-text">${item.q}</span>
+                    <div class="options-list">
+                        ${item.options.map((opt, optIndex) => `
+                            <label class="option-item" id="label-q${index}-o${optIndex}">
+                                <input type="radio" name="q${index}" value="${optIndex}">
+                                <span>${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Adicionar evento de destaque visual ao selecionar
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const name = e.target.name;
+                    document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+                        r.parentElement.classList.remove('selected');
+                    });
+                    if (e.target.checked) {
+                        e.target.parentElement.classList.add('selected');
+                    }
+                });
+            });
+        }
+
+        function submitQuiz() {
+            const form = document.getElementById('quiz-form');
+            const formData = new FormData(form);
+            let score = 0;
+            const resContainer = document.getElementById('resolutions-container');
+            resContainer.innerHTML = '';
+
+            quizData.forEach((item, index) => {
+                const userAnswer = formData.get(`q${index}`);
+                const isCorrect = userAnswer == item.correct;
+                if (isCorrect) score++;
+
+                const resCard = document.createElement('div');
+                resCard.className = `resolution-card ${isCorrect ? 'correct' : 'wrong'}`;
+                
+                const statusText = isCorrect ? '✅ Acertou!' : '❌ Errou!';
+                const correctLetter = String.fromCharCode(65 + item.correct);
+                
+                resCard.innerHTML = `
+                    <div class="resolution-header">Questão ${index + 1}: ${statusText}</div>
+                    <p><strong>Sua resposta:</strong> ${userAnswer !== null ? item.options[userAnswer] : 'Não respondida'}</p>
+                    <p><strong>Gabarito:</strong> Alternativa ${correctLetter}) ${item.options[item.correct]}</p>
+                    <div class="explanation-text"><strong>Resolução Comentada:</strong> ${item.explanation}</div>
+                `;
+                resContainer.appendChild(resCard);
+            });
+
+            // Exibir Resultados
+            document.getElementById('score-display').innerText = `${score}/10`;
+            const msg = score >= 7 ? "Excelente desempenho! Você está pronto para o IF." : "Bom esforço. Revise as resoluções comentadas para fortalecer os conceitos.";
+            document.getElementById('score-message').innerText = msg;
+            
+            document.getElementById('results-section').style.display = 'block';
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Inicializar
+        window.onload = renderQuestions;
+    </script>
+</body>
+</html>
