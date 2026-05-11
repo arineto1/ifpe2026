@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado: Sistemas Operacionais - EBTT</title>
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --text-color: #2c3e50;
+            --accent-color: #2980b9;
+            --correct-color: #27ae60;
+            --wrong-color: #c0392b;
+            --border-color: #e0e0e0;
+            --card-bg: #ffffff;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .quiz-container {
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 50px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-label:hover {
+            background-color: #f0f7ff;
+            border-color: var(--accent-color);
+        }
+
+        .option-label input {
+            margin-right: 15px;
+            margin-top: 5px;
+            transform: scale(1.2);
+        }
+
+        /* Classes para feedback */
+        .option-label.correct {
+            background-color: #d4edda;
+            border-color: var(--correct-color);
+            color: #155724;
+        }
+
+        .option-label.wrong {
+            background-color: #f8d7da;
+            border-color: var(--wrong-color);
+            color: #721c24;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 40px auto;
+            padding: 15px 30px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3);
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #1f6391;
+        }
+
+        .results-section {
+            display: none;
+            background: #f1f4f8;
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 20px;
+            border: 2px solid var(--accent-color);
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: var(--accent-color);
+        }
+
+        .resolution-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff;
+            border-left: 5px solid var(--accent-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            display: none; /* Escondido até o fim */
+        }
+
+        .resolution-box h4 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.6rem; }
+            .question-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Simulado: Sistemas Operacionais</h1>
+    <p>Concurso Professor EBTT - Foco em Memória Virtual e Sistemas de Arquivos</p>
+</header>
+
+<main class="quiz-container">
+    <div id="quiz-content">
+        <!-- As questões serão inseridas aqui via JavaScript -->
+    </div>
+
+    <button class="btn-submit" id="btn-finalizar" onclick="calcularResultado()">Finalizar Simulado</button>
+
+    <section id="results" class="results-section">
+        <div class="score-display" id="score-text"></div>
+        <div id="resolutions-container">
+            <h3>Resoluções Comentadas:</h3>
+            <!-- Resoluções serão preenchidas aqui -->
+        </div>
+    </section>
+</main>
+
+<footer>
+    Material desenvolvido com base nos conteúdos da Aula 7 de Sistemas Operacionais.
+</footer>
+
+<script>
+    const questions = [
+        {
+            id: 1,
+            q: "A técnica de Memória Virtual constitui uma ferramenta avançada de gerenciamento de memória em sistemas operacionais contemporâneos, introduzindo uma abstração de isolamento entre o espaço lógico de endereçamento dos processos e os limites físicos da memória do computador. Considerando a fundamentação teórica proposta por Silberschatz e Tanenbaum sobre esse conceito, assinale a alternativa correta.",
+            options: [
+                "A memória virtual restringe o espaço de endereçamento de um programa ao tamanho exato da memória RAM instalada no computador, garantindo que nenhum processo consuma armazenamento secundário.",
+                "A técnica consiste na combinação lógica entre a memória principal (RAM) e a memória secundária (Disco/SSD), criando para os programas a ilusão de um espaço de memória contíguo e de ampla escala.",
+                "Sob o ponto de vista arquitetural, a memória virtual elimina a necessidade do sistema de arquivos, uma vez que todos os arquivos do disco secundário passam a ser mapeados como memória volátil contígua de alta velocidade.",
+                "A execução de programas cujo espaço de endereçamento seja maior que a RAM física disponível é impossibilitada na ausência de memórias caches dedicadas do tipo SRAM integradas ao circuito do processador."
+            ],
+            correct: 1,
+            resolution: "A definição técnica central da memória virtual reside na união lógica entre a RAM (memória principal) e a memória secundária para forjar a ilusão de um espaço linear amplo e contínuo. Isso viabiliza a execução de processos de tamanhos que superam a RAM física disponível."
+        },
+        {
+            id: 2,
+            q: "No mecanismo de paginação, a tradução dinâmica de endereços e a gestão de páginas na memória principal exigem o acoplamento de estruturas de hardware e software. A respeito da interação entre a Tabela de Páginas, a Unidade de Gerenciamento de Memória (MMU) e a ocorrência de Falhas de Página (Page Fault), assinale a alternativa correta.",
+            options: [
+                "A Tabela de Páginas consiste em um circuito integrado de hardware presente no interior da CPU, que armazena fisicamente o código binário dos programas ativos.",
+                "A MMU intercepta as referências lógicas de memória geradas pelo programa ativo e, consultando a Tabela de Páginas, traduz esses endereços virtuais para suas localizações físicas correspondentes na RAM.",
+                "A Falha de Página (Page Fault) indica um erro catastrófico irreversível de hardware nas células de silício da memória RAM, forçando o desligamento imediato e físico do computador.",
+                "O mapeamento de endereços impede que existam páginas lógicas em disco de swap, forçando a Tabela de Páginas a manter todas as instruções de programas permanentemente carregadas nas molduras físicas da RAM."
+            ],
+            correct: 1,
+            resolution: "A MMU (Memory Management Unit) é o circuito eletrônico responsável por traduzir os endereços virtuais (lógicos) gerados pelos programas em endereços físicos na RAM, utilizando-se da Tabela de Páginas para mapear páginas em molduras (frames)."
+        },
+        {
+            id: 3,
+            q: "Em ambientes de memória virtual paginada, as políticas de substituição de páginas entram em ação quando há necessidade de carregar uma nova página na RAM, mas todas as molduras (frames) disponíveis encontram-se ocupadas. Analise o comportamento comparativo entre os algoritmos de substituição FIFO (First-In, First-Out) e LRU (Least Recently Used) e assinale a alternativa correta.",
+            options: [
+                "O algoritmo FIFO baseia-se na frequência de uso recente da página, escolhendo para substituição aquela que passou o maior período sem ser referenciada pelo processador.",
+                "O algoritmo LRU descarta a página que está na memória física há mais tempo (a mais antiga), desconsiderando se ela foi acessada nos últimos ciclos de execução.",
+                "O algoritmo FIFO descarta a página mais antiga carregada na memória RAM, independentemente de quão recentemente ela foi acessada, o que pode levar à remoção de páginas que continuam sendo muito utilizadas.",
+                "Ambas as técnicas descartam exclusivamente páginas que foram modificadas no disco de swap, ignorando as páginas de código limpo residentes na RAM."
+            ],
+            correct: 2,
+            resolution: "O FIFO remove a página que ingressou primeiro na memória RAM (a mais antiga). Por desconsiderar os padrões de uso recente, essa política pode descartar páginas ativas de alta relevância para a execução do processo."
+        },
+        {
+            id: 4,
+            q: "O sistema operacional Windows utiliza mecanismos avançados para gerenciar dinamicamente o consumo de RAM de processos ativos e inativos, otimizando o desempenho geral do hardware. A respeito do conceito de 'Working Set' (Conjunto de Trabalho) empregado nesse contexto de gerenciamento de memória, assinale a alternativa correta.",
+            options: [
+                "O Working Set é a porção reservada do disco de swap destinada exclusivamente ao armazenamento de dados confidenciais do usuário administrador.",
+                "Trata-se do conjunto de páginas do espaço de endereçamento do processo que estão atualmente residentes na memória RAM física e sendo usadas ativamente.",
+                "Refere-se a um arquivo estático localizado na pasta do sistema que impede programas pesados de acessarem a internet.",
+                "O Working Set consiste na listagem de arquivos corrompidos no sistema que aguardam uma rotina semanal de formatação física do HD."
+            ],
+            correct: 1,
+            resolution: "O Working Set representa a coleção de páginas de memória que o processo está utilizando de forma ativa na memória física. O Windows mantém o controle sobre essas páginas ativas, priorizando sua permanência na RAM física para maximizar a responsividade."
+        },
+        {
+            id: 5,
+            q: "Sem um sistema de arquivos estruturado, os dispositivos de armazenamento magnéticos ou semicondutores seriam apenas uma sequência ininterrupta de bits, inviabilizando a localização lógica e o isolamento de dados. A respeito das funções elementares e da hierarquia de um Sistema de Arquivos, assinale a alternativa correta.",
+            options: [
+                "A função primária de um sistema de arquivos é a desfragmentação compulsória de memórias voláteis do tipo RAM em tempo real.",
+                "O sistema de arquivos atua como uma camada de software utilizada pelo sistema operacional para organizar, nomear, salvar e recuperar dados em mídias de armazenamento.",
+                "Os arquivos representam recipientes genéricos que guardam outros diretórios de forma ilimitada, enquanto os diretórios são as menores unidades físicas de armazenamento.",
+                "O sistema de arquivos impede a criação de diretórios, de modo que todos os documentos devem ser gravados em formato contíguo na pasta raiz."
+            ],
+            correct: 1,
+            resolution: "O sistema de arquivos fornece a abstração necessária para que dados binários em disco sejam interpretados como arquivos estruturados e pastas lógicas, permitindo a organização, nomenclatura e recuperação de dados pelo usuário e pelas aplicações."
+        },
+        {
+            id: 6,
+            q: "A escolha do sistema de arquivos na formatação de uma mídia secundária (como um pen drive ou partição de disco) impacta diretamente os recursos de resiliência, segurança e limitações físicas de armazenamento. Ao comparar as características dos sistemas de arquivos FAT32 e NTFS, assinale a alternativa correta.",
+            options: [
+                "O FAT32 é o sistema padrão recomendado para unidades de boot por oferecer proteção robusta de metadados contra desligamento abrupto.",
+                "O NTFS é o sistema de arquivos moderno utilizado pelo Windows no disco do sistema (unidade C:\\), suportando arquivos com tamanho maior que 4 GB e controle de permissões de acesso.",
+                "O FAT32 é mais robusto que o NTFS, pois permite gravar arquivos individuais de tamanho ilimitado e gerenciar políticas complexas de segurança baseadas em criptografia local.",
+                "O NTFS possui a desvantagem histórica de limitar o tamanho máximo de qualquer arquivo a 4 GB, o que impossibilita o seu uso para o armazenamento de vídeos gigantes."
+            ],
+            correct: 1,
+            resolution: "O NTFS é o sistema de arquivos padrão do Windows para discos do sistema. Suas especificações incluem a capacidade de manipular arquivos grandes que superam o limite de 4 GB, além de implementar segurança integrada."
+        },
+        {
+            id: 7,
+            q: "A estratégia empregada para posicionar os dados nas mídias físicas de armazenamento define o método de alocação de arquivos de um sistema operacional. Assinale a alternativa que descreve corretamente as características de funcionamento de um dos métodos de alocação estudados.",
+            options: [
+                "Na alocação contígua, o arquivo é fragmentado em blocos dispersos no disco, onde cada bloco guarda um ponteiro para a localização do bloco subsequente, semelhante a uma lista ligada.",
+                "Na alocação encadeada, o arquivo é gravado em blocos vizinhos adjacentes na mídia, o que inviabiliza que novos blocos sejam adicionados caso a página seguinte esteja ocupada.",
+                "Na alocação indexada, o sistema operacional emprega uma tabela ou sumário de índices centralizados que aponta os endereços lógicos dos blocos do arquivo, permitindo leitura rápida sem exigir contiguidade física.",
+                "O método de alocação indexada exige que todos os arquivos sejam gravados em blocos contíguos vizinhos, gerando grandes buracos no disco quando arquivos são removidos."
+            ],
+            correct: 2,
+            resolution: "A alocação indexada utiliza uma tabela central de índices (como um sumário) que reúne as referências de todos os blocos do arquivo de dados, garantindo acesso direto veloz e eliminando a fragmentação externa sem demandar contiguidade física dos blocos."
+        },
+        {
+            id: 8,
+            q: "A fragmentação física de dados constitui um gargalo clássico de desempenho na manipulação de arquivos em dispositivos de armazenamento secundário. Entretanto, o impacto da fragmentação e a necessidade de desfragmentação variam em função da tecnologia física do hardware utilizado. A esse respeito, assinale a alternativa correta.",
+            options: [
+                "A desfragmentação melhora o desempenho em HDs mecânicos porque organiza os blocos de forma contígua, reduzindo os saltos e deslocamentos físicos da agulha de leitura magnética.",
+                "A ferramenta de desfragmentação deve ser executada frequentemente em SSDs para estender sua vida útil, organizando eletricamente as células de memória flash.",
+                "A fragmentação física de dados em HDs mecânicos não prejudica a taxa de transferência de leitura de dados, uma vez que o acesso físico nesses discos é puramente elétrico e instantâneo.",
+                "Os SSDs perdem velocidade de leitura ao trabalhar com blocos de dados não contíguos devido ao tempo mecânico necessário para posicionar suas agulhas eletrostáticas de leitura."
+            ],
+            correct: 0,
+            resolution: "Em discos mecânicos (HDs), a contiguidade física de dados minimiza a necessidade de movimentação da cabeça física de leitura sobre a superfície dos pratos giratórios. Desfragmentar o disco reagrupa blocos dispersos em setores contíguos, acelerando significativamente a taxa de transferência."
+        },
+        {
+            id: 9,
+            q: "Para localizar e gerenciar arquivos de maneira precisa no espaço de armazenamento secundário, o sistema operacional adota uma estrutura em árvore invertida e utiliza o conceito de caminhos lógicos (paths). A respeito de diretórios e caminhos lógicos de arquivos, assinale a alternativa correta.",
+            options: [
+                "O caminho lógicos (path) representa a rota completa que o sistema operacional percorre a partir da raiz (como C:\\) para localizar um arquivo específico no disco.",
+                "A estrutura hierárquica impede que dois arquivos diferentes possuam o mesmo nome de gravação, mesmo que residam em pastas (diretórios) distintas.",
+                "Um diretório constitui um arquivo de texto criptografado pelo processador que impede o sistema de inicializar novos softwares executáveis.",
+                "O sistema operacional Windows utiliza caminhos relativos exclusivos, impossibilitando que o usuário determine rotas absolutas a partir da unidade de armazenamento."
+            ],
+            correct: 0,
+            resolution: "O caminho (path) funciona como o endereço postal detalhado do arquivo de dados. Ele traça toda a sequência de diretórios partindo da raiz do disco (C:\\) até atingir o documento visado."
+        },
+        {
+            id: 10,
+            q: "Os sistemas de arquivos contemporâneos incorporam funcionalidades de controle de acesso a dados e salvaguarda contra desligamentos abruptos. Considerando o funcionamento das Listas de Controle de Acesso (ACL) e o recurso de Journaling no NTFS, assinale a alternativa correta.",
+            options: [
+                "O recurso de Journaling atua realizando cópias automáticas de segurança de todos os programas na memória RAM para servidores externos baseados na internet.",
+                "As ACLs são tabelas lógicas que definem as permissões de acesso dos usuários a um arquivo, compreendendo as ações básicas de Leitura (Read), Escrita (Write) e Execução (Execute).",
+                "O Journaling impede o funcionamento do utilitário 'Remover Hardware com Segurança', corrompendo as transações pendentes de gravação em pen drives FAT32.",
+                "A permissão de Leitura (Read) concede ao usuário de contas comuns privilégios lógicos avançados para alterar, renomear e excluir os arquivos do kernel do Windows."
+            ],
+            correct: 1,
+            resolution: "As Listas de Controle de Acesso (ACLs) do NTFS gerenciam de forma granular os privilégios lógicos por usuário ou grupo, regulando de que forma estes interagem com o arquivo através de ações de Leitura, Escrita ou Execução."
+        }
+    ];
+
+    function loadQuiz() {
+        const container = document.getElementById('quiz-content');
+        questions.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${index}`;
+
+            let optionsHtml = '';
+            item.options.forEach((opt, optIndex) => {
+                optionsHtml += `
+                    <label class="option-label" id="label-${index}-${optIndex}">
+                        <input type="radio" name="q${index}" value="${optIndex}">
+                        <span>${String.fromCharCode(65 + optIndex)}) ${opt}</span>
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <span class="question-text">Questão ${index + 1}:</span>
+                <p>${item.q}</p>
+                <div class="options-container">
+                    ${optionsHtml}
+                </div>
+                <div class="resolution-box" id="res-${index}">
+                    <h4>Resolução Comentada:</h4>
+                    <p>${item.resolution}</p>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function calcularResultado() {
+        let acertos = 0;
+        const total = questions.length;
+
+        questions.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const resBox = document.getElementById(`res-${index}`);
+            
+            // Mostrar resolução
+            resBox.style.display = 'block';
+
+            // Feedback visual nas opções
+            item.options.forEach((_, optIndex) => {
+                const label = document.getElementById(`label-${index}-${optIndex}`);
+                if (optIndex === item.correct) {
+                    label.classList.add('correct');
+                }
+            });
+
+            if (selected) {
+                const userChoice = parseInt(selected.value);
+                if (userChoice === item.correct) {
+                    acertos++;
+                } else {
+                    document.getElementById(`label-${index}-${userChoice}`).classList.add('wrong');
+                }
+            }
+        });
+
+        // Exibir placar final
+        const resultsSection = document.getElementById('results');
+        const scoreText = document.getElementById('score-text');
+        resultsSection.style.display = 'block';
+        scoreText.innerText = `Você acertou ${acertos} de ${total} questões! (${(acertos/total*100).toFixed(0)}%)`;
+
+        // Scroll suave até o resultado
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+        // Desativar botão após finalização
+        document.getElementById('btn-finalizar').disabled = true;
+        document.getElementById('btn-finalizar').style.opacity = "0.5";
+        document.getElementById('btn-finalizar').innerText = "Simulado Finalizado";
+    }
+
+    // Inicializar
+    window.onload = loadQuiz;
+</script>
+
+</body>
+</html>
