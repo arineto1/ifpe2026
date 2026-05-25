@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado E/S - Concurso Magistério EBTT</title>
+    
+    <!-- Tailwind CSS para Estilização de Alta Performance -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display para Títulos Editoriais e Inter para Leitura Fluida -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX para Renderização Perfeita de Notações Científicas e Matemáticas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        paper: {
+                            50: '#fbfbfa',   // Off-white suave (fundo de e-reader)
+                            100: '#f5f5f3',  // Separadores e boxes suaves
+                            200: '#eaeae6',  // Bordas e detalhes
+                            800: '#2d2d2a',  // Texto principal suave para evitar contraste excessivo
+                            900: '#1c1c1a'   // Títulos destacados
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Estilização para garantir conforto visual prolongado */
+        body {
+            background-color: #fbfbfa;
+            color: #2d2d2a;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Otimização de quebra de página para impressão de gabarito técnico */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-break {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Efeito de transição suave para as seleções de alternativas */
+        .option-transition {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="font-sans selection:bg-amber-100 selection:text-stone-900 min-h-screen flex flex-col justify-between">
+
+    <!-- Cabeçalho Principal (Otimizado para leitura editorial) -->
+    <header class="border-b border-paper-200 bg-paper-50/80 backdrop-blur-md sticky top-0 z-40 transition-shadow duration-300">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+                <span class="text-xs font-semibold tracking-widest text-amber-800 uppercase">Simulado Preparatório IF</span>
+                <h1 class="font-serif text-2xl sm:text-3xl text-paper-900 mt-1">Interface de Entrada e Saída</h1>
+                <p class="text-xs text-stone-500 mt-0.5">Carreira do Magistério Superior EBTT • Ciência da Computação</p>
+            </div>
+            
+            <!-- Controles do Modo de Estudo / Simulado -->
+            <div class="flex items-center gap-3 no-print bg-paper-100 p-1.5 rounded-lg border border-paper-200">
+                <button id="btn-mode-simulado" onclick="setMode('simulado')" class="px-3 py-1.5 text-xs font-semibold rounded-md shadow-sm option-transition bg-white text-paper-900 border border-paper-200">
+                    Modo Prova
+                </button>
+                <button id="btn-mode-estudo" onclick="setMode('estudo')" class="px-3 py-1.5 text-xs font-semibold rounded-md option-transition text-stone-600 hover:text-paper-900">
+                    Modo Estudo
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Barra de Progresso do Candidato -->
+    <div class="w-full h-1 bg-paper-100 sticky top-[92px] sm:top-[77px] z-40 no-print">
+        <div id="progress-bar" class="h-full bg-amber-700 w-0 option-transition"></div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 flex-grow w-full">
+        
+        <!-- Instruções Iniciais -->
+        <section class="mb-10 p-6 bg-paper-100 rounded-xl border border-paper-200 shadow-sm relative overflow-hidden">
+            <div class="absolute right-0 top-0 translate-x-4 -translate-y-4 opacity-5 pointer-events-none">
+                <svg width="200" height="200" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
+                </svg>
+            </div>
+            <h2 class="font-serif text-lg text-paper-900 mb-2 flex items-center gap-2">
+                Instruções do Processo Seletivo
+            </h2>
+            <ul class="text-sm text-stone-600 space-y-2 list-disc list-inside">
+                <li>Contém exatamente <strong>10 questões objetivas</strong> extraídas fielmente do material programático.</li>
+                <li>Cada questão possui <strong>4 alternativas</strong> de múltipla escolha e pontua individualmente.</li>
+                <li>No <strong>Modo Prova</strong>, você responde a todo o simulado e submete no final para ver sua pontuação e resoluções completas.</li>
+                <li>No <strong>Modo Estudo</strong>, cada clique em alternativa revela imediatamente o gabarito oficial acompanhado de sua detalhada análise teórica.</li>
+            </ul>
+        </section>
+
+        <!-- Formulário do Quiz contendo as questões geradas dinamicamente -->
+        <form id="quiz-form" onsubmit="submitQuiz(event)" class="space-y-8">
+            <div id="questions-container" class="space-y-8">
+                <!-- Inserido dinamicamente via JS -->
+            </div>
+
+            <!-- Painel de Ações e Submissão -->
+            <div class="pt-6 border-t border-paper-200 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
+                <div class="text-sm text-stone-500 font-medium" id="status-counter">
+                    0 de 10 respondidas
+                </div>
+                <div class="flex gap-4 w-full sm:w-auto">
+                    <button type="button" onclick="resetQuiz()" class="flex-1 sm:flex-none px-6 py-3 text-sm font-semibold rounded-lg border border-paper-200 bg-white text-stone-700 hover:bg-stone-50 active:bg-stone-100 option-transition">
+                        Limpar Simulado
+                    </button>
+                    <button id="btn-submit" type="submit" class="flex-1 sm:flex-none px-8 py-3 text-sm font-semibold text-white bg-amber-800 hover:bg-amber-900 active:bg-amber-950 rounded-lg shadow-sm option-transition">
+                        Finalizar Simulado
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Seção de Resultados (Invisível por padrão) -->
+        <section id="results-section" class="hidden mt-12 space-y-8 animate-fadeIn">
+            <div class="border-t-2 border-amber-800 pt-8">
+                <div class="bg-amber-50/50 border border-amber-100 rounded-xl p-8 text-center max-w-2xl mx-auto shadow-sm">
+                    <h2 class="font-serif text-3xl text-paper-900 mb-2">Desempenho Geral</h2>
+                    <p class="text-sm text-stone-500 mb-6">Diagnóstico analítico da sua prova teórica</p>
+                    
+                    <div class="flex items-center justify-center gap-6 mb-6">
+                        <div class="relative flex items-center justify-center">
+                            <!-- Gráfico de anel simplificado com Tailwind -->
+                            <div class="w-28 h-28 rounded-full border-8 border-stone-200 flex items-center justify-center">
+                                <span id="text-score" class="font-serif text-3xl text-stone-800">0/10</span>
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-sm text-stone-500">Taxa de Acertos</div>
+                            <div id="text-percentage" class="text-3xl font-bold text-amber-900">0%</div>
+                            <div id="text-diagnostic-tag" class="mt-1 inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full bg-stone-100 text-stone-700"></div>
+                        </div>
+                    </div>
+
+                    <p id="text-diagnostic-desc" class="text-sm text-stone-600 leading-relaxed mb-6 italic">
+                        Por favor, responda as questões para ver sua avaliação pedagógica estruturada.
+                    </p>
+
+                    <!-- Filtros pós-prova para estudo detalhado -->
+                    <div class="flex flex-wrap justify-center gap-2 border-t border-paper-200/60 pt-6">
+                        <button onclick="filterQuestions('all')" id="btn-filter-all" class="px-4 py-1.5 text-xs font-semibold rounded-full bg-stone-800 text-white option-transition shadow-sm">
+                            Ver Todas
+                        </button>
+                        <button onclick="filterQuestions('correct')" id="btn-filter-correct" class="px-4 py-1.5 text-xs font-semibold rounded-full bg-stone-100 text-stone-600 hover:bg-stone-200 option-transition">
+                            Ver Acertos (<span id="count-correct">0</span>)
+                        </button>
+                        <button onclick="filterQuestions('incorrect')" id="btn-filter-incorrect" class="px-4 py-1.5 text-xs font-semibold rounded-full bg-stone-100 text-stone-600 hover:bg-stone-200 option-transition">
+                            Ver Erros (<span id="count-incorrect">0</span>)
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Botões Rápidos e Exportação -->
+            <div class="flex justify-center gap-4 no-print py-4">
+                <button onclick="window.print()" class="px-6 py-2.5 text-xs font-semibold rounded-lg bg-stone-100 text-stone-700 border border-stone-200 hover:bg-stone-200 option-transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.844l4-4m0 0l-4-4m4 4H18m-11 6h.008v.008H7V18z"/>
+                    </svg>
+                    Imprimir Prova Comentada (PDF)
+                </button>
+                <button onclick="resetQuiz()" class="px-6 py-2.5 text-xs font-semibold rounded-lg bg-amber-800 text-white hover:bg-amber-900 option-transition">
+                    Refazer Simulado
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Rodapé Editorial -->
+    <footer class="border-t border-paper-200 bg-paper-100 py-8 no-print mt-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-2">
+            <p class="text-xs text-stone-500 font-medium">Caderno de Questões para Concurso Público de Provas e Títulos</p>
+            <p class="text-[10px] text-stone-400">Desenvolvido com foco em legibilidade de longo prazo e ergonomia ocular acadêmica.</p>
+        </div>
+    </footer>
+
+    <!-- Objeto de Questões e Resoluções Técnicas -->
+    <script>
+        const quizData = [
+            {
+                id: 1,
+                question: "No projeto de hardware de computadores, o subsistema de Entrada e Saída (E/S) desempenha um papel fundamental para mitigar uma das maiores limitações de desempenho físico do sistema. Com base nos conceitos clássicos de Stallings e Monteiro, assinale a alternativa que descreve o principal desafio físico e a escala métrica que fundamentam o desenvolvimento das interfaces de E/S.",
+                options: [
+                    "A necessidade de rebaixar a tensão elétrica dos barramentos físicos de controle, considerando que periféricos operam em volts e a CPU trabalha exclusivamente na escala síncrona de nanovolts.",
+                    "O desafio de gerenciar a disparidade de velocidade de transmissão e largura de banda entre os periféricos e a CPU, que opera na escala de gigahertz, representando um bilhão ($1.000.000.000$) de operações por segundo.",
+                    "A eliminação da latência de propagação de dados magnéticos em mouses ópticos e teclados mecânicos síncronos, que exigem processamento contínuo na faixa de terahertz.",
+                    "A limitação física dos barramentos paralelos em transmitir dados binários de forma assíncrona para dispositivos rápidos que operam na escala restrita de hertz."
+                ],
+                correct: 1, // B
+                resolution: "O projeto de hardware de computadores moderno lida diretamente com uma imensa disparidade de velocidade de transmissão de dados e largura de banda entre o processador principal e os periféricos físicos. Como a CPU opera na casa de gigahertz (capaz de executar $1.000.000.000$ de operações elementares por segundo), ela ficaria a maior parte do tempo ociosa e inativa se precisasse se sincronizar de forma direta com dispositivos mecânicos ou interfaces de rede mais lentas. Portanto, os módulos de E/S atuam como elements de interface, buffers e tradutores de protocolos síncronos/assíncronos para sanar essa assimetria de largura de banda. As demais alternativas estão erradas porque inventam conceitos físicos e escalas incoerentes (nanovolts, terahertz de mouse mecânico, barramentos de hertz analógicos) que não encontram fundamentação na arquitetura de computadores clássica."
+            },
+            {
+                id: 2,
+                question: "No método de Entrada e Saída Programada ($Polling$), a Unidade Central de Processamento (CPU) realiza todo o controle de leitura e gravação de dados junto aos periféricos de forma síncrona. No que tange à eficiência operacional e ao impacto dessa abordagem no desempenho global do sistema de computação, é correto afirmar que:",
+                options: [
+                    "A técnica é altamente eficiente para discos rápidos por permitir que a CPU execute em paralelo códigos de cálculo complexos sem interrupções elétricas.",
+                    "A CPU fica presa em um laço infinito de verificação de estado conhecido como \"espera ativa\", impossibilitada de realizar qualquer outra tarefa de processamento útil e desperdiçando bilhões de ciclos de clock de GHz.",
+                    "O Polling elimina o tempo de ociosidade do processador ao delegar as operações de escrita em disco diretamente à memória física RAM, ignorando os canais de controle tradicionais.",
+                    "A eficiência do método decorre de sua habilidade de suspender de maneira definitiva a alimentação elétrica do processador, minimizando a geração de calor durante transmissões lentas."
+                ],
+                correct: 1, // B
+                resolution: "A grande deficiência conceitual e prática da técnica de Entrada e Saída Programada ($Polling$) reside no fato de que o processador assume todo o controle do processo de forma síncrona, executando um laço repetitivo de verificação (\"espera ativa\") para saber se o dispositivo periférico terminou de coletar ou transmitir os dados requisitados. Como os periféricos operam em velocidades significativamente inferiores (kHz ou MHz) em relação à CPU (GHz), o processador é forçado a desperdiçar bilhões de ciclos de clock apenas aguardando a alteração física de um flag de status. Isso inviabiliza que o computador processe outras rotinas úteis do usuário, deixando o sistema congelado ou instável. As alternativas A e C estão incorretas porque afirmam que há concorrência ou liberação da CPU, o que é conceitualmente o oposto do Polling. A alternativa D está incorreta porque a CPU permanece ligada e operando em $100\\%$ de capacidade de processamento durante a espera ativa, consumindo o máximo de energia possível e gerando calor de forma improdutiva."
+            },
+            {
+                id: 3,
+                question: "Considere a analogia didática do atendimento em uma lanchonete ou cafetaria utilizada para exemplificar as perdas intrínsecas decorrentes do método de Entrada e Saída Programada (Sondagem/Polling). De acordo com essa analogia, qual o comportamento do cliente que ilustra de forma fidedigna a limitação da CPU sob essa técnica?",
+                options: [
+                    "O cliente faz o pedido do hambúrguer, senta-se com os amigos, usa o telemóvel e apenas se dirige ao balcão quando o seu bipador eletrônico portátil emite vibrações e pisca.",
+                    "O cliente realiza o pedido, retira-se da lanchonete e delega a retirada do hambúrguer a um gerente de logística independente para focar em suas tarefas diárias.",
+                    "O cliente realiza o pedido que demora dez minutos e permanece imóvel junto ao balcão, perguntando repetidamente ao cozinheiro a cada segundo se o alimento está pronto, sendo incapaz de realizar qualquer outra ação útil durante esse tempo.",
+                    "O cliente retira o hambúrguer instantaneamente devido ao fluxo de processamento paralelo e de alta velocidade garantido pela lanchonete de banda larga."
+                ],
+                correct: 2, // C
+                resolution: "A analogia didática do atendimento na cafetaria/lanchonete retrata com precisão a ineficiência intrínseca do método de $Polling$. O ato do cliente realizar um pedido que leva dez minutos de preparação e decidir permanecer fisicamente junto ao balcão, perguntando ao atendente a cada segundo se o alimento está pronto, espelha a CPU presa em laço infinito de espera ativa. O tempo de espera do cliente é totalmente improdutivo, pois ele não consegue fazer mais nada. A alternativa A representa a técnica de E/S por Interrupção (com uso de pager/bipador portátil). A alternativa B representa o método de Acesso Direto à Memória (DMA), onde um intermediário dedicado (gerente de logística) faz o transporte. A alternativa D descreve uma situação ideal de transmissão síncrona paralela imediata, inexistente na interface física de periféricos convencionais lentos."
+            },
+            {
+                id: 4,
+                question: "Como alternativa de projeto para otimizar o uso do processador, a técnica de E/S por Interrupção confere maior autonomia aos dispositivos periféricos. Assinale a alternativa que descreve com precisão o mecanismo elétrico e lógico empregado por essa técnica para suspender o fluxo ordinário do processador.",
+                options: [
+                    "O processador envia um comando inicial, retorna imediatamente à sua fila de processamento secundário e é notificado da conclusão por meio de um sinal físico de alerta assíncrono chamado Requisição de Interrupção (IRQ - $Interrupt\\ Request$) enviado pelo periférico.",
+                    "O periférico bloqueia as linhas físicas de controle de energia da CPU, forçando o processador a executar uma reconfiguração de inicialização de sistema (reinicialização forçada).",
+                    "A interface de E/S desvia os barramentos de dados para que os bytes sejam gravados de forma direta e ininterrupta nos registradores de memória cache da CPU, sem que o processador precise parar suas atividades.",
+                    "O controlador de periféricos executa um laço síncrono que sonda ciclicamente os registradores internos do sistema operacional para interceptar o fluxo do ponteiro de instrução da CPU."
+                ],
+                correct: 0, // A
+                resolution: "A E/S por Interrupção foi concebida para contornar o desperdício de processamento provocado pela espera ativa do Polling. O fluxo técnico inicia-se quando a CPU emite o comando ao controlador de dispositivo (placa-mãe ou unidade periférica) e retorna de imediato à execução de outras tarefas na memória principal. Quando o hardware periférico conclui a operação de Entrada/Saída de forma assíncrona, ele gera e envia um sinal físico de alerta conhecido como Requisição de Interrupção (IRQ) por meio de barramentos elétricos dedicados de controle. Ao receber esse sinal, a CPU suspende momentaneamente as atividades de segundo plano para atender à demanda específica do periférico e retoma as computações logo em seguida. As alternativas B, C e D estão erradas porque descrevem cenários fantasiosos de reconfiguração de hardware, gravações diretas em cache sem controle da CPU e desvios de ponteiros por controladores síncronos."
+            },
+            {
+                id: 5,
+                question: "Em sistemas operacionais modernos executados em arquiteturas de alto desempenho, os periféricos de entrada manual de baixa taxa de transferência, como o teclado e o rato (mouse) óptico, utilizam a técnica de E/S por Interrupção de forma transparente para o usuário final. Esse processo ocorre no hardware por meio do seguinte fluxo de execução:",
+                options: [
+                    "O processador executa um Polling de alta prioridade que paralisa totalmente a exibição do ecrã do sistema operacional a cada tecla pressionada.",
+                    "O hardware do dispositivo gera um sinal de interrupção, fazendo com que a CPU realize uma pausa invisível de microssegundos em suas tarefas ativas, desenhe o caractere ou mova o cursor na tela, e retorne imediatamente à execução de onde parou.",
+                    "O periférico grava os dados do caractere diretamente na memória gráfica (VRAM) por meio de barramentos de DMA exclusivos, ocultando as ações de controle da CPU principal.",
+                    "O controlador físico do dispositivo realiza um teste de integridade de sistema que força a reinicialização síncrona de todos os periféricos de rede Wi-Fi a cada evento registrado."
+                ],
+                correct: 1, // B
+                resolution: "Em sistemas de computadores modernos, periféricos assíncronos e de baixa taxa de transferência (como o rato/mouse óptico e o teclado) fazem uso amplo do mecanismo de E/S por Interrupção. Quando o usuário executa uma ação de toque ou movimento físico, o circuito de controle de hardware gera uma interrupção. A CPU realiza uma pausa extremamente curta e imperceptível na escala de microssegundos em relação ao programa atual (por exemplo, um jogo de corrida ou navegador de internet), processa o evento específico (desenhando o caractere na tela ou atualizando a coordenada do cursor no ecrã) e retorna de imediato ao ponto onde havia parado de processar as instruções. Esse processo permite que o sistema permaneça ultra-responsivo ao toque humano sem congestionar a execução de outras tarefas críticas. As demais alternativas pecam por propor travamentos síncronos (A), transferências automáticas por DMA de dados manuais (C) ou reinicializações forçadas absurdas (D)."
+            },
+            {
+                id: 6,
+                question: "A transição lógica do Polling para o modelo de E/S por Interrupção pode ser facilmente assimilada por meio de uma analogia com dispositivos eletrônicos cotidianos. Sob a perspectiva de arquitetura e organização de computadores, a qual componente ou sinal lógico de hardware corresponde o aviso vibratório do bipador eletrônico (pager) entregue ao cliente da lanchonete?",
+                options: [
+                    "À linha de controle de clock síncrono que acelera o processador principal.",
+                    "Ao barramento físico de endereços de alta velocidade que faz a leitura física das portas lógicas do processador.",
+                    "À linha física de sinalização de Requisição de Interrupção (IRQ) responsável por suspender o fluxo ordinário de tarefas da CPU.",
+                    "Ao módulo integrado de Direct Memory Access encarregado de ler registradores de estado de periféricos lentos."
+                ],
+                correct: 2, // C
+                resolution: "No modelo didático de lanchonete baseada em interrupções, o bipador eletrônico portátil ($pager$) que vibra e pisca representa o sinal elétrico de alerta assíncrono que sinaliza à CPU que o dado está pronto para ser coletado. Na arquitetura física real do computador, esse mecanismo elétrico e lógico de aviso assíncrono corresponde à linha de Requisição de Interrupção (IRQ - $Interrupt\\ Request$) enviada pelo controlador de periférico. O IRQ alerta o processador central a interromper brevemente a execução normal do programa corrente para processar o dado recém-disponibilizado na interface de Entrada/Saída. A alternativa A está incorreta porque o clock síncrono regula os ciclos lógicos constantes do processador, sem relação direta com alertas assíncronos de prontidão. A alternativa B está incorreta porque barramentos de endereços transmitem posições físicas de memória, não sinais elétricos assíncronos de notificação. A alternativa D descreve o módulo de DMA, que é um circuito integrado complexo de transferência de dados e não o sinal elétrico isolado de aviso."
+            },
+            {
+                id: 7,
+                question: "Apesar de ser excelente para gerenciar dispositivos de baixa velocidade e interações assíncronas de entrada manual, a E/S por Interrupção apresenta limitações operacionais severas em dispositivos de armazenamento rápido ou placas de rede de alta velocidade. Esse fenômeno, conhecido como \"gargalo das interrupções\", é caracterizado por:",
+                options: [
+                    "Danos físicos permanentes nas trilhas de cobre do barramento de dados devido ao superaquecimento elétrico induzido pelo excesso de sinais de IRQ.",
+                    "Uma tempestade de interrupções que sobrecarrega a CPU ao exigir a interrupção do processador a cada pequeno byte recebido, consumindo a capacidade computacional com salvamento de contexto e travando o sistema.",
+                    "Uma transição compulsória do hardware para o modo de E/S Programada de emergência, desabilitando permanentemente os drivers de rede e som.",
+                    "Um conflito lógico que impede que a unidade de controle do processador acesse os blocos de memória cache L1 e L2 do núcleo de processamento."
+                ],
+                correct: 1, // B
+                resolution: "Embora seja altamente eficiente para periféricos de baixo tráfego (mouses e teclados), a técnica de E/S por Interrupção é inviável para periféricos de alta vazão, como SSDs modernos de gigabytes de leitura e conexões gigabit de rede de dados de internet. Caso cada byte ou pequeno bloco de arquivo gerasse uma interrupção IRQ elétricamente dedicada para a CPU, o processador passaria a maior parte de seu tempo salvando e recuperando o contexto lógico de registradores para atender a essas milhares de interrupções assíncronas consecutivas. Esse bombardeio de sinais de alerta satura a CPU (\"tempestade de interrupções\"), provocando lentidões superiores a $25\\%$ em downloads pesados, engasgos severos na reprodução de som e ausência de resposta nos periféricos manuais. As alternativas A, C e D descrevem fenômenos falsos (destruição térmica de trilhas de cobre, Polling compulsório com desativação permanente de drivers e bloqueio de memória cache) que não encontram respaldo nos modelos lógicos e de engenharia de computadores."
+            },
+            {
+                id: 8,
+                question: "O Acesso Direto à Memória (DMA - $Direct\\ Memory\\ Access$) constitui uma das maiores evoluções no design de computadores voltadas a viabilizar altas taxas de transferência de dados com mínimo impacto sobre o processador. O comportamento que define a operação do módulo de DMA no sistema computacional fundamenta-se em:",
+                options: [
+                    "Monitorar de forma constante em Polling síncrono todas as requisições de interrupção emitidas pelas placas gráficas conectadas ao barramento PCI-Express.",
+                    "Assumir o controle temporário dos barramentos do sistema para transferir grandes blocos de dados de forma direta entre o periférico de armazenamento e a memória RAM, reduzindo a intervenção da CPU ao início e ao término da cópia.",
+                    "Executar algoritmos complexos de renderização de imagem e lógica de inteligência artificial de maneira autônoma, atuando de forma síncrona com os núcleos lógicos da GPU.",
+                    "Capturar as requisições de áudio analógico para transmiti-las por meio de cabos de fibra óptica dedicados que dispensam barramentos de dados lógicos."
+                ],
+                correct: 1, // B
+                resolution: "O $Direct\\ Memory\\ Access$ (DMA) é uma solução de hardware criada precisamente para sanar o \"gargalo das interrupções\" gerado pela transferência volumosa de dados sob o método de E/S por Interrupção. O chip ou módulo de DMA funciona de maneira independente, assumindo temporariamente o controle físico dos barramentos de dados e endereços do computador para mediar a transferência de blocos completos de dados de forma direta entre a RAM e a unidade de armazenamento (por exemplo, SSD). Esse processo dispensa inteiramente a intervenção contínua da CPU, que atua apenas na configuração inicial e ao receber um sinal único de interrupção ao término de toda a transação. A alternativa A está incorreta porque o DMA não realiza Polling síncrono sobre sinais de IRQ gráfica. A alternativa C está incorreta porque confunde o DMA com a GPU ao sugerir processamento gráfico autônomo. A alternativa D está errada ao associar o DMA a roteamentos de cabos físicos de fibra óptica na placa-mãe."
+            },
+            {
+                id: 9,
+                question: "Em jogos eletrônicos modernos tridimensionais de mundo aberto, o carregamento dinâmico e sem travamentos (loading screens) de cenários e texturas de alta definição é viabilizado graças ao uso coordenado de armazenamento rápido (SSD NVMe) e tecnologias como DirectStorage, baseadas em canais de DMA. Sob o aspecto arquitetural, esse ganho de desempenho deve-se a:",
+                options: [
+                    "Que a CPU é forçada a paralisar a renderização gráfica da placa de vídeo para realizar a leitura sequencial de dados de edifícios e árvores diretamente do barramento de controle.",
+                    "Que as texturas e dados tridimensionais são transportados diretamente da unidade de armazenamento para a memória de vídeo (VRAM) em segundo plano, sem passar pela CPU, que permanece livre para computar física e inteligência artificial.",
+                    "Que o controlador gráfico do computador executa uma rotina contínua de Polling sobre os dispositivos de entrada manual para acelerar o clock do barramento da GPU.",
+                    "Que o módulo de DMA desativa a memória RAM física principal para forçar a placa de vídeo a realizar a leitura lógica de arquivos por canais seriais analógicos."
+                ],
+                correct: 1, // B
+                resolution: "Em jogos de mundo aberto modernos, a técnica clássica de carregamento de texturas tridimensionais costumava sobrecarregar a CPU principal, que precisava parar o loop principal do jogo para mediar a cópia de blocos lógicos do disco de armazenamento para as memórias de sistema, gerando as indesejáveis travadas de jogo ($stutters$). A integração de barramentos rápidos (SSD NVMe) e tecnologias como DirectStorage tira proveito de canais modernos de DMA. Essa integração permite que dados tridimensionais maciços de vegetação, texturas e cenários sejam enviados diretamente do disco de silício para a memória gráfica (VRAM) de forma paralela e em segundo plano, mantendo a CPU livre para executar tarefas cruciais de física, comportamento de personagens e lógica de IA. A alternativa A está incorreta porque a paralisação síncrona da renderização pela CPU é justamente o problema que a técnica visa erradicar. As alternativas C e D descrevem propostas incoerentes de Polling gráfico e desligamento físico da RAM."
+            },
+            {
+                id: 10,
+                question: "Os sistemas operacionais modernos gerenciam a interação com o hardware físico de forma dinâmica e coordenada, alternando entre as diferentes técnicas de Entrada e Saída (E/S) disponíveis na arquitetura de computadores. Tomando como referência os mecanismos de execução internos do Windows 11, como ocorre o emprego prático dessas técnicas?",
+                options: [
+                    "O sistema operacional utiliza unicamente o método de E/S Programada (Polling) síncrona para eliminar a fiação física de interrupção na placa-mãe de desktops de alta performance.",
+                    "As interrupções gerenciam eventos em tempo real (mouse, teclado e microfone), o DMA lida com transferências massivas de dados (jogos, cópias e downloads) e o Polling é usado em caráter de exceção e emergência para diagnóstico de erros graves de hardware.",
+                    "O Windows 11 direciona o uso de canais de DMA exclusivamente para capturar as entradas do teclado físico, enquanto as interrupções são usadas para mover texturas de gigabytes das unidades SSD.",
+                    "O sistema de arquivos utiliza Polling rápido síncrono para transferir arquivos de downloads da rede para evitar a saturação de largura de banda das interfaces de rede gigabit."
+                ],
+                correct: 1, // B
+                resolution: "O Windows 11 funciona como um maestro sofisticado de hardware, empregando cada técnica clássica de E/S para a tarefa na qual ela atinge o ápice de eficiência e economia de energia. As interrupções de hardware assíncronas (IRQ) gerenciam periféricos em tempo real e de baixo fluxo de dados (como movimentos do mouse óptico, digitações de teclas do teclado físico e gravação de voz instantânea no Discord). O canal de DMA é acionado para transporte de grandes massas de arquivos digitais (carregamento de texturas pesadas de jogos modernos, download gigabit de dados na placa de rede e cópia massiva de arquivos lógicos em disco de estado sólido), liberando o processador de qualquer intervenção intermediária. Por fim, a técnica arcaica de $Polling$ síncrono é evitada devido ao desperdício extremo de energia por \"espera ativa\", sendo acionada exclusivamente como rotina emergencial para checar a presença física de erros de sistema em componentes que deixaram de se comunicar com o sistema operacional, culminando no travamento de segurança conhecido como tela azul. As demais alternativas propõem incorreções teóricas graves ao inverter a indicação dessas ferramentas técnicas na arquitetura de sistemas contemporâneos."
+            }
+        ];
+
+        // Estado da Aplicação
+        let userAnswers = Array(quizData.length).fill(null);
+        let appMode = 'simulado'; // 'simulado' ou 'estudo'
+        let isSubmitted = false;
+
+        // Renderiza as Questões na Tela
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            quizData.forEach((q, qIndex) => {
+                const isAnswered = userAnswers[qIndex] !== null;
+                const questionDiv = document.createElement('div');
+                questionDiv.id = `q-card-${qIndex}`;
+                questionDiv.className = `bg-white border border-paper-200 p-6 sm:p-8 rounded-xl shadow-sm option-transition print-break ${isSubmitted ? 'submitted-state' : ''}`;
+                
+                // Cabeçalho da questão
+                let headerHTML = `
+                    <div class="flex items-start justify-between gap-4 mb-4">
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-100 px-3 py-1 rounded-md">
+                            Questão ${String(q.id).padStart(2, '0')}
+                        </span>
+                        <div id="badge-q-${qIndex}" class="text-xs font-semibold px-2.5 py-1 rounded-full hidden"></div>
+                    </div>
+                    <p class="text-stone-800 font-medium leading-relaxed text-base sm:text-lg mb-6">${q.question}</p>
+                `;
+
+                // Campo das Alternativas (Mapeado de A a D)
+                let optionsHTML = '<div class="space-y-3 no-print">';
+                const optionLetters = ['A', 'B', 'C', 'D'];
+
+                q.options.forEach((opt, optIndex) => {
+                    const isSelected = userAnswers[qIndex] === optIndex;
+                    let optionStyle = 'border-paper-200 hover:border-stone-400 hover:bg-stone-50/50';
+                    let radioStyle = 'border-stone-300';
+
+                    if (isSelected) {
+                        optionStyle = 'border-amber-700 bg-amber-50/40 font-medium ring-1 ring-amber-700/30';
+                        radioStyle = 'border-amber-700 bg-amber-700';
+                    }
+
+                    // Se já foi enviado ou se está em modo de estudo e respondeu
+                    if (isSubmitted || (appMode === 'estudo' && isAnswered)) {
+                        const isCorrectOpt = optIndex === q.correct;
+                        if (isCorrectOpt) {
+                            // Correta destaca em verde sempre
+                            optionStyle = 'border-emerald-600 bg-emerald-50/60 font-semibold ring-1 ring-emerald-600/20 text-emerald-950';
+                            radioStyle = 'border-emerald-600 bg-emerald-600';
+                        } else if (isSelected) {
+                            // Errada selecionada pelo usuário destaca em vermelho
+                            optionStyle = 'border-rose-500 bg-rose-50/60 font-medium ring-1 ring-rose-500/20 text-rose-950';
+                            radioStyle = 'border-rose-500 bg-rose-500';
+                        } else {
+                            // Opção neutra pós submissão
+                            optionStyle = 'border-paper-200 opacity-60 cursor-default';
+                            radioStyle = 'border-stone-300';
+                        }
+                    }
+
+                    optionsHTML += `
+                        <label class="flex items-center gap-4 p-4 rounded-xl border ${optionStyle} cursor-pointer option-transition">
+                            <input type="radio" name="question-${qIndex}" value="${optIndex}" 
+                                ${isSelected ? 'checked' : ''} 
+                                ${isSubmitted || (appMode === 'estudo' && isAnswered) ? 'disabled' : ''}
+                                onclick="selectOption(${qIndex}, ${optIndex})" 
+                                class="sr-only">
+                            <span class="w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-bold uppercase transition-colors ${radioStyle === 'border-stone-300' ? 'text-stone-500' : 'text-white'}">
+                                ${isSelected || (isSubmitted && optIndex === q.correct) ? '✓' : optionLetters[optIndex]}
+                            </span>
+                            <span class="text-sm leading-relaxed">${opt}</span>
+                        </label>
+                    `;
+                });
+                optionsHTML += '</div>';
+
+                // Modo Impressão: alternativa selecionada com marcação especial textual
+                let printHTML = `
+                    <div class="hidden print:block space-y-2 mt-4">
+                        ${q.options.map((opt, optIdx) => {
+                            const isCorrect = optIdx === q.correct;
+                            const isUserSelection = userAnswers[qIndex] === optIdx;
+                            let prefix = '[ ]';
+                            if (isCorrect) prefix = '[✓] GABARITO:';
+                            else if (isUserSelection) prefix = '[X] SUA RESPOSTA:';
+                            return `<p class="text-xs ${isCorrect ? 'font-bold text-emerald-800' : 'text-stone-600'}">${prefix} ${opt}</p>`;
+                        }).join('')}
+                    </div>
+                `;
+
+                // Resolução Comentada (Box)
+                let resolutionHTML = '';
+                const showResolution = isSubmitted || (appMode === 'estudo' && isAnswered);
+                
+                if (showResolution) {
+                    const isCorrect = userAnswers[qIndex] === q.correct;
+                    resolutionHTML = `
+                        <div class="mt-6 p-5 sm:p-6 bg-stone-50 border-l-4 ${isCorrect ? 'border-emerald-600' : 'border-amber-700'} rounded-r-xl transition-all duration-300">
+                            <h4 class="text-xs font-bold uppercase tracking-wider ${isCorrect ? 'text-emerald-800' : 'text-amber-800'} mb-2">
+                                Resolução Comentada • Questão ${q.id}
+                            </h4>
+                            <p class="text-sm text-stone-700 leading-relaxed">${q.resolution}</p>
+                        </div>
+                    `;
+                }
+
+                questionDiv.innerHTML = headerHTML + optionsHTML + printHTML + resolutionHTML;
+                container.appendChild(questionDiv);
+            });
+
+            // Atualiza KaTeX após a manipulação do DOM
+            if (window.renderMathInElement) {
+                renderMathInElement(container, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+
+            updateStatus();
+        }
+
+        // Seleção de Alternativa pelo usuário
+        function selectOption(qIndex, optIndex) {
+            if (isSubmitted) return;
+            
+            userAnswers[qIndex] = optIndex;
+            
+            if (appMode === 'estudo') {
+                // No Modo Estudo, o componente renderiza imediatamente a resposta correta
+                renderQuestions();
+            } else {
+                // No Modo Simulado, apenas atualiza o visual local da questão selecionada
+                renderQuestions();
+            }
+        }
+
+        // Alterna entre o Modo Estudo e Modo Simulado
+        function setMode(mode) {
+            if (isSubmitted) return; // Não troca de modo após finalizado
+            appMode = mode;
+            
+            const btnSimulado = document.getElementById('btn-mode-simulado');
+            const btnEstudo = document.getElementById('btn-mode-estudo');
+
+            if (mode === 'simulado') {
+                btnSimulado.className = "px-3 py-1.5 text-xs font-semibold rounded-md shadow-sm option-transition bg-white text-paper-900 border border-paper-200";
+                btnEstudo.className = "px-3 py-1.5 text-xs font-semibold rounded-md option-transition text-stone-600 hover:text-paper-900";
+            } else {
+                btnEstudo.className = "px-3 py-1.5 text-xs font-semibold rounded-md shadow-sm option-transition bg-white text-paper-900 border border-paper-200";
+                btnSimulado.className = "px-3 py-1.5 text-xs font-semibold rounded-md option-transition text-stone-600 hover:text-paper-900";
+            }
+            
+            renderQuestions();
+        }
+
+        // Atualiza a Barra de Progresso e o Contador Lógico
+        function updateStatus() {
+            const total = quizData.length;
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const progressPercent = (answeredCount / total) * 100;
+
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('status-counter').innerText = `${answeredCount} de ${total} respondidas`;
+        }
+
+        // Submissão do Simulado
+        function submitQuiz(event) {
+            event.preventDefault();
+            
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            if (answeredCount < quizData.length) {
+                const confirmSubmit = confirm(`Atenção: Você respondeu apenas ${answeredCount} de ${quizData.length} questões. Deseja finalizar assim mesmo?`);
+                if (!confirmSubmit) return;
+            }
+
+            isSubmitted = true;
+            calculateResults();
+        }
+
+        // Cálculo e Exibição de Resultados Pedagógicos
+        function calculateResults() {
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            quizData.forEach((q, index) => {
+                const isCorrect = userAnswers[index] === q.correct;
+                if (isCorrect) correctCount++;
+                else incorrectCount++;
+
+                // Adiciona Badges de status para cada questão
+                const badge = document.getElementById(`badge-q-${index}`);
+                if (badge) {
+                    badge.classList.remove('hidden');
+                    if (isCorrect) {
+                        badge.innerText = 'Acertou';
+                        badge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800';
+                    } else {
+                        badge.innerText = userAnswers[index] === null ? 'Não respondida' : 'Errou';
+                        badge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-100 text-rose-800';
+                    }
+                }
+            });
+
+            // Atualiza o painel de resultados gerais
+            document.getElementById('text-score').innerText = `${correctCount}/${quizData.length}`;
+            const percent = (correctCount / quizData.length) * 100;
+            document.getElementById('text-percentage').innerText = `${percent}%`;
+
+            // Diagnósticos de desempenho específicos de concurso IF/EBTT
+            let diagnosticTag = '';
+            let diagnosticDesc = '';
+            let tagClass = '';
+
+            if (percent >= 90) {
+                diagnosticTag = 'Excelente!';
+                diagnosticDesc = 'Parabéns! Excelente nível de preparação acadêmica. Você demonstra domínio conceitual preciso sobre as metodologias de Entrada/Saída, temporização e delegação de barramentos.';
+                tagClass = 'bg-emerald-100 text-emerald-800';
+            } else if (percent >= 70) {
+                diagnosticTag = 'Muito Bom!';
+                diagnosticDesc = 'Ótimo desempenho técnico. Com pequenos ajustes conceituais nos detalhes das transições de sinal ou tempestade de interrupções, você alcançará o topo da classificação.';
+                tagClass = 'bg-teal-100 text-teal-800';
+            } else if (percent >= 50) {
+                diagnosticTag = 'Regular';
+                diagnosticDesc = 'Pontuação média. É altamente recomendado revisar a fundamentação teórica através das resoluções comentadas para consolidar a dinâmica entre latência de dispositivos e ociosidade da CPU.';
+                tagClass = 'bg-amber-100 text-amber-800';
+            } else {
+                diagnosticTag = 'Atenção!';
+                diagnosticDesc = 'Recomendamos uma revisão integral do conteúdo didático. Concentre-se nas analogias e nas tabelas comparativas para fixar as diferenças essenciais entre Polling, IRQ e DMA.';
+                tagClass = 'bg-rose-100 text-rose-800';
+            }
+
+            const tagEl = document.getElementById('text-diagnostic-tag');
+            tagEl.innerText = diagnosticTag;
+            tagEl.className = `mt-1 inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full ${tagClass}`;
+            document.getElementById('text-diagnostic-desc').innerText = diagnosticDesc;
+
+            // Atualiza os contadores dos filtros
+            document.getElementById('count-correct').innerText = correctCount;
+            document.getElementById('count-incorrect').innerText = incorrectCount;
+
+            // Mostra seção de resultados e rola suavemente até ela
+            const resultsSec = document.getElementById('results-section');
+            resultsSec.classList.remove('hidden');
+            resultsSec.scrollIntoView({ behavior: 'smooth' });
+
+            // Desabilita botões de controle de submissão desnecessários
+            document.getElementById('btn-submit').disabled = true;
+            document.getElementById('btn-submit').classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Re-renderiza com as explicações e resoluções
+            renderQuestions();
+        }
+
+        // Filtro de Questões (Ver todas, apenas acertos ou apenas erros)
+        function filterQuestions(filterType) {
+            quizData.forEach((q, index) => {
+                const card = document.getElementById(`q-card-${index}`);
+                if (!card) return;
+
+                const isCorrect = userAnswers[index] === q.correct;
+
+                // Reset do estado de filtro do botão
+                document.getElementById('btn-filter-all').className = "px-4 py-1.5 text-xs font-semibold rounded-full bg-stone-100 text-stone-600 hover:bg-stone-200 option-transition";
+                document.getElementById('btn-filter-correct').className = "px-4 py-1.5 text-xs font-semibold rounded-full bg-stone-100 text-stone-600 hover:bg-stone-200 option-transition";
+                document.getElementById('btn-filter-incorrect').className = "px-4 py-1.5 text-xs font-semibold rounded-full bg-stone-100 text-stone-600 hover:bg-stone-200 option-transition";
+
+                if (filterType === 'all') {
+                    card.classList.remove('hidden');
+                    document.getElementById('btn-filter-all').className = "px-4 py-1.5 text-xs font-semibold rounded-full bg-stone-800 text-white option-transition shadow-sm";
+                } else if (filterType === 'correct') {
+                    if (isCorrect) card.classList.remove('hidden');
+                    else card.classList.add('hidden');
+                    document.getElementById('btn-filter-correct').className = "px-4 py-1.5 text-xs font-semibold rounded-full bg-emerald-700 text-white option-transition shadow-sm";
+                } else if (filterType === 'incorrect') {
+                    if (!isCorrect) card.classList.remove('hidden');
+                    else card.classList.add('hidden');
+                    document.getElementById('btn-filter-incorrect').className = "px-4 py-1.5 text-xs font-semibold rounded-full bg-rose-700 text-white option-transition shadow-sm";
+                }
+            });
+        }
+
+        // Reinicialização do Estado do Simulado
+        function resetQuiz() {
+            if (confirm('Tem certeza de que deseja reiniciar o simulado? Todo o seu progresso atual será limpo.')) {
+                userAnswers = Array(quizData.length).fill(null);
+                isSubmitted = false;
+
+                // Esconde seção de resultados
+                document.getElementById('results-section').classList.add('hidden');
+
+                // Reabilita o botão de submissão
+                document.getElementById('btn-submit').disabled = false;
+                document.getElementById('btn-submit').className = "flex-1 sm:flex-none px-8 py-3 text-sm font-semibold text-white bg-amber-800 hover:bg-amber-900 active:bg-amber-950 rounded-lg shadow-sm option-transition";
+
+                // Executa reset dos filtros visuais
+                filterQuestions('all');
+
+                // Renderiza novamente a tela padrão
+                renderQuestions();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Inicialização automática ao carregar a página
+        window.onload = function() {
+            renderQuestions();
+            
+            // Renderização segura do KaTeX em todo o corpo apenas após o DOM estar pronto
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+    </script>
+</body>
+</html>
