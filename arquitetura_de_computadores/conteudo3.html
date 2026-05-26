@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linux - Espaço de Estudos</title>
-    <!-- Tailwind CSS para estilização moderna e responsiva -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,7 +23,6 @@
             }
         }
     </script>
-    <!-- Lucide Icons para ícones vetoriais modernos -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         /* Estilos personalizados para barras de scroll e ajustes finos */
@@ -77,11 +75,9 @@
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-[#0f172a] dark:text-slate-100 min-h-screen font-sans flex flex-col">
 
-    <!-- CABEÇALHO / BARRA DE NAVEGAÇÃO -->
     <header class="sticky top-0 z-40 bg-white/80 dark:bg-[#1e293b]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div class="max-w-[90%] mx-auto h-16 flex items-center justify-between">
             
-            <!-- Botão Voltar e Título -->
             <div class="flex items-center gap-4">
                 <button onclick="handleVoltar()" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95 group">
                     <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
@@ -89,7 +85,6 @@
                 </button>
                 <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700"></div>
                 <div class="flex items-center gap-2">
-                    <!-- Ícone estilizado do Linux Terminal -->
                     <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-500 text-white shadow-md shadow-brand-500/10">
                         <i data-lucide="terminal" class="w-4 h-4"></i>
                     </div>
@@ -99,15 +94,12 @@
                 </div>
             </div>
 
-            <!-- Controles do Sistema (Tema, Ajuda) -->
             <div class="flex items-center gap-2">
-                <!-- Alternar Tema -->
                 <button onclick="toggleTheme()" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Alternar Tema Escuro/Claro">
                     <i data-lucide="sun" id="theme-icon-light" class="w-5 h-5 hidden"></i>
                     <i data-lucide="moon" id="theme-icon-dark" class="w-5 h-5"></i>
                 </button>
 
-                <!-- Botão de Ajuda Rápida -->
                 <button onclick="showInstructions()" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Como configurar seus links">
                     <i data-lucide="help-circle" class="w-5 h-5"></i>
                 </button>
@@ -115,13 +107,10 @@
         </div>
     </header>
 
-    <!-- ÁREA PRINCIPAL (Ocupa exatamente 90% de largura da tela para melhor leitura) -->
     <main class="flex-1 w-[90%] mx-auto py-8 flex flex-col gap-8">
 
-        <!-- 1. BLOCO DE CONTEÚDOS (PDF 1) - Otimizado para leitura profunda -->
         <section id="pdf-section-1" class="bg-white dark:bg-[#1e293b] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[82vh]">
             
-            <!-- Cabeçalho da Janela de Conteúdos -->
             <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-[#1e293b]/50">
                 <div class="flex items-center gap-3">
                     <div class="p-2 bg-brand-500/10 text-brand-500 rounded-lg">
@@ -133,16 +122,13 @@
                     </div>
                 </div>
 
-                <!-- Botão de Tela Inteira para PDF 1 -->
                 <button onclick="toggleFullscreen('pdf-section-1', 'fs-icon-1')" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5" title="Alternar Tela Inteira">
                     <i data-lucide="maximize-2" id="fs-icon-1" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <!-- Espaço do Visualizador de PDF -->
             <div class="flex-1 relative bg-slate-100 dark:bg-[#0f172a] p-2 flex flex-col items-center justify-center">
                 
-                <!-- Placeholder de orientação caso esteja vazio -->
                 <div id="pdf-placeholder-1" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10 bg-white dark:bg-[#1e293b] transition-all">
                     <div class="w-16 h-16 bg-brand-50 dark:bg-brand-500/10 text-brand-500 rounded-2xl flex items-center justify-center mb-4">
                         <i data-lucide="file-text" class="w-8 h-8 animate-pulse"></i>
@@ -153,79 +139,16 @@
                     </p>
                 </div>
 
-                <!-- 
-                  ==================================================================
-                  👉 COLOQUE O LINK DO SEU PDF DE CONTEÚDOS ABAIXO!
-                  Substitua "about:blank" pelo endereço real do seu PDF de Linux.
-                  Pode ser um arquivo local (ex: src="linux_comandos.pdf") ou link web (ex: src="https://site.com/doc.pdf").
-                  ==================================================================
-                -->
                 <iframe 
                     id="pdf-viewer-1" 
                     class="w-full h-full rounded-lg border-0 bg-white dark:bg-slate-900 hidden" 
-                    src="about:blank">
+                    src="aulalinux.pdf">
                 </iframe>
             </div>
         </section>
 
-        <!-- 2. BLOCO DE VÍDEO-AULA (YOUTUBE) - Otimizado para visualização perfeita -->
-        <section class="bg-white dark:bg-[#1e293b] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col max-w-6xl mx-auto w-full">
-            
-            <!-- Cabeçalho do Reprodutor de Vídeo -->
-            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-[#1e293b]/50">
-                <div class="flex items-center gap-3">
-                    <div class="p-2 bg-red-500/10 text-red-500 rounded-lg">
-                        <i data-lucide="youtube" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h2 class="font-bold text-slate-900 dark:text-white text-base leading-tight">Vídeo Aula Linux</h2>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Reprodutor imersivo e sem anúncios de distração</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Área do Reprodutor -->
-            <div class="p-6 bg-slate-50 dark:bg-[#111827]">
-                <!-- Mantém a proporção perfeita de 16:9 -->
-                <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-lg flex items-center justify-center">
-                    
-                    <!-- Placeholder de orientação para vídeo -->
-                    <div id="video-placeholder" class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center z-10 bg-slate-900 transition-all">
-                        <div class="w-12 h-12 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mb-3">
-                            <i data-lucide="play-circle" class="w-6 h-6 animate-pulse"></i>
-                        </div>
-                        <h4 class="text-sm font-semibold text-white">Vídeo Aula de Linux Não Configurada</h4>
-                        <p class="text-xs text-slate-400 max-w-xs mt-1">
-                            Adicione o link do YouTube no código HTML abaixo. Pode usar qualquer formato de link!
-                        </p>
-                    </div>
-
-                    <!-- 
-                      ==================================================================
-                      👉 COLOQUE O LINK DO SEU VÍDEO DO YOUTUBE ABAIXO!
-                      Agora você pode colocar QUALQUER formato de link do YouTube!
-                      Exemplos aceitos:
-                        - Link do navegador: src="https://www.youtube.com/watch?v=VIDEO_ID"
-                        - Link de celular/share: src="https://youtu.be/VIDEO_ID"
-                        - Link de incorporação: src="https://www.youtube.com/embed/VIDEO_ID"
-                      O sistema converterá automaticamente para que rode sem erros!
-                      ==================================================================
-                    -->
-                    <iframe 
-                        id="youtube-player" 
-                        class="absolute inset-0 w-full h-full border-0 hidden" 
-                        src="about:blank" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. BLOCO DE ATIVIDADES NO CADERNO (PDF 2) - Amplo para consulta rápida -->
         <section id="pdf-section-2" class="bg-white dark:bg-[#1e293b] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[82vh]">
             
-            <!-- Cabeçalho do Bloco -->
             <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-[#1e293b]/50">
                 <div class="flex items-center gap-3">
                     <div class="p-2 bg-emerald-500/10 text-emerald-500 rounded-lg">
@@ -237,16 +160,13 @@
                     </div>
                 </div>
 
-                <!-- Botão de Tela Inteira para PDF 2 -->
                 <button onclick="toggleFullscreen('pdf-section-2', 'fs-icon-2')" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5" title="Alternar Tela Inteira">
                     <i data-lucide="maximize-2" id="fs-icon-2" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <!-- Area do visualizador de PDF -->
             <div class="flex-1 relative bg-slate-100 dark:bg-[#0f172a] p-2 flex flex-col items-center justify-center">
                 
-                <!-- Placeholder de orientação para atividades -->
                 <div id="pdf-placeholder-2" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10 bg-white dark:bg-[#1e293b] transition-all">
                     <div class="w-12 h-12 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center mb-3">
                         <i data-lucide="book-open" class="w-6 h-6 animate-pulse"></i>
@@ -257,23 +177,16 @@
                     </p>
                 </div>
 
-                <!-- 
-                  ==================================================================
-                  👉 COLOQUE O LINK DO SEU PDF DE ATIVIDADES ABAIXO!
-                  Substitua "about:blank" pelo endereço do seu PDF de exercícios resolvidos de Linux.
-                  ==================================================================
-                -->
                 <iframe 
                     id="pdf-viewer-2" 
                     class="w-full h-full rounded-lg border-0 bg-white dark:bg-slate-900 hidden" 
-                    src="about:blank">
+                    src="atividadelinux.pdf">
                 </iframe>
             </div>
         </section>
 
     </main>
 
-    <!-- RODAPÉ -->
     <footer class="bg-white dark:bg-[#0f172a] border-t border-slate-200 dark:border-slate-800/80 py-4 transition-colors">
         <div class="max-w-[90%] mx-auto text-center">
             <p class="text-xs text-slate-400 dark:text-slate-500">
@@ -282,7 +195,6 @@
         </div>
     </footer>
 
-    <!-- MODAL DE AJUDA RÁPIDA -->
     <div id="instructions-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden animate-fade-in">
         <div class="bg-white dark:bg-[#1e293b] rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700">
             <div class="flex items-center justify-between mb-4">
@@ -305,12 +217,7 @@
                     </div>
 
                     <div class="p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
-                        <span class="font-bold text-red-500">2. Link do YouTube (Fácil!)</span>
-                        <p class="text-slate-500 mt-1">Coloque o link normal ou de compartilhar do YouTube em <code class="text-brand-500">src="..."</code> no <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded text-red-500">id="youtube-player"</code>. O site converte automaticamente!</p>
-                    </div>
-
-                    <div class="p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
-                        <span class="font-bold text-emerald-500">3. PDF de Atividades Linux</span>
+                        <span class="font-bold text-emerald-500">2. PDF de Atividades Linux</span>
                         <p class="text-slate-500 mt-1">Troque o <code class="text-brand-500">src="about:blank"</code> do <code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded text-red-500">id="pdf-viewer-2"</code> pelo seu arquivo de exercícios.</p>
                     </div>
                 </div>
@@ -322,7 +229,6 @@
         </div>
     </div>
 
-    <!-- NOTIFICAÇÃO PERSONALIZADA (Toast) -->
     <div id="toast-notification" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border bg-white dark:bg-[#1e293b] border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 translate-y-20 opacity-0 pointer-events-none transition-all duration-300">
         <span id="toast-icon" class="text-brand-500">
             <i data-lucide="info" class="w-5 h-5"></i>
@@ -330,7 +236,6 @@
         <span id="toast-message" class="text-sm font-medium">Notificação</span>
     </div>
 
-    <!-- JAVASCRIPT DE FUNCIONALIDADE -->
     <script>
         // Inicializa os ícones do Lucide
         lucide.createIcons();
@@ -359,18 +264,10 @@
             }, 3000);
         }
 
-        // --- EXTRATOR E CONVERSOR INTELIGENTE DE LINKS DO YOUTUBE ---
-        function extractYoutubeId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
         // --- VERIFICAÇÃO AUTOMÁTICA DE LINKS NO ARRANQUE ---
         window.addEventListener('DOMContentLoaded', () => {
             const pdf1 = document.getElementById('pdf-viewer-1');
             const pdf2 = document.getElementById('pdf-viewer-2');
-            const yt = document.getElementById('youtube-player');
 
             const isConfigured = (element, srcVal) => {
                 return srcVal && srcVal !== "" && srcVal !== "about:blank";
@@ -381,25 +278,6 @@
             if (isConfigured(pdf1, src1)) {
                 document.getElementById('pdf-placeholder-1').classList.add('hidden');
                 pdf1.classList.remove('hidden');
-            }
-
-            // Processamento e Correção de Link do YouTube
-            const rawYtSrc = yt.getAttribute('src');
-            if (isConfigured(yt, rawYtSrc)) {
-                const videoId = extractYoutubeId(rawYtSrc);
-                if (videoId) {
-                    // Substitui dinamicamente pelo formato embed perfeito que não gera bloqueios
-                    yt.src = `https://www.youtube.com/embed/${videoId}?rel=0`;
-                    document.getElementById('video-placeholder').classList.add('hidden');
-                    yt.classList.remove('hidden');
-                } else if (rawYtSrc.includes('youtube.com/embed/')) {
-                    // Se já estiver no formato embed, mantém
-                    document.getElementById('video-placeholder').classList.add('hidden');
-                    yt.classList.remove('hidden');
-                } else {
-                    // Erro ao identificar o link
-                    showToast("Formato de link do YouTube não reconhecido.", "error");
-                }
             }
 
             // Processamento do PDF 2 (Atividades)
@@ -485,11 +363,7 @@
 
         // --- BOTÃO VOLTAR ---
         function handleVoltar() {
-            showToast("A regressar ao Menu Principal...", "info");
-            
-            setTimeout(() => {
-                showToast("Comando de regresso acionado!", "success");
-            }, 800);
+            window.location.href = "aula04-arq.html";
         }
 
         // --- CONTROLES DE INSTRUÇÕES ---
