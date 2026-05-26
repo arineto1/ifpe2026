@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-PT" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistemas Operacionais - Espaço de Estudos</title>
+    <!-- Tailwind CSS para estilização moderna e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        soTeal: {
+                            500: '#00b4d8', // Tom ciano de processos ativos
+                            600: '#0077b6',
+                        },
+                        soDark: {
+                            100: '#f8fafc', // Fundo claro limpo
+                            800: '#1e293b', // Fundo de janelas
+                            900: '#0f172a', // Fundo geral do sistema
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons para ícones vetoriais modernos -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Ajuste do modo de tela cheia nativo nos blocos de PDF */
+        #pdf-section-1:fullscreen, #pdf-section-2:fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+            padding: 16px;
+            border-radius: 0px;
+        }
+        .dark #pdf-section-1:fullscreen, .dark #pdf-section-2:fullscreen {
+            background-color: #0f172a;
+        }
+        #pdf-section-1:fullscreen, #pdf-section-2:fullscreen {
+            background-color: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-soDark-100 text-slate-800 dark:bg-soDark-900 dark:text-slate-100 min-h-screen flex flex-col">
+
+    <!-- CABEÇALHO / BARRA DE NAVEGAÇÃO -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-soDark-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+        <div class="max-w-[90%] mx-auto h-16 flex items-center justify-between">
+            
+            <!-- Botão Voltar (Estilo Barra de Ferramentas) e Título -->
+            <div class="flex items-center gap-4">
+                <button onclick="handleVoltar()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-all active:scale-95 group">
+                    <i data-lucide="chevron-left" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform"></i>
+                    <span>Voltar ao Menu</span>
+                </button>
+                <div class="h-5 w-[1px] bg-slate-200 dark:bg-slate-700"></div>
+                <div class="flex items-center gap-2">
+                    <!-- Logótipo de Processador/Núcleo -->
+                    <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-soTeal-500 text-white shadow-md shadow-soTeal-500/20">
+                        <i data-lucide="cpu" class="w-4 h-4"></i>
+                    </div>
+                    <span class="font-semibold text-lg tracking-tight">
+                        Sistemas Operacionais
+                    </span>
+                </div>
+            </div>
+
+            <!-- Controles do Sistema (Tema, Ajuda) -->
+            <div class="flex items-center gap-1.5">
+                <!-- Alternar Tema -->
+                <button onclick="toggleTheme()" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors" title="Alternar Tema Escuro/Claro">
+                    <i data-lucide="sun" id="theme-icon-light" class="w-5 h-5 hidden"></i>
+                    <i data-lucide="moon" id="theme-icon-dark" class="w-5 h-5"></i>
+                </button>
+
+                <!-- Botão de Ajuda Rápida -->
+                <button onclick="showInstructions()" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 transition-colors" title="Como configurar seus links">
+                    <i data-lucide="help-circle" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL (Coluna única de 90%) -->
+    <main class="flex-1 w-[90%] mx-auto py-8 flex flex-col gap-8">
+
+        <!-- 1. BLOCO DE CONTEÚDOS (PDF 1) - Otimizado para leitura profunda -->
+        <section id="pdf-section-1" class="bg-white dark:bg-soDark-800 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[82vh] transition-all duration-300">
+            
+            <!-- Cabeçalho da Janela de Conteúdos -->
+            <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-soDark-800/50">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-1.5 bg-soTeal-500/10 text-soTeal-500 rounded-lg">
+                        <i data-lucide="layers" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-slate-900 dark:text-white text-sm leading-tight">Conteúdos</h2>
+                    </div>
+                </div>
+
+                <!-- Botão de Tela Inteira para PDF 1 -->
+                <button onclick="toggleFullscreen('pdf-section-1', 'fs-icon-1')" class="p-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5" title="Alternar Tela Inteira">
+                    <span class="text-xs font-semibold hidden sm:inline">Tela Inteira</span>
+                    <i data-lucide="maximize-2" id="fs-icon-1" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Espaço do Visualizador de PDF -->
+            <div class="flex-1 relative bg-slate-100 dark:bg-soDark-900 p-2 flex flex-col items-center justify-center">
+                
+                <!-- Placeholder de orientação caso esteja vazio -->
+                <div id="pdf-placeholder-1" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10 bg-white dark:bg-soDark-800 transition-all">
+                    <div class="w-16 h-16 bg-soTeal-500/10 text-soTeal-500 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="file-text" class="w-8 h-8 animate-pulse"></i>
+                    </div>
+                    <h3 class="text-base font-semibold text-slate-800 dark:text-slate-200">PDF de Conteúdos Não Configurado</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mt-2">
+                        Abra este arquivo <code class="bg-slate-100 dark:bg-slate-700 px-1 py-0.5 rounded text-red-500 font-mono font-semibold">index.html</code> no seu editor de código e coloque o link do seu PDF de Sistemas Operacionais na linha correspondente indicada nos comentários.
+                    </p>
+                </div>
+
+                <!-- 
+                  ==================================================================
+                  👉 COLOQUE O LINK DO SEU PDF DE CONTEÚDOS ABAIXO!
+                  Substitua "about:blank" pelo endereço do seu PDF real de SO.
+                  Exemplos aceitos:
+                    - Ficheiro local: src="arquitetura_so.pdf"
+                    - Link de rede/web: src="https://exemplo.com/apostila.pdf"
+                  ==================================================================
+                -->
+                <iframe 
+                    id="pdf-viewer-1" 
+                    class="w-full h-full rounded-lg border-0 bg-white dark:bg-slate-900 hidden" 
+                    src="aulaso.pdf">
+                </iframe>
+            </div>
+        </section>
+
+        <!-- 2. BLOCO DE VÍDEO-AULA (YOUTUBE) - Otimizado para visualização perfeita -->
+        <section class="bg-white dark:bg-soDark-800 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col max-w-6xl mx-auto w-full">
+            
+            <!-- Cabeçalho do Reprodutor de Vídeo -->
+            <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-soDark-800/50">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-1.5 bg-red-500/10 text-red-500 rounded-lg">
+                        <i data-lucide="play-circle" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-slate-900 dark:text-white text-sm leading-tight">Vídeo Aula</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área do Reprodutor -->
+            <div class="p-6 bg-slate-50 dark:bg-slate-900/40">
+                <!-- Mantém a proporção perfeita de 16:9 -->
+                <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black border border-slate-200 dark:border-slate-800 shadow-lg flex items-center justify-center">
+                    
+                    <!-- Placeholder de orientação para vídeo -->
+                    <div id="video-placeholder" class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center z-10 bg-slate-950 transition-all">
+                        <div class="w-12 h-12 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mb-3">
+                            <i data-lucide="play" class="w-6 h-6 animate-pulse"></i>
+                        </div>
+                        <h4 class="text-sm font-semibold text-white">Vídeo Aula Não Configurada</h4>
+                        <p class="text-xs text-slate-400 max-w-xs mt-1">
+                            Adicione o link do YouTube no código HTML abaixo. O site converterá o link de forma totalmente automática para si!
+                        </p>
+                    </div>
+
+                    <!-- 
+                      ==================================================================
+                      👉 COLOQUE O LINK DO SEU VÍDEO DO YOUTUBE ABAIXO!
+                      Pode colocar QUALQUER formato de link do YouTube! Exemplos aceites:
+                        - Link do browser: src="https://www.youtube.com/watch?v=VIDEO_ID"
+                        - Link curto/share: src="https://youtu.be/VIDEO_ID"
+                        - Link incorporado: src="https://www.youtube.com/embed/VIDEO_ID"
+                      ==================================================================
+                    -->
+                    <iframe 
+                        id="youtube-player" 
+                        class="absolute inset-0 w-full h-full border-0 hidden" 
+                        src="https://www.youtube.com/watch?v=yjfB-asZVF4" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. BLOCO DE ATIVIDADES NO CADERNO (PDF 2) - Amplo para consulta rápida -->
+        <section id="pdf-section-2" class="bg-white dark:bg-soDark-800 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[82vh] transition-all duration-300">
+            
+            <!-- Cabeçalho do Bloco -->
+            <div class="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-soDark-800/50">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-1.5 bg-emerald-500/10 text-emerald-500 rounded-lg">
+                        <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-slate-900 dark:text-white text-sm leading-tight">Atividades no Caderno</h2>
+                    </div>
+                </div>
+
+                <!-- Botão de Tela Inteira para PDF 2 -->
+                <button onclick="toggleFullscreen('pdf-section-2', 'fs-icon-2')" class="p-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5" title="Alternar Tela Inteira">
+                    <span class="text-xs font-semibold hidden sm:inline">Tela Inteira</span>
+                    <i data-lucide="maximize-2" id="fs-icon-2" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Area do visualizador de PDF -->
+            <div class="flex-1 relative bg-slate-100 dark:bg-soDark-900 p-2 flex flex-col items-center justify-center">
+                
+                <!-- Placeholder de orientação para atividades -->
+                <div id="pdf-placeholder-2" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10 bg-white dark:bg-soDark-800 transition-all">
+                    <div class="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center mb-3">
+                        <i data-lucide="book-open" class="w-6 h-6 animate-pulse"></i>
+                    </div>
+                    <h4 class="text-sm font-semibold text-slate-800 dark:text-slate-200">Atividades Não Configuradas</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 max-w-xs mt-1">
+                        Insira o link para o PDF de atividades resolvidas de Sistemas Operacionais no local indicado nos comentários do código.
+                    </p>
+                </div>
+
+                <!-- 
+                  ==================================================================
+                  👉 COLOQUE O LINK DO SEU PDF DE ATIVIDADES ABAIXO!
+                  Substitua "about:blank" pelo endereço do seu PDF de exercícios de SO resolvidos.
+                  ==================================================================
+                -->
+                <iframe 
+                    id="pdf-viewer-2" 
+                    class="w-full h-full rounded-lg border-0 bg-white dark:bg-slate-900 hidden" 
+                    src="about:blank">
+                </iframe>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="bg-white dark:bg-[#090d16] border-t border-slate-200 dark:border-slate-800/60 py-6 transition-colors">
+        <div class="max-w-[90%] mx-auto text-center">
+            <p class="text-xs text-slate-400 dark:text-slate-500">
+                Espaço de Estudos - Sistemas Operacionais. Otimizado para monitores de alta fidelidade e foco máximo.
+            </p>
+        </div>
+    </footer>
+
+    <!-- MODAL DE INSTRUÇÕES (Estilo Painel de Controle) -->
+    <div id="instructions-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden animate-fade-in">
+        <div class="bg-white dark:bg-soDark-800 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="terminal" class="w-5 h-5 text-soTeal-500"></i>
+                    <h3 class="font-bold text-lg text-slate-900 dark:text-white">Editar Arquivo HTML</h3>
+                </div>
+                <button onclick="hideInstructions()" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-200 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4 text-sm text-slate-600 dark:text-slate-300">
+                <p>Mude o link dos seguintes elementos abrindo este ficheiro com um editor de código:</p>
+                
+                <div class="space-y-3 font-sans text-xs">
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
+                        <span class="font-bold text-soTeal-500">1. PDF de Conteúdos SO</span>
+                        <p class="text-slate-400 mt-1">Procure o <code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-red-500">id="pdf-viewer-1"</code> e substitua <code class="text-soTeal-500">src="about:blank"</code> pelo seu ficheiro.</p>
+                    </div>
+
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
+                        <span class="font-bold text-red-500">2. Vídeo Aula (YouTube)</span>
+                        <p class="text-slate-400 mt-1">Procure o <code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-red-500">id="youtube-player"</code> e insira qualquer link de vídeo em <code class="text-soTeal-500">src="..."</code>.</p>
+                    </div>
+
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
+                        <span class="font-bold text-emerald-500">3. PDF de Atividades</span>
+                        <p class="text-slate-400 mt-1">Procure o <code class="bg-slate-200 dark:bg-slate-700 px-1 py-0.5 rounded text-red-500">id="pdf-viewer-2"</code> e substitua <code class="text-soTeal-500">src="about:blank"</code> pelo seu PDF de exercícios.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="hideInstructions()" class="w-full mt-6 py-2.5 bg-soTeal-500 hover:bg-soTeal-600 active:scale-95 text-white font-semibold rounded-xl text-sm transition-all shadow-lg shadow-soTeal-500/20">
+                Concluído
+            </button>
+        </div>
+    </div>
+
+    <!-- NOTIFICAÇÃO PERSONALIZADA (Toast de Kernel) -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border bg-white dark:bg-soDark-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 translate-y-20 opacity-0 pointer-events-none transition-all duration-300">
+        <span id="toast-icon" class="text-soTeal-500">
+            <i data-lucide="info" class="w-5 h-5"></i>
+        </span>
+        <span id="toast-message" class="text-sm font-medium">Notificação</span>
+    </div>
+
+    <!-- JAVASCRIPT DE FUNCIONALIDADE -->
+    <script>
+        // Inicializa os ícones do Lucide
+        lucide.createIcons();
+
+        // --- SISTEMA DE TOAST (Alertas Estilizados) ---
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast-notification');
+            const msgSpan = document.getElementById('toast-message');
+            const iconSpan = document.getElementById('toast-icon');
+
+            msgSpan.innerText = message;
+
+            if (type === 'success') {
+                iconSpan.innerHTML = '<i data-lucide="check" class="w-5 h-5 text-emerald-500"></i>';
+            } else if (type === 'error') {
+                iconSpan.innerHTML = '<i data-lucide="alert-circle" class="w-5 h-5 text-red-500"></i>';
+            } else {
+                iconSpan.innerHTML = '<i data-lucide="info" class="w-5 h-5 text-soTeal-500"></i>';
+            }
+            lucide.createIcons();
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // --- EXTRATOR E CONVERSOR INTELIGENTE DE LINKS DO YOUTUBE ---
+        function extractYoutubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // --- VERIFICAÇÃO AUTOMÁTICA DE LINKS NO ARRANQUE ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const pdf1 = document.getElementById('pdf-viewer-1');
+            const pdf2 = document.getElementById('pdf-viewer-2');
+            const yt = document.getElementById('youtube-player');
+
+            const isConfigured = (element, srcVal) => {
+                return srcVal && srcVal !== "" && srcVal !== "about:blank";
+            };
+
+            // Processamento do PDF de Conteúdos (PDF 1)
+            const src1 = pdf1.getAttribute('src');
+            if (isConfigured(pdf1, src1)) {
+                document.getElementById('pdf-placeholder-1').classList.add('hidden');
+                pdf1.classList.remove('hidden');
+            }
+
+            // Processamento do Link do YouTube (Conversor Automático)
+            const rawYtSrc = yt.getAttribute('src');
+            if (isConfigured(yt, rawYtSrc)) {
+                const videoId = extractYoutubeId(rawYtSrc);
+                if (videoId) {
+                    // Substitui dinamicamente pelo formato embed seguro
+                    yt.src = `https://www.youtube.com/embed/${videoId}?rel=0`;
+                    document.getElementById('video-placeholder').classList.add('hidden');
+                    yt.classList.remove('hidden');
+                } else if (rawYtSrc.includes('youtube.com/embed/')) {
+                    // Se já estiver no formato correto, mantém
+                    document.getElementById('video-placeholder').classList.add('hidden');
+                    yt.classList.remove('hidden');
+                } else {
+                    showToast("Formato de link do YouTube não reconhecido.", "error");
+                }
+            }
+
+            // Processamento do PDF de Atividades (PDF 2)
+            const src2 = pdf2.getAttribute('src');
+            if (isConfigured(pdf2, src2)) {
+                document.getElementById('pdf-placeholder-2').classList.add('hidden');
+                pdf2.classList.remove('hidden');
+            }
+        });
+
+        // --- CONTROLES DE TELA INTEIRA (Fullscreen API) ---
+        function toggleFullscreen(sectionId, iconId) {
+            const element = document.getElementById(sectionId);
+            
+            if (!document.fullscreenElement && 
+                !document.webkitFullscreenElement && 
+                !document.msFullscreenElement) {
+                // Entrar em Tela Inteira
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.webkitRequestFullscreen) { /* Safari */
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) { /* IE11 */
+                    element.msRequestFullscreen();
+                }
+                showToast("Leitura imersiva (Tela Cheia) ativada. Use 'ESC' para sair.", "info");
+            } else {
+                // Sair de Tela Inteira
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        // Listener para gerenciar as mudanças de tela cheia e atualizar os ícones
+        function handleFullscreenChange() {
+            const fsElement = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+            const icon1 = document.getElementById('fs-icon-1');
+            const icon2 = document.getElementById('fs-icon-2');
+
+            if (fsElement) {
+                // Em tela cheia
+                if (fsElement.id === 'pdf-section-1' && icon1) {
+                    icon1.setAttribute('data-lucide', 'minimize-2');
+                } else if (fsElement.id === 'pdf-section-2' && icon2) {
+                    icon2.setAttribute('data-lucide', 'minimize-2');
+                }
+            } else {
+                // Saiu da tela cheia
+                if (icon1) icon1.setAttribute('data-lucide', 'maximize-2');
+                if (icon2) icon2.setAttribute('data-lucide', 'maximize-2');
+            }
+            lucide.createIcons();
+        }
+
+        // Registrar os eventos de alteração de tela cheia nos múltiplos navegadores
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+        // --- ALTERNAR TEMA CLARO / ESCURO (Modo Geral) ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const darkIcon = document.getElementById('theme-icon-dark');
+            const lightIcon = document.getElementById('theme-icon-light');
+
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                darkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+                showToast("Modo Claro ativado.", "info");
+            } else {
+                html.classList.add('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+                showToast("Modo Escuro ativado.", "info");
+            }
+        }
+
+        // --- BOTÃO VOLTAR ---
+        function handleVoltar() {
+            showToast("A regressar ao Menu Principal...", "info");
+            
+            setTimeout(() => {
+                showToast("Comando de regresso acionado!", "success");
+            }, 800);
+        }
+
+        // --- CONTROLES DE INSTRUÇÕES ---
+        function showInstructions() {
+            document.getElementById('instructions-modal').classList.remove('hidden');
+        }
+
+        function hideInstructions() {
+            document.getElementById('instructions-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

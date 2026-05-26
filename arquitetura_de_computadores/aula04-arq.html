@@ -1,359 +1,423 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula 04 - Ecossistema Windows</title>
+    <title>Trilha dos Sistemas Operacionais</title>
     <style>
+        /* Paleta de Cores Premium de Alto Contraste (Dark Mode Focado em Leitura) */
         :root {
-            /* Paleta suave e melancólica inspirada em Frieren */
-            --primary-color: #798b97; 
-            --primary-hover: #5d6c77;
-            --bg-color: #f4f6f7;
-            --card-bg: #ffffff;
-            --text-main: #2c3e50;
-            --text-muted: #7f8c8d;
-            --border-color: #e5e9eb;
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
-            --radius: 12px;
+            --background: #090d16;
+            --card-bg: #151b26;
+            --border: #242c3d;
+            --border-hover: #4f46e5;
+            
+            --primary: #6366f1;
+            --primary-light: rgba(99, 102, 241, 0.15);
+            --primary-hover: #818cf8;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-highlight: #38bdf8;
+            
+            --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.7);
+            
+            --radius-md: 14px;
+            --radius-lg: 20px;
         }
 
+        /* Reset e Configurações de Acessibilidade */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--background);
             color: var(--text-main);
-            line-height: 1.7;
-            padding-bottom: 4rem;
-        }
-
-        /* Tipografia elegante para títulos (estilo literatura clássica/grimórios) */
-        h1, h2, h3 {
-            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
-        }
-
-        /* Top Navigation */
-        nav {
-            background-color: var(--card-bg);
-            padding: 1rem 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
         }
 
-        .back-link {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: color 0.2s;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        .back-link:hover {
-            color: var(--primary-color);
-        }
-
-        /* Main Content */
-        main {
+        /* Container Centralizado de Leitura Otimizada */
+        .container {
+            max-width: 680px;
             width: 100%;
-            margin: 3rem auto 0;
-            padding: 0;
+            padding: 3rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
         }
 
-        .content-wrapper {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .page-header {
-            margin-bottom: 3rem;
+        header {
             text-align: center;
-        }
-
-        .page-header h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--text-main);
             margin-bottom: 0.5rem;
-            line-height: 1.2;
         }
 
-        .page-header p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-        }
-
-        /* PDF Section Styles */
-        .pdf-section {
-            margin-bottom: 4rem;
-            width: 100%;
-        }
-
-        .pdf-section-title {
-            max-width: 1200px;
-            margin: 0 auto 1rem auto;
-            padding: 0 1.5rem;
-        }
-
-        .pdf-section h2 {
-            font-size: 1.8rem;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .pdf-section h2::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 24px;
-            background-color: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        .toggle-wrapper {
-            text-align: center;
-            margin: 1.5rem 0;
-        }
-
-        .btn-toggle {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            padding: 0.75rem 2.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
-        .btn-toggle:hover {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-
-        .pdf-container {
-            width: 90%; /* Ocupa 90% da largura do ecrã */
-            margin: 0 auto; /* Centraliza */
-            height: 90vh; /* 90% da altura do ecrã */
-            min-height: 600px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            background: #e5e9eb;
-            position: relative;
-            overflow: hidden;
-            display: none; /* Oculto por padrão */
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .pdf-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-
-        .pdf-fallback {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: var(--text-muted);
-            z-index: -1;
-        }
-
-        /* Action Button */
-        .action-section {
-            text-align: center;
-            margin: 5rem auto 0;
-            padding-top: 3rem;
-            border-top: 1px solid var(--border-color);
-            max-width: 900px;
-        }
-
-        .btn-concurso {
+        .header-icon {
+            background-color: var(--primary-light);
+            color: var(--primary-hover);
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-md);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.75rem;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            padding: 1.25rem 2.5rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 850;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
             font-size: 1.1rem;
-            font-weight: 700;
-            border-radius: 50px;
-            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Box de Seção Principal */
+        .section-box {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: 2.25rem;
             box-shadow: var(--shadow-md);
-            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
-        .btn-concurso:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-3px);
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 1.75rem;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .instruction-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+            position: relative;
+        }
+
+        /* Linha guia vertical sutil de alto contraste */
+        .instruction-steps::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            bottom: 20px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--border));
+            z-index: 1;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 1.25rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-badge {
+            background-color: var(--primary);
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 0.95rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 4px var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .step-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding-top: 0.35rem;
+        }
+
+        .step-heading {
+            font-weight: 750;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .step-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Links do Menu como Cards Interativos */
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-hover);
             box-shadow: var(--shadow-lg);
+            background-color: rgba(99, 102, 241, 0.08);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-header h1 {
-                font-size: 2rem;
+        .topic-info-container {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        /* Indicador do Tópico (TP xx) */
+        .topic-indicator {
+            background-color: var(--border);
+            color: var(--text-highlight);
+            font-weight: 800;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            min-width: 65px;
+            text-align: center;
+        }
+
+        .menu-item:hover .topic-indicator {
+            background-color: var(--primary);
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .topic-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .topic-title {
+            font-weight: 750;
+            font-size: 1.15rem;
+            color: var(--text-main);
+            letter-spacing: -0.01em;
+        }
+
+        .topic-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Ícone de Seta Indicadora */
+        .arrow-icon {
+            color: var(--text-muted);
+            transition: transform 0.25s, color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu-item:hover .arrow-icon {
+            color: var(--text-highlight);
+            transform: translateX(6px);
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Responsividade para telas menores */
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.75rem 1rem;
+                gap: 2rem;
             }
-            .pdf-container {
-                width: 95%; /* Em ecrãs pequenos, ocupa um pouco mais de espaço */
-                height: 70vh;
+            .section-box {
+                padding: 1.5rem;
             }
-            .btn-concurso {
-                width: 90%;
+            .menu-item {
+                padding: 1.1rem;
+            }
+            .topic-info-container {
+                gap: 0.85rem;
+            }
+            .topic-title {
+                font-size: 1.05rem;
+            }
+            .topic-desc {
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navegação Superior -->
-    <nav>
-        <a href="menu-arquitetura.html" class="back-link">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Voltar ao Menu
-        </a>
-    </nav>
-
-    <main>
-        <!-- Cabeçalho da Aula -->
-        <header class="page-header content-wrapper">
-            <h1>Aula 04: Ecossistema Windows</h1>
-            <p>Arquitetura de Computadores • Instalar Windows, configurar privacidade e região.</p>
+    <div class="container">
+        
+        <!-- Cabeçalho -->
+        <header>
+            <div class="header-icon">
+                <!-- Ícone de CPU com Placa de Circuito Integrado -->
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>
+            </div>
+            <h1>Trilha dos Sistemas Operacionais</h1>
+            <p class="subtitle">Descubra o coração do hardware de forma guiada</p>
         </header>
 
-        <!-- Secção: Material Teórico -->
-        <section class="pdf-section">
-            <div class="pdf-section-title">
-                <h2>Material da Aula</h2>
-            </div>
+        <!-- Instruções Sequenciais (Fluxo um embaixo do outro) -->
+        <div class="section-box">
+            <h2 class="section-title">
+                <!-- Ícone de Livro Aberto -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                Como funciona a sua trilha?
+            </h2>
             
-            <div class="toggle-wrapper">
-                <button class="btn-toggle" onclick="togglePdf('pdf-aula', this, 'Ver Aula', 'Ocultar Aula')">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    <span>Ver Aula</span>
-                </button>
-            </div>
+            <div class="instruction-steps">
+                <!-- Passo 1 -->
+                <div class="step-item">
+                    <div class="step-badge">1</div>
+                    <div class="step-content">
+                        <span class="step-heading">Siga uma ordem lógica</span>
+                        <span class="step-text">Acesse um tópico de cada vez. O aprendizado é projetado de forma cumulativa, partindo da teoria geral até sistemas específicos.</span>
+                    </div>
+                </div>
 
-            <div id="pdf-aula" class="pdf-container">
-                <div class="pdf-fallback">A carregar visualizador de PDF...</div>
+                <!-- Passo 2 -->
+                <div class="step-item">
+                    <div class="step-badge">2</div>
+                    <div class="step-content">
+                        <span class="step-heading">Leia com atenção focada</span>
+                        <span class="step-text">Ao abrir a página externa do tópico, reserve alguns minutos para absorver a arquitetura e detalhes técnicos explicados.</span>
+                    </div>
+                </div>
+
+                <!-- Passo 3 -->
+                <div class="step-item">
+                    <div class="step-badge">3</div>
+                    <div class="step-content">
+                        <span class="step-heading">Responda as atividades</span>
+                        <span class="step-text">Ao término da leitura de cada módulo, resolva as atividades práticas propostas na página para testar e validar sua fixação.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu de Acesso (Lista de Tópicos Sequenciais) -->
+        <div class="section-box">
+            <h2 class="section-title">
+                <!-- Ícone de Menu / Lista de Estudo -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                Tópicos de Estudo
+            </h2>
+
+            <nav class="menu-list">
                 
-                <!-- COLOQUE O NOME DO SEU PDF DA AULA 4 AQUI -->
-                <iframe src="aula04-arq-teoria.pdf#navpanes=0&view=FitH" title="Material Teórico da Aula 04">
-                    <p>O seu navegador não suporta a visualização de PDFs. <a href="aula04-arq-teoria.pdf">Clique aqui para descarregar o PDF da Aula</a>.</p>
-                </iframe>
-            </div>
-        </section>
+                <!-- Tópico 1 -->
+                <a href="conteudo1.html" class="menu-item">
+                    <div class="topic-info-container">
+                        <div class="topic-indicator">TP 01</div>
+                        <div class="topic-details">
+                            <span class="topic-title">Visão Geral dos Sistemas Operacionais</span>
+                        </div>
+                    </div>
+                    <div class="arrow-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                </a>
 
-        <!-- Secção: Atividades Práticas -->
-        <section class="pdf-section">
-            <div class="pdf-section-title">
-                <h2>Prática e Documentação</h2>
-            </div>
-            
-            <div class="toggle-wrapper">
-                <button class="btn-toggle" onclick="togglePdf('pdf-atividades', this, 'Ver Prática', 'Ocultar Prática')">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    <span>Ver Prática</span>
-                </button>
-            </div>
+                <!-- Tópico 2 -->
+                <a href="conteudo2.html" class="menu-item">
+                    <div class="topic-info-container">
+                        <div class="topic-indicator">TP 02</div>
+                        <div class="topic-details">
+                            <span class="topic-title">Windows</span>
+                        </div>
+                    </div>
+                    <div class="arrow-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                </a>
 
-            <div id="pdf-atividades" class="pdf-container">
-                <div class="pdf-fallback">A carregar visualizador de PDF...</div>
-                
-                <!-- COLOQUE O NOME DO SEU PDF DE ATIVIDADES DA AULA 4 AQUI -->
-                <iframe src="aula04-arq-atividades.pdf#navpanes=0&view=FitH" title="Atividades Práticas da Aula 04">
-                    <p>O seu navegador não suporta a visualização de PDFs. <a href="aula04-arq-atividades.pdf">Clique aqui para descarregar o PDF de Atividades</a>.</p>
-                </iframe>
-            </div>
-        </section>
+                <!-- Tópico 3 -->
+                <a href="conteudo3.html" class="menu-item">
+                    <div class="topic-info-container">
+                        <div class="topic-indicator">TP 03</div>
+                        <div class="topic-details">
+                            <span class="topic-title">Linux</span>
+                        </div>
+                    </div>
+                    <div class="arrow-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                </a>
 
-        <!-- Secção: Call to Action (Questões de Concurso/Fixação) -->
-        <section class="action-section">
-            <a href="aula4-arq-concurso.html" class="btn-concurso">
-                Resolver Questões de Concurso
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-            </a>
-        </section>
-    </main>
+                <!-- Tópico 4 -->
+                <a href="conteudo4.html" class="menu-item">
+                    <div class="topic-info-container">
+                        <div class="topic-indicator">TP 04</div>
+                        <div class="topic-details">
+                            <span class="topic-title">Mac</span>
+                        </div>
+                    </div>
+                    <div class="arrow-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                </a>
 
-    <script>
-        // Função para mostrar/ocultar o PDF com transição suave
-        function togglePdf(id, btn, textShow, textHide) {
-            const container = document.getElementById(id);
-            const isHidden = container.style.display === 'none' || container.style.display === '';
+            </nav>
+        </div>
 
-            if (isHidden) {
-                // Mostrar PDF
-                container.style.display = 'block';
-                // Pequeno atraso para garantir que a transição de opacidade aconteça
-                setTimeout(() => {
-                    container.style.opacity = '1';
-                }, 10);
-                
-                // Mudar texto e ícone (olho riscado)
-                btn.innerHTML = `
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                        <line x1="1" y1="1" x2="23" y2="23"></line>
-                    </svg>
-                    <span>${textHide}</span>
-                `;
-            } else {
-                // Ocultar PDF
-                container.style.opacity = '0';
-                setTimeout(() => {
-                    container.style.display = 'none';
-                }, 300); // Aguarda a animação acabar
-                
-                // Mudar texto e ícone (olho aberto)
-                btn.innerHTML = `
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                    <span>${textShow}</span>
-                `;
-            }
-        }
-    </script>
+        <!-- Rodapé -->
+        <footer>
+            <p>EduLab &bull; Trilha dos Sistemas Operacionais &bull; Totalmente Autônomo & Offline</p>
+        </footer>
+
+    </div>
+
 </body>
 </html>
