@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado EBTT - Sistemas Operacionais</title>
+    <!-- Tailwind CSS para estilização moderna e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            creme: '#FAF8F5',       // Fundo confortável de leitura (E-reader style)
+                            textDark: '#1E293B',    // Slate-800 para alto contraste porém suave
+                            textHeading: '#0F172A', // Slate-900 para títulos marcantes
+                            accent: '#0284C7',      // Azul calmo institucional para links/foco
+                            accentHover: '#0369A1',
+                            correct: '#15803D',     // Verde sucesso suave
+                            correctBg: '#F0FDF4',
+                            wrong: '#B91C1C',       // Vermelho erro suave
+                            wrongBg: '#FEF2F2',
+                            neutralBg: '#F8FAFC',
+                            cardBorder: '#E2E8F0'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        serif: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos finos para transição suave de estados */
+        .option-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Custom scrollbar para manter a harmonia do design */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF8F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+<body class="bg-brand-creme text-brand-textDark font-sans min-h-screen selection:bg-sky-100 selection:text-sky-900">
+
+    <!-- Cabeçalho Institucional -->
+    <header class="border-b border-stone-200 bg-white/80 backdrop-blur-md sticky top-0 z-40 transition-shadow duration-300">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <!-- Ícone Acadêmico / IF -->
+                <div class="bg-emerald-600 text-white p-2 rounded-lg font-bold text-lg tracking-wider shadow-sm flex items-center justify-center w-10 h-10">
+                    IF
+                </div>
+                <div>
+                    <span class="text-xs font-semibold tracking-widest text-emerald-700 uppercase block">Simulado Preparatório</span>
+                    <h1 class="text-lg font-bold text-brand-textHeading leading-tight">Magistério EBTT • Informática</h1>
+                </div>
+            </div>
+            
+            <!-- Barra de Progresso Compacta -->
+            <div id="header-progress-container" class="w-full sm:w-48 flex items-center gap-3">
+                <div class="w-full bg-slate-100 rounded-full h-2.5">
+                    <div id="progress-bar-fill" class="bg-emerald-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <span id="progress-text" class="text-xs font-semibold text-slate-500 whitespace-nowrap">0/10</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        
+        <!-- Hero de Introdução -->
+        <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 mb-8 shadow-sm">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-sky-50 text-sky-700 rounded-full text-xs font-semibold mb-4">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"></path></svg>
+                Tema: Sistemas Operacionais (Análise de Desempenho e Diagnóstico)
+            </div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-brand-textHeading mb-3 tracking-tight">
+                Simulado Especializado: Gestão de Recursos & Diagnóstico de Gargalos
+            </h2>
+            <p class="text-slate-600 leading-relaxed text-sm md:text-base mb-4">
+                Este teste foi estruturado metodologicamente para simular o rigor técnico exigido em provas de concurso para o cargo de <strong>Professor de Ensino Básico, Técnico e Tecnológico (EBTT)</strong> dos Institutos Federais. O conteúdo aborda as métricas do kernel, mecanismos físicos de E/S, paginação e analogias didáticas de desempenho.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs md:text-sm text-slate-500 pt-2 border-t border-stone-100">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    10 Questões Inéditas
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                    Estilo Questões de Concurso IFs
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    Resolução Comentada ao Final
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de Resultados (Oculto por padrão, aparece ao submeter) -->
+        <section id="results-card" class="hidden bg-white rounded-2xl border-2 border-emerald-500 p-6 md:p-8 mb-8 shadow-md transition-all duration-500 transform scale-95 opacity-0">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-700 block mb-1">Simulado Concluído</span>
+                    <h3 class="text-2xl font-black text-brand-textHeading">Painel de Desempenho</h3>
+                    <p class="text-slate-500 text-sm mt-1" id="results-summary-text">Você acertou 0 de 10 questões (0%)</p>
+                </div>
+                <!-- Gráfico de Score Circular Simplificado -->
+                <div class="relative flex items-center justify-center">
+                    <div class="w-28 h-28 rounded-full flex flex-col items-center justify-center bg-emerald-50 border-4 border-emerald-500 text-center shadow-inner">
+                        <span id="results-score-badge" class="text-3xl font-black text-emerald-800">0/10</span>
+                        <span id="results-percent-badge" class="text-xs font-bold text-emerald-600">0% de Acerto</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card de Avaliação de Perfil de Candidato -->
+            <div id="performance-feedback-box" class="p-4 rounded-xl mb-6 text-sm">
+                <!-- Inserido dinamicamente pelo JS -->
+            </div>
+
+            <!-- Filtros de Questões após envio -->
+            <div class="flex flex-wrap items-center gap-2 border-t border-stone-100 pt-6">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mr-2">Filtrar Questões:</span>
+                <button onclick="filterQuestions('all')" id="btn-filter-all" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-brand-textHeading text-white border border-brand-textHeading transition-all shadow-sm">
+                    Todas (10)
+                </button>
+                <button onclick="filterQuestions('correct')" id="btn-filter-correct" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-50 transition-all">
+                    Corretas (<span id="count-correct">0</span>)
+                </button>
+                <button onclick="filterQuestions('wrong')" id="btn-filter-wrong" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-red-700 border border-red-200 hover:bg-red-50 transition-all">
+                    Incorretas (<span id="count-wrong">0</span>)
+                </button>
+                <button onclick="resetQuiz()" class="ml-auto px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                    Tentar Novamente
+                </button>
+            </div>
+        </section>
+
+        <!-- Formulário das Questões -->
+        <form id="quiz-form" onsubmit="handleSubmit(event)" class="space-y-8">
+            <div id="questions-container" class="space-y-8">
+                <!-- Gerado Dinamicamente pelo JavaScript para máxima precisão -->
+            </div>
+
+            <!-- Barra de Ações Inferior -->
+            <div class="bg-white rounded-xl border border-stone-200 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+                <div>
+                    <h4 class="font-bold text-brand-textHeading text-sm">Pronto para finalizar o Simulado?</h4>
+                    <p class="text-xs text-slate-500">Revise suas respostas cuidadosamente antes de enviar.</p>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                    <span id="completion-warning" class="text-xs font-semibold text-amber-600 hidden">
+                        Ainda restam questões sem resposta!
+                    </span>
+                    <button type="submit" id="submit-btn" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-brand-textHeading text-white font-bold text-sm tracking-wide hover:bg-black transition-all hover:shadow-md active:scale-95 duration-100">
+                        Finalizar e Ver Resultados
+                    </button>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <!-- Rodapé de Créditos -->
+    <footer class="border-t border-stone-200 bg-white py-8 mt-12 text-center text-xs text-slate-400">
+        <div class="max-w-4xl mx-auto px-4">
+            <p class="mb-1">Simulado didático estruturado com base nas diretrizes acadêmicas de Sistemas Operacionais.</p>
+            <p>Desenvolvido para fins de estudo preparatório ao magistério superior e técnico de Institutos Federais.</p>
+        </div>
+    </footer>
+
+    <!-- Modal de Confirmação customizado (Eliminando o uso de 'alert()') -->
+    <div id="confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm hidden opacity-0 transition-all duration-300">
+        <div class="bg-white rounded-2xl border border-stone-200 max-w-md w-full p-6 shadow-xl transform scale-95 transition-transform duration-300">
+            <div class="flex items-center gap-3 mb-4 text-amber-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <h3 class="text-lg font-bold text-brand-textHeading">Atenção: Questões em Branco</h3>
+            </div>
+            <p id="modal-text" class="text-slate-600 text-sm leading-relaxed mb-6">
+                Você ainda não respondeu a todas as questões. Deseja finalizar o simulado mesmo assim?
+            </p>
+            <div class="flex gap-3 justify-end">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                    Voltar ao Simulado
+                </button>
+                <button onclick="confirmSubmit()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-amber-600 text-white hover:bg-amber-700 transition-all">
+                    Finalizar Mesmo Assim
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script com os Dados e Controle Interativo -->
+    <script>
+        // Estrutura de dados contendo integralmente os conteúdos das 10 questões, gabaritos e explicações comentadas
+        const quizData = [
+            {
+                id: 1,
+                num: "Questão 01",
+                topic: "Gargalo de Sistema & Dinâmica do Kernel",
+                question: "No que tange ao fenômeno de gargalo de sistema (bottleneck) e à dinâmica de gerenciamento de hardware pelo kernel do sistema operacional, assinale a alternativa correta.",
+                options: [
+                    "A) O desempenho global de um computador é determinado pela velocidade média dos barramentos e dispositivos lógicos da placa-mãe.",
+                    "B) Caso ocorra um gargalo em um componente de hardware lento, componentes mais rápidos da cadeia podem entrar em Wait State, de modo que a adição de recursos onde não reside o gargalo configurará desperdício.",
+                    "C) O kernel do sistema operacional elimina automaticamente os pontos de estrangulamento de hardware ao redimensionar em tempo real a frequência nominal de clock do barramento de controle.",
+                    "D) A ocorrência de um gargalo de disco rígido é anulada se o kernel for configurado para operar estritamente no modo de gerenciamento não paginável de threads de processos do usuário."
+                ],
+                correct: 1, // Letra B (index 1)
+                explanation: "<strong>Alternativa B está CORRETA.</strong> Se houver um ponto de lentidão crônica na entrega de dados (como um disco mecânico tradicional ou uma CPU saturada), os demais dispositivos velozes associados ao fluxo de processamento entram em estado de espera (Wait State) aguardando o processamento de E/S. Nesses casos, adicionar novos recursos nos pontos rápidos (por exemplo, expandir a memória RAM física sem substituir o HD limitante por um SSD) é ineficaz."
+            },
+            {
+                id: 2,
+                num: "Questão 02",
+                topic: "Fila do Processador (Processor Queue Length)",
+                question: "No monitoramento de processadores em sistemas operacionais modernos, um contador crítico a ser avaliado pelo administrador é a Fila do Processador (Processor Queue Length). Sob a ótica do escalonador de processos do kernel, assinale a alternativa que apresenta a interpretação correta para essa métrica.",
+                options: [
+                    "A) A fila mede a quantidade total de processos marcados pelo kernel como suspensos ou aguardando chamadas de sistema na tabela de descritores de sockets.",
+                    "B) A saturação de processamento de uma CPU é evidenciada quando o comprimento da fila de processos prontos excede o dobro do número total de núcleos físicos do processador.",
+                    "C) Uma fila de processador vazia (valor igual a zero) indica que a CPU está sofrendo para gerenciar a concorrência de threads de tempo real.",
+                    "D) O comprimento da fila do processador é inversamente proporcional à carga geral do sistema, uma vez que threads prontas representam a otimização de ciclos inativos da CPU."
+                ],
+                correct: 1, // Letra B (index 1)
+                explanation: "<strong>Alternativa B está CORRETA.</strong> O contador Processor Queue Length registra o número de threads prontas e aptas a rodar, mas que estão bloqueadas aguardando a CPU liberar um núcleo. Um valor maior que o dobro do número de núcleos físicos do processador é o indicador clássico de que o escalonador está saturado por excesso de demanda."
+            },
+            {
+                id: 3,
+                num: "Questão 03",
+                topic: "Tempo de Interrupção do Processador",
+                question: "Ao monitorar um servidor que apresenta lentidão sistêmica, o analista constata que o contador 'Tempo de Interrupção' (Interrupt Time %) do processador exibe valores constantemente elevados, superiores a 10%. Esse comportamento do sistema operacional sugere que:",
+                options: [
+                    "A) Um aplicativo de navegador de internet entrou em um erro lógico do tipo loop infinito na execução de código javascript do usuário.",
+                    "B) Há um driver de hardware com comportamento anômalo ou defeituoso gerando interrupções físicas em massa para o processador.",
+                    "C) O escalonador de processos foi desativado temporariamente devido ao esgotamento das tabelas de descritores de processos ativos do kernel.",
+                    "D) O sistema operacional realizou uma reconfiguração forçada para alocar mais threads no nível do arquivo de paginação do disco local."
+                ],
+                correct: 1, // Letra B (index 1)
+                explanation: "<strong>Alternativa B está CORRETA.</strong> O Tempo de Interrupção mede a fração temporal de processamento gasta respondendo a requisições de hardware. Se esse percentual de interrupção de hardware ultrapassa o limite de 10%, indica que existe um driver mal desenvolvido ou um dispositivo físico que está gerando interrupções em massa de forma repetitiva e ineficiente, sobrecarregando a CPU."
+            },
+            {
+                id: 4,
+                num: "Questão 04",
+                topic: "Erros Lógicos em Processos (Loops)",
+                question: "Um notebook de uso corporativo passou a apresentar severa lentidão geral, acompanhada pelo aumento imediato de rotação do cooler de refrigeração da CPU. Ao acionar a interface simplificada do Gerenciador de Tarefas, o usuário observa que a utilização da CPU indica 100% de saturação e que o processo 'navegador.exe' consome de forma contínua 98% do processador. O correto diagnóstico do comportamento operacional indica que:",
+                options: [
+                    "A) A unidade de disco rígido mecânico perdeu a sincronização de setores magnéticos, exigindo uma formatação de baixo nível.",
+                    "B) A memória RAM física instalada é de baixa frequência, forçando o navegador a usar o arquivo de swap como memória cache de vídeo de forma permanente.",
+                    "C) O processo 'navegador.exe' entrou em um erro lógico conhecido como loop infinito, consumindo ciclos do processador sem realizar processamento útil.",
+                    "D) O processador atingiu o seu limite físico de tempo de interrupção, exigindo a atualização forçada da versão do firmware de inicialização da BIOS."
+                ],
+                correct: 2, // Letra C (index 2)
+                explanation: "<strong>Alternativa C está CORRETA.</strong> Quando o cooler aumenta drasticamente de rotação devido ao aquecimento da CPU e uma única tarefa desponta no Gerenciador de Tarefas consumindo quase a totalidade da capacidade útil de computação de forma contínua, o diagnóstico padrão aponta para um erro de programação lógica (como loops infinitos). Finalizar o processo restaura o sistema à operação normal."
+            },
+            {
+                id: 5,
+                num: "Questão 05",
+                topic: "Gerenciamento de Memória (Commit Charge)",
+                question: "No gerenciamento de memória promovido pelo kernel do sistema operacional, a métrica denominada Memória Confirmada (Commit Charge) possui papel fundamental. Assinale a alternativa que define corretamente esse contador.",
+                options: [
+                    "A) O tempo consumido pela controladora de barramento do sistema operacional para transferir páginas de código limpo do cache L1 para os blocos físicos da RAM.",
+                    "B) A soma acumulada de memória virtual prometida pelo sistema operacional aos programas abertos, forçando o uso de paginação caso exceda o limite físico da RAM.",
+                    "C) O percentual fixo e não-modificável de memória RAM física que o kernel reserva na inicialização para conter os drivers críticos de rede e vídeo.",
+                    "D) A taxa média de transferência de dados que a memória RAM executa no envio de pacotes brutos direcionados aos controladores lógicos de barramento de barreira."
+                ],
+                correct: 1, // Letra B (index 1)
+                explanation: "<strong>Alternativa B está CORRETA.</strong> O Commit Charge representa o volume total de memória virtual (a soma da memória física e do arquivo de paginação em disco/swap) que o sistema operacional garantiu entregar aos aplicativos em execução. Se o montante dessa memória garantida ultrapassar o total de RAM física instalada, o sistema operacional é forçado a realizar swaps de dados, gerando gargalo."
+            },
+            {
+                id: 6,
+                num: "Questão 06",
+                topic: "Memória Virtual & Hiperpaginação",
+                question: "Em sistemas operacionais com memória virtual paginada, o fenômeno de hiperpaginação (thrashing) degrada intensamente o desempenho do computador. Sob o ponto de vista físico e de alocação de recursos, o diagnóstico correto do thrashing é caracterizado por:",
+                options: [
+                    "A) Utilização extremamente elevada da CPU (próxima a 100%) na execução de cálculos matemáticos pesados das threads de background.",
+                    "B) Baixa atividade de transferência de dados no subsistema de armazenamento secundário combinada com alto tempo ativo da memória física.",
+                    "C) Um cenário de travamentos recorrentes de sistema em que o kernel gasta a maior parte de seu tempo movendo páginas de dados do disco para a RAM e vice-versa, deixando a CPU com utilização útil mínima.",
+                    "D) Uma falha física destrutiva nos setores da memória RAM estática do computador, gerando a reconfiguração forçada para o modo de canal duplo."
+                ],
+                correct: 2, // Letra C (index 2)
+                explanation: "<strong>Alternativa C está CORRETA.</strong> O thrashing ocorre quando a memória física RAM está saturada. Sempre que o sistema tenta alternar tarefas, precisa mover páginas de dados do processo inativo para o disco de forma a abrir espaço na RAM, e logo em seguida inverter a operação. O computador entra em colapso devido à imensa latência do processo de troca (swapping), fazendo com que a CPU não consiga evoluir no processamento de instruções úteis das aplicações."
+            },
+            {
+                id: 7,
+                num: "Questão 07",
+                topic: "Capacidade Física de Armazenamento e IOPS",
+                question: "Ao diagnosticar a lentidão de um servidor de banco de dados, o administrador de infraestrutura de TI percebe que o 'Tempo Ativo do Disco' está registrando 100% de utilização contínua, embora a taxa de transferência real de dados marque apenas 2 MB/s, em um disco cuja capacidade sequencial teórica suporta até 100 MB/s.",
+                hasExtra: true,
+                extraContent: `+-----------------------------------------------------------+
+| Task Manager                                         _ X  |
++-----------------------------------------------------------+
+| Processos | Desempenho |...                              |
++-----------------------------------------------------------+
+| Nome                | CPU    | Memória   | Disco   | Rede |
+| > Sistema           | 0,1%   | 150,4 MB  | 100%    | 0 Mb |
+|                     |        |           | 2.0MB/s |      |
++-----------------------------------------------------------+`,
+                question_part2: "Com base nas métricas de entrada e saída (E/S), assinale a alternativa que explica de forma correta e tecnicamente precisa essa situação.",
+                options: [
+                    "A) O cabo de barramento SATA do disco rígido está desconectado, fazendo com que o kernel simule a operação através de barramentos virtuais de baixa vazão.",
+                    "B) O disco mecânico está operando no seu limite físico de IOPS na tentativa de localizar milhares de pequenos arquivos dispersos em diferentes setores, consumindo tempo no deslocamento físico da agulha.",
+                    "C) O sistema operacional realizou uma redução preventiva de vazão para evitar que a unidade de estado sólido (SSD) atinja o limite máximo de calor aceitável.",
+                    "D) O arquivo de swap do sistema operacional foi desativado temporariamente pela CPU para evitar falhas graves de página na fila do processador."
+                ],
+                correct: 1, // Letra B (index 1)
+                explanation: "<strong>Alternativa B está CORRETA.</strong> Discos rígidos mecânicos sofrem uma degradação extrema de desempenho ao ler ou gravar arquivos pequenos de forma dispersa (logs, arquivos DLL, etc.) devido à limitação mecânica do tempo de busca. A agulha precisa se deslocar constantemente de um bloco físico a outro nos pratos magnéticos. O tempo ativo do disco atinge 100% porque a quantidade de pedidos que ele pode atender por segundo (IOPS) foi saturada, mesmo que o volume acumulado trafegado (megabytes por segundo) seja baixíssimo, de apenas 2 MB/s."
+            },
+            {
+                id: 8,
+                num: "Questão 08",
+                topic: "Ecossistema de Ferramentas de Instrumentação",
+                question: "O sistema operacional Windows disponibiliza ferramentas nativas específicas para a instrumentação do desempenho do sistema de arquivos e processos. Correlacionando essas ferramentas com o grau de profundidade e granularidade de dados obtidos, assinale a alternativa que apresenta a correta analogia de diagnóstico clínico.",
+                options: [
+                    "A) O Monitor de Recursos ('resmon') atua como uma 'ressonância magnética', pois seu objetivo principal é coletar logs históricos complexos e personalizados de hardware por longos meses.",
+                    "B) O Gerenciador de Tarefas ('taskmgr') equivale a um 'exame de sangue', uma vez que permite isolar um processo e mapear detalhadamente em tempo real quais arquivos ele está acessando e os IPs conectados na rede externa.",
+                    "C) O Monitor de Recursos ('resmon') atua como um 'exame de sangue', pois permite detalhar o comportamento de componentes específicos e identificar culpados em tempo real, exibindo os arquivos de disco lidos e IPs acessados.",
+                    "D) O Monitor de Desempenho ('perfmon') equivale a um simples 'termômetro', pois apenas fornece uma resposta rápida em tempo real sobre a utilização agregada do processador, sem gravação de relatórios."
+                ],
+                correct: 2, // Letra C (index 2)
+                explanation: "<strong>Alternativa C está CORRETA.</strong> O Monitor de Recursos ('resmon') fornece uma visão intermediária e analítica detalhada. Ao isolar um processo específico, o administrador consegue verificar instantaneamente os descritores de arquivos acessados no disco, além das portas abertas e endereços IPs acessados na rede externa. Ele atua exatamente como um 'exame de sangue', identificando culpados específicos pelas anomalias."
+            },
+            {
+                id: 9,
+                num: "Questão 09",
+                topic: "Transposição Didática - Analogia de Estudo",
+                question: "No estudo pedagógico sobre gerenciamento de memória virtual, utiliza-se a clássica analogia de uma mesa de estudos de dimensões reduzidas integrada a uma biblioteca com uma estante de livros posicionada de forma distante. Sob o ponto de vista da arquitetura de sistemas operacionais, assinale a alternativa que descreve a correspondência correta dessa analogia.",
+                options: [
+                    "A) A estante distante representa a memória física RAM, enquanto a mesa de estudos de dimensões reduzidas representa o arquivo de paginação em disco rígido.",
+                    "B) O ato de caminhar repetidamente até a estante para trocar os livros da mesa ilustra o processo de tratamento de falhas de página graves (Hard Page Faults) no swap do disco rígido.",
+                    "C) Se a mesa de estudos (RAM) for pequena demais para comportar os livros ativos, o estudante deve solucionar o problema mudando a posição física da estante na placa-mãe.",
+                    "D) O tempo gasto no tráfego até a estante ilustra a latência nula de acesso que ocorre quando o processador lê páginas de código executadas diretamente no nível de modo usuário."
+                ],
+                correct: 1, // Letra B (index 1)
+                explanation: "<strong>Alternativa B está CORRETA.</strong> Se a mesa (RAM) for pequena demais, o estudante (CPU) não consegue manter os livros necessários abertos simultaneamente. Toda vez que precisar ler um capítulo de um livro ausente da mesa, ele deverá caminhar até a estante distante (executar uma busca física em disco - Hard Page Fault) para trazer o livro, guardando outro em seu lugar. Esse tráfego de substituição contínua ilustra de forma clara o comportamento do swap e da hiperpaginação (thrashing)."
+            },
+            {
+                id: 10,
+                num: "Questão 10",
+                topic: "Transposição Didática - Linha de Produção",
+                question: "No âmbito do magistério de informática, o professor EBTT recorre à analogia de uma 'Linha de Produção de Pastéis' para ilustrar as restrições físicas de fluxo em um computador. Nesse cenário pedagógico de simulação, o primeiro funcionário abre a massa de pastéis muito rápido (representando a velocidade da RAM) e o segundo funcionário coloca recheios instantaneamente (representando a CPU). Todavia, os pastéis se acumulam em uma pilha gigantesca porque o terceiro funcionário frita os pastéis em um fogão pequeno, antigo e de operação lenta (representando o Disco Rígido). Com base nessa estrutura conceitual de otimização de sistemas, assinale a alternativa que apresenta a correta conclusão de diagnóstico.",
+                options: [
+                    "A) Para obter mais pastéis prontos por hora, a decisão técnica recomendada é contratar novos funcionários para abrir a massa de pastéis (aumentar a RAM do computador).",
+                    "B) O fogão lento e antigo representa o disco rígido, cujo tempo de processamento físico constitui o gargalo real de E/S, devendo ser substituído por uma tecnologia mais veloz (SSD).",
+                    "C) O acúmulo de massas prontas ilustra o comportamento saudável de um escalonador de processos que opera com fila de processamento zerada.",
+                    "D) A velocidade final de entrega dos pastéis prontos para o cliente será determinada pela velocidade de operação do funcionário que adiciona o recheio de forma instantânea (CPU)."
+                ],
+                correct: 1, // Letra B (index 1)
+                explanation: "<strong>Alternativa B está CORRETA.</strong> O fogão lento representa o limitador de vazão física da cadeia de recursos (o disco mecânico antigo). A única maneira real e eficaz de aumentar o rendimento de pastéis entregues por hora (ou seja, de melhorar a performance do computador) é trocar o dispositivo de cozimento por uma cozinha industrial moderna (substituir o HD por um SSD), que opera sob ordens de grandeza superiores."
+            }
+        ];
+
+        // Estado Global da Aplicação
+        let userAnswers = {};
+        let isSubmitted = false;
+        let currentFilter = 'all';
+
+        // Inicialização do Simulado
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuestions();
+            updateProgress();
+        });
+
+        // Função para Renderizar todas as questões na tela
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            quizData.forEach((q, index) => {
+                const questionElement = document.createElement('article');
+                questionElement.id = `question-block-${q.id}`;
+                questionElement.className = "bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all duration-300";
+                
+                // Constrói a estrutura interna da questão
+                let innerHTML = `
+                    <div class="flex items-center justify-between gap-2 mb-4 border-b border-stone-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-black text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">${q.num}</span>
+                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">${q.topic}</span>
+                        </div>
+                        <div id="status-badge-${q.id}" class="hidden text-xs font-bold px-2.5 py-1 rounded-full"></div>
+                    </div>
+                    
+                    <h3 class="text-base md:text-lg text-brand-textHeading leading-relaxed font-serif mb-4 font-medium">
+                        ${q.question}
+                    </h3>
+                `;
+
+                // Adiciona elemento extra (ex: representação do Task Manager da Questão 07)
+                if (q.hasExtra) {
+                    innerHTML += `
+                        <pre class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-xs overflow-x-auto my-4 border border-slate-700 shadow-inner select-none whitespace-pre leading-relaxed">${q.extraContent}</pre>
+                        <h4 class="text-base md:text-lg text-brand-textHeading leading-relaxed font-serif mb-4 font-medium">${q.question_part2}</h4>
+                    `;
+                }
+
+                // Div para agrupar as opções
+                innerHTML += `<div class="space-y-3 mt-4" id="options-group-${q.id}">`;
+
+                q.options.forEach((opt, optIndex) => {
+                    innerHTML += `
+                        <label id="label-q${q.id}-o${optIndex}" 
+                               class="option-card flex items-start gap-3 p-4 rounded-xl border border-stone-200 cursor-pointer bg-stone-50/50 hover:bg-stone-50 select-none">
+                            <input type="radio" 
+                                   name="question-${q.id}" 
+                                   value="${optIndex}" 
+                                   class="mt-1 w-4 h-4 text-brand-accent focus:ring-brand-accent border-stone-300" 
+                                   onclick="selectOption(${q.id}, ${optIndex})"
+                                   ${isSubmitted ? 'disabled' : ''}>
+                            <span class="text-sm leading-relaxed text-brand-textDark font-sans">${opt}</span>
+                        </label>
+                    `;
+                });
+
+                innerHTML += `</div>`;
+
+                // Div de Resolução Comentada (Invisível no início)
+                innerHTML += `
+                    <div id="explanation-${q.id}" class="hidden mt-6 p-5 bg-sky-50/60 rounded-xl border border-sky-100 text-slate-700 text-sm leading-relaxed transition-all duration-300">
+                        <div class="flex items-center gap-2 text-sky-800 font-bold mb-2">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h.008v.008H12V7.5zM12 11.5v5m0 0H9m3 0h3m-3-12h.008v.008H12V3.5z"></path></svg>
+                            Gabarito Comentado Oficial:
+                        </div>
+                        <p>${q.explanation}</p>
+                    </div>
+                `;
+
+                questionElement.innerHTML = innerHTML;
+                container.appendChild(questionElement);
+            });
+        }
+
+        // Função acionada ao selecionar uma alternativa
+        function selectOption(questionId, optionIndex) {
+            if (isSubmitted) return;
+
+            // Salva a resposta do usuário
+            userAnswers[questionId] = optionIndex;
+            updateProgress();
+
+            // Atualiza visualmente todos os cartões do grupo
+            const q = quizData.find(item => item.id === questionId);
+            q.options.forEach((_, optIdx) => {
+                const label = document.getElementById(`label-q${questionId}-o${optIdx}`);
+                if (optIdx === optionIndex) {
+                    label.classList.remove('border-stone-200', 'bg-stone-50/50', 'hover:bg-stone-50');
+                    label.classList.add('border-brand-accent', 'bg-sky-50/30');
+                } else {
+                    label.classList.remove('border-brand-accent', 'bg-sky-50/30');
+                    label.classList.add('border-stone-200', 'bg-stone-50/50', 'hover:bg-stone-50');
+                }
+            });
+        }
+
+        // Atualiza a barra de progresso do topo
+        function updateProgress() {
+            const answeredCount = Object.keys(userAnswers).length;
+            const totalCount = quizData.length;
+            const percent = (answeredCount / totalCount) * 100;
+
+            document.getElementById('progress-bar-fill').style.width = `${percent}%`;
+            document.getElementById('progress-text').innerText = `${answeredCount}/${totalCount}`;
+            
+            if (answeredCount === totalCount) {
+                document.getElementById('completion-warning').classList.add('hidden');
+            }
+        }
+
+        // Submissão do formulário
+        function handleSubmit(event) {
+            event.preventDefault();
+            if (isSubmitted) return;
+
+            const answeredCount = Object.keys(userAnswers).length;
+            const totalCount = quizData.length;
+
+            if (answeredCount < totalCount) {
+                // Alerta customizado informando questões em branco
+                openModal(`Você respondeu apenas <strong>${answeredCount} de ${totalCount}</strong> questões. Tem certeza de que deseja finalizar o simulado agora e gerar o gabarito?`);
+            } else {
+                processResults();
+            }
+        }
+
+        // Exibe o modal customizado
+        function openModal(text) {
+            const modal = document.getElementById('confirm-modal');
+            document.getElementById('modal-text').innerHTML = text;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        // Fecha o modal customizado
+        function closeModal() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Executa a finalização após confirmação no modal
+        function confirmSubmit() {
+            closeModal();
+            processResults();
+        }
+
+        // Processa as respostas e monta os relatórios
+        function processResults() {
+            isSubmitted = true;
+            let score = 0;
+
+            // Desativa todos os inputs e destaca acertos/erros
+            quizData.forEach(q => {
+                const userAns = userAnswers[q.id];
+                const isCorrect = userAns === q.correct;
+                if (isCorrect) score++;
+
+                // Revela a explicação comentada
+                const expBox = document.getElementById(`explanation-${q.id}`);
+                expBox.classList.remove('hidden');
+
+                // Atualiza o distintivo de status da questão
+                const statusBadge = document.getElementById(`status-badge-${q.id}`);
+                statusBadge.classList.remove('hidden');
+                
+                if (isCorrect) {
+                    statusBadge.innerHTML = '✓ Correta';
+                    statusBadge.classList.add('bg-brand-correctBg', 'text-brand-correct');
+                } else {
+                    statusBadge.innerHTML = '✗ Incorreta';
+                    statusBadge.classList.add('bg-brand-wrongBg', 'text-brand-wrong');
+                }
+
+                // Ajusta as cores das bordas e background dos cartões de alternativas
+                q.options.forEach((_, optIdx) => {
+                    const label = document.getElementById(`label-q${q.id}-o${optIdx}`);
+                    const radio = label.querySelector('input');
+                    radio.disabled = true;
+
+                    // Remove classes dinâmicas de hover comuns
+                    label.classList.remove('hover:bg-stone-50', 'cursor-pointer');
+
+                    if (optIdx === q.correct) {
+                        // Resposta Correta: Borda verde forte
+                        label.classList.remove('border-stone-200', 'bg-stone-50/50', 'bg-sky-50/30', 'border-brand-accent');
+                        label.classList.add('border-green-600', 'bg-green-50/40', 'ring-2', 'ring-green-100');
+                    } else if (optIdx === userAns) {
+                        // Resposta do Usuário Incorreta: Borda vermelha forte
+                        label.classList.remove('border-stone-200', 'bg-stone-50/50', 'bg-sky-50/30', 'border-brand-accent');
+                        label.classList.add('border-red-600', 'bg-red-50/40');
+                    } else {
+                        // Outras opções: Opacidade reduzida
+                        label.classList.add('opacity-60');
+                    }
+                });
+            });
+
+            // Oculta a barra de progresso no cabeçalho após o término do quiz
+            document.getElementById('header-progress-container').classList.add('hidden');
+
+            // Exibe e atualiza o Painel de Resultados
+            const resultsCard = document.getElementById('results-card');
+            resultsCard.classList.remove('hidden');
+            setTimeout(() => {
+                resultsCard.classList.remove('opacity-0', 'scale-95');
+            }, 50);
+
+            // Calcula o percentual de acerto
+            const total = quizData.length;
+            const percent = Math.round((score / total) * 100);
+
+            // Atualiza os badges de score do topo
+            document.getElementById('results-score-badge').innerText = `${score}/${total}`;
+            document.getElementById('results-percent-badge').innerText = `${percent}% de Acerto`;
+            document.getElementById('results-summary-text').innerHTML = `Você obteve <strong>${score} de ${total}</strong> acertos (${percent}% do total de questões).`;
+
+            // Atualiza contadores no filtro
+            document.getElementById('count-correct').innerText = score;
+            document.getElementById('count-wrong').innerText = total - score;
+
+            // Fornece um feedback detalhado com base no score obtido
+            const feedbackBox = document.getElementById('performance-feedback-box');
+            let feedbackHTML = '';
+
+            if (percent >= 80) {
+                feedbackHTML = `
+                    <div class="bg-green-50 border-l-4 border-green-600 text-green-900 p-4">
+                        <h4 class="font-bold text-base mb-1">Excelente Desempenho! 🚀</h4>
+                        <p class="leading-relaxed text-xs md:text-sm">
+                            Parabéns! Sua nota indica um nível avançado de preparação, ideal para o grau de concorrência comum em provas docentes de Institutos Federais. Você demonstra excelente domínio conceitual das métricas do kernel e mecanismos de gerenciamento de recursos. Continue mantendo o ritmo de estudos!
+                        </p>
+                    </div>
+                `;
+            } else if (percent >= 60) {
+                feedbackHTML = `
+                    <div class="bg-amber-50 border-l-4 border-amber-600 text-amber-900 p-4">
+                        <h4 class="font-bold text-base mb-1">Bom Aproveitamento! 👍</h4>
+                        <p class="leading-relaxed text-xs md:text-sm">
+                            Você teve um desempenho sólido, mas ainda existem pontos específicos que exigem atenção nas resoluções comentadas. Analise com foco as questões sobre IOPS e falhas graves de página para polir sua preparação teórica rumo ao topo.
+                        </p>
+                    </div>
+                `;
+            } else {
+                feedbackHTML = `
+                    <div class="bg-red-50 border-l-4 border-red-600 text-red-900 p-4">
+                        <h4 class="font-bold text-base mb-1">Atenção Necessária! 📚</h4>
+                        <p class="leading-relaxed text-xs md:text-sm">
+                            Este simulado de nível EBTT exige alta precisão teórica. Recomendamos uma revisão detalhada do material conceitual associado à paginação de memória, tempo de interrupção e saturação de disco rígido mecânico. Utilize as resoluções comentadas abaixo para consolidar seu aprendizado.
+                        </p>
+                    </div>
+                `;
+            }
+
+            feedbackBox.innerHTML = feedbackHTML;
+
+            // Oculta o aviso de pendências nas ações inferiores
+            document.getElementById('completion-warning').classList.add('hidden');
+            
+            // Altera o texto do botão para indicar finalizado
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Gabarito Gerado";
+            submitBtn.classList.add('bg-slate-400', 'cursor-not-allowed', 'hover:bg-slate-400');
+
+            // Scroll suave de retorno para o topo do Painel de Resultados
+            resultsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Filtra a exibição das questões na tela após envio do gabarito
+        function filterQuestions(filterType) {
+            currentFilter = filterType;
+
+            // Reset de estilo dos botões de filtro
+            const btnAll = document.getElementById('btn-filter-all');
+            const btnCorrect = document.getElementById('btn-filter-correct');
+            const btnWrong = document.getElementById('btn-filter-wrong');
+
+            btnAll.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition-all";
+            btnCorrect.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-emerald-700 border border-emerald-200 hover:bg-emerald-50 transition-all";
+            btnWrong.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-white text-red-700 border border-red-200 hover:bg-red-50 transition-all";
+
+            if (filterType === 'all') {
+                btnAll.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-brand-textHeading text-white border border-brand-textHeading transition-all shadow-sm";
+            } else if (filterType === 'correct') {
+                btnCorrect.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-emerald-600 text-white border border-emerald-600 transition-all shadow-sm";
+            } else if (filterType === 'wrong') {
+                btnWrong.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-red-600 text-white border border-red-600 transition-all shadow-sm";
+            }
+
+            // Exibe/Oculta os blocos de questões
+            quizData.forEach(q => {
+                const block = document.getElementById(`question-block-${q.id}`);
+                const isCorrect = userAnswers[q.id] === q.correct;
+
+                if (filterType === 'all') {
+                    block.classList.remove('hidden');
+                } else if (filterType === 'correct' && isCorrect) {
+                    block.classList.remove('hidden');
+                } else if (filterType === 'wrong' && !isCorrect) {
+                    block.classList.remove('hidden');
+                } else {
+                    block.classList.add('hidden');
+                }
+            });
+        }
+
+        // Reseta o estado completo do quiz permitindo tentar novamente
+        function resetQuiz() {
+            userAnswers = {};
+            isSubmitted = false;
+            currentFilter = 'all';
+
+            // Oculta painel de resultados
+            const resultsCard = document.getElementById('results-card');
+            resultsCard.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                resultsCard.classList.add('hidden');
+            }, 300);
+
+            // Restaura a visibilidade da barra de progresso no cabeçalho
+            document.getElementById('header-progress-container').classList.remove('hidden');
+
+            // Libera e limpa o botão de envio
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Finalizar e Ver Resultados";
+            submitBtn.className = "w-full sm:w-auto px-6 py-3 rounded-xl bg-brand-textHeading text-white font-bold text-sm tracking-wide hover:bg-black transition-all hover:shadow-md active:scale-95 duration-100";
+
+            // Redesenha as questões do início
+            renderQuestions();
+            updateProgress();
+
+            // Scroll de volta ao topo do Simulado
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
