@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado EBTT - Organização de Computadores</title>
+    <!-- Tailwind CSS para um design elegante e limpo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Cabeçalho Principal -->
+    <header class="bg-white border-b border-stone-200 py-8 px-4 sticky top-0 z-10 shadow-sm">
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 mb-2">
+                    Simulado Preparatório
+                </span>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-stone-900">
+                    Concurso Professor EBTT - Instituto Federal
+                </h1>
+                <p class="text-sm text-stone-500 mt-1">
+                    Matéria: Organização e Arquitetura de Computadores (Pipeline vs. Sequencial)
+                </p>
+            </div>
+            
+            <!-- Painel de Progresso / Feedback Rápido -->
+            <div id="quick-stats" class="hidden md:flex items-center gap-4 bg-stone-100 p-3 rounded-xl border border-stone-200">
+                <div class="text-center">
+                    <span class="block text-xs uppercase tracking-wider text-stone-500 font-bold">Acertos</span>
+                    <span id="header-score" class="text-lg font-bold text-stone-800">- / 10</span>
+                </div>
+                <div class="w-px h-8 bg-stone-300"></div>
+                <div class="text-center">
+                    <span class="block text-xs uppercase tracking-wider text-stone-500 font-bold">Aproveitamento</span>
+                    <span id="header-percent" class="text-lg font-bold text-stone-800">- %</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8">
+        <!-- Banner de Instruções -->
+        <div id="instructions-banner" class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8 flex gap-4 items-start">
+            <div class="text-amber-600 shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div>
+                <h2 class="font-semibold text-amber-900">Instruções do Simulado</h2>
+                <p class="text-sm text-amber-800 mt-1 leading-relaxed">
+                    Este simulado contém exatamente as 10 questões básicas do estilo EBTT estudadas em aula. Selecione uma opção para cada pergunta. Ao terminar, clique em <strong>"Finalizar Simulado e Ver Resoluções"</strong> no final da página para obter o seu resultado e ler as explicações detalhadas de cada alternativa diretamente no corpo das questões.
+                </p>
+            </div>
+        </div>
+
+        <!-- Formulário do Quiz -->
+        <form id="quiz-form" onsubmit="event.preventDefault();" class="space-y-8">
+            
+            <!-- QUESTÃO 1 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="B" id="q1">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        01
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    No contexto da organização de computadores, o ciclo de instruções representa o procedimento padronizado pelo qual a CPU interage com a memória para o processamento de programas. Assinale a alternativa que descreve de forma correta e sequencial as etapas desse ciclo de instrução.
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-1" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> Execução (EI), Escrita (WO), Busca (FI) e Decodificação (DI).</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-1" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> Busca (FI), Decodificação (DI), Execução (EI) e Escrita (WO).</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-1" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> Decodificação (DI), Execução (EI), Escrita (WO) e Busca (FI).</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-1" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> Busca (FI), Execução (EI), Decodificação (DI) e Escrita (WO).</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: B.</strong> O ciclo de instrução do processador ocorre em uma sequência lógica invariável: primeiro a CPU busca a instrução na memória RAM ou Cache L1 (FI); na sequência, a Unidade de Controle decodifica o comando traduzindo os bits (DI); após isso, a ULA executa fisicamente a operação (EI) e, finalmente, o resultado é salvo de volta nos registradores ou memória por meio da escrita (WO).
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativa A está incorreta</strong> pois inverte completamente a ordem lógica das etapas funcionais, iniciando com a execução e escrita.</li>
+                        <li><strong>Alternativa C está incorreta</strong> porque posiciona a decodificação de forma anacrônica antes da busca da instrução na memória.</li>
+                        <li><strong>Alternativa D está incorreta</strong> visto que inverte a posição das etapas de execução e decodificação, sugerindo de forma ilógica que a CPU executa uma instrução antes de traduzir seu significado.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 2 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="C" id="q2">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        02
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    A implementação da arquitetura de pipeline visa otimizar o desempenho do processador em comparação ao modelo clássico de processamento sequencial. No que concerne às diferenças de desempenho e comportamento das métricas de latência e vazão (<em>throughput</em>) entre esses dois modelos, assinale a alternativa correta.
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-2" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> O pipeline diminui a latência de execução de cada instrução isolada, mantendo a vazão inalterada.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-2" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> O pipeline reduz drasticamente a latência e a vazão ao mesmo tempo para evitar o superaquecimento do processador.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-2" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> A latência de uma única instrução permanece idêntica em ambos os modelos, mas a vazão de instruções concluídas por segundo aumenta expressivamente com o uso de pipeline.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-2" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> O modelo sequencial apresenta maior vazão e menor latência do que o modelo de pipeline devido à ausência de registradores intermediários.</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: C.</strong> O objetivo do pipeline é aumentar a vazão de instruções concluídas por segundo através da sobreposição de tarefas na esteira de processamento. O tempo de viagem de uma única instrução de ponta a ponta dentro do chip (latência) permanece inalterado, pois os estágios físicos que ela precisa percorrer continuam sendo os mesmos do modelo sequencial.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativa A está incorreta</strong> pois o pipeline não altera a latência individual das instruções e atua especificamente no aumento da vazão.</li>
+                        <li><strong>Alternativa B está incorreta</strong> porque o pipeline aumenta a vazão e não atua reduzindo o desempenho como mecanismo de proteção térmica.</li>
+                        <li><strong>Alternativa D está incorreta</strong> uma vez que o modelo sequencial é consideravelmente menos eficiente em termos de vazão devido à alta ociosidade de seus circuitos internos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 3 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="B" id="q3">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        03
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    Considere uma lavanderia hipotética que opere em modo sequencial e que leve 90 minutos para processar uma trouxa de roupa (passando por lavadora, secadora e mesa de passar por 30 minutos cada). Se essa lavanderia adotar um modelo de pipeline balanceado de 3 estágios para processar 4 trouxas de roupa, o tempo total estimado de processamento será de:
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-3" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> 360 minutos.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-3" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> Pouco mais de 2 horas.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-3" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> Exatamente 4 horas.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-3" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> Menos de 30 minutos.</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: B.</strong> No modo sequencial, o tempo total seria de 4 * 90 min = 360 minutos (6 horas). Com a implementação do pipeline de 3 estágios operando de forma concorrente, enquanto a primeira trouxa é passada, a segunda está secando e a terceira está lavando. O tempo total de processamento das 4 trouxas cai para pouco mais de 2 horas devido ao preenchimento contínuo e à operação simultânea das máquinas.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativas A e C estão incorretas</strong> por apresentarem tempos equivalentes ao modo puramente sequencial ou com alto índice de ociosidade de máquinas.</li>
+                        <li><strong>Alternativa D está incorreta</strong> pois viola os limites físicos do sistema, visto que cada etapa individual consome necessariamente 30 minutos no circuito.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 4 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="B" id="q4">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        04
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    Em um processador que utiliza pipeline, os conflitos de hardware, denominados <em>hazards</em>, podem forçar a introdução de bolhas (<em>stalls</em>) no fluxo de execução. Quando duas instruções concorrentes tentam acessar o mesmo componente físico de hardware ao mesmo tempo (como a memória RAM no mesmo milissegundo de clock), ocorre um conflito de tipo:
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-4" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> De Dados.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-4" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> Estrutural.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-4" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> De Controle.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-4" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> De Desvio.</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: B.</strong> O conflito estrutural ocorre em virtude de uma limitação ou disputa por recursos físicos do processador. Se o hardware não possui recursos duplicados ou barramentos separados que permitam acessos paralelos, duas etapas do pipeline que demandem o mesmo recurso de hardware ao mesmo tempo colidirão, gerando um conflito estrutural e exigindo a injeção de uma bolha de atraso.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativa A está incorreta</strong> pois os conflitos de dados referem-se a dependências de valores lógicos de operandos e variáveis.</li>
+                        <li><strong>Alternativas C e D estão incorretas</strong> porque os conflitos de controle ou desvios relacionam-se com a tomada de decisões e saltos condicionais na sequência do código.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 5 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="C" id="q5">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        05
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    Analise o trecho de código abaixo:<br>
+                    <code class="bg-stone-100 px-2 py-1 rounded text-stone-800 font-mono text-sm inline-block mt-2">Instrução 1: X = 5 + 5</code><br>
+                    <code class="bg-stone-100 px-2 py-1 rounded text-stone-800 font-mono text-sm inline-block mt-1">Instrução 2: Y = X + 2</code><br>
+                    <span class="block mt-4">Considerando um processador em pipeline, a impossibilidade de executar a Instrução 2 no ciclo de clock imediatamente subsequente ao da Instrução 1, devido ao fato de que o valor de X ainda não foi calculado e salvo na etapa de escrita, caracteriza um conflito:</span>
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-5" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> Estrutural.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-5" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> De Controle.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-5" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> De Dados.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-5" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> De Desvio Condicional.</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: C.</strong> O trecho de código expõe um conflito de dados típico por dependência de informação. Como a Instrução 2 necessita do operando X para realizar a soma Y = X+2, ela não pode prosseguir para a fase de execução até que o resultado de X = 5+5 seja determinado e disponibilizado pelo processador.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativa A está incorreta</strong> porque o travamento ocorre em virtude de uma dependência lógica de dados, e não pela disputa simultânea por um componente físico de hardware.</li>
+                        <li><strong>Alternativas B e D estão incorretas</strong> uma vez que o trecho de código é composto por instruções puramente sequenciais e aritméticas, sem desvios condicionais ou comandos do tipo "IF".</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 6 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="B" id="q6">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        06
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    La presença de instruções de desvio condicional (como estruturas do tipo "IF") em programas de computador pode interromper a alimentação contínua de instruções no pipeline. Esse tipo de interrupção, que ocorre porque a CPU não sabe qual será a próxima instrução a ser buscada até que o resultado da condição lógica seja calculado, é classificado como um conflito:
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-6" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> Estrutural.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-6" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> De Controle.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-6" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> De Dados.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-6" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> De Dependência de Operando.</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: B.</strong> Os conflitos de controle (também conhecidos como conflitos de desvio) decorrem da incerteza sobre qual será a próxima instrução a ser inserida no pipeline quando o programa encontra um comando de tomada de decisão, como um "IF". A CPU precisa aguardar a resolução do teste lógico pela ULA para saber qual caminho lógico seguir, interrompendo o preenchimento contínuo do pipeline.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativa A está incorreta</strong> pois não se trata de uma colisão de acesso a um recurso de hardware.</li>
+                        <li><strong>Alternativas C e D estão incorretas</strong> porque não há uma dependência lógica direta de dados entre operandos de operações aritméticas adjacentes.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 7 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="C" id="q7">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        07
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    Para mitigar os impactos negativos dos conflitos de dados no pipeline, os engenheiros de hardware desenvolveram uma técnica que direciona o resultado obtido na saída da ULA imediatamente para a entrada da próxima instrução, eliminando a necessidade de esperar pela conclusão da etapa de escrita. Essa técnica é conhecida como:
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-7" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> Previsão de Desvio (<em>Branch Prediction</em>).</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-7" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> Execução Fora de Ordem (<em>Out-of-Order Execution</em>).</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-7" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> Adiantamento ou Encaminhamento (<em>Forwarding</em>).</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-7" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> Limpeza de Pipeline (<em>Pipeline Flush</em>).</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: C.</strong> O adiantamento ou encaminhamento (<em>forwarding</em>) é uma técnica de circuito projetada para desviar o dado gerado na saída da ULA e inseri-lo diretamente como entrada para a instrução subsequente que aguarda no estágio de execução. Isso evita que o pipeline sofra atrasos por bolhas enquanto espera que o dado passe pelo estágio final de escrita (<em>writeback</em>) nos registradores.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativa A está incorreta</strong> porque a previsão de desvio atua na resolução de conflitos de controle, e não de dados.</li>
+                        <li><strong>Alternativa B está incorreta</strong> pois a execução fora de ordem reordena o fluxo do programa para aproveitar ciclos ociosos, não consistindo no encaminhamento direto de resultados de cálculos em progresso.</li>
+                        <li><strong>Alternativa D está incorreta</strong> visto que o <em>pipeline flush</em> é uma ação corretiva de descarte de instruções gerada por erros de previsão de desvio, e não um desvio de dados.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 8 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="C" id="q8">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        08
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    O uso da técnica de Previsão de Desvio (<em>Branch Prediction</em>) ajuda a manter o pipeline preenchido ao estimar se um teste condicional será verdadeiro ou falso. Caso o algoritmo de previsão embutido no hardware erre o palpite, ocorre uma queda temporária de desempenho decorrente da necessidade de:
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-8" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> Interromper o clock do processador de forma definitiva por meio de um reset físico.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-8" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> Duplicar a frequência física de clock do chip para compensar o atraso do cálculo.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-8" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> Realizar uma limpeza de pipeline (<em>pipeline flush</em>), descartando as instruções carregadas incorretamente e buscando as novas instruções do caminho correto do zero.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-8" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> Executar o programa de trás para frente até que o erro de decisão seja apagado da memória cache.</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: C.</strong> Quando o processador erra a previsão de um desvio, as instruções que haviam sido carregadas e processadas de forma especulativa tornam-se inválidas. O hardware deve realizar uma limpeza de pipeline (<em>pipeline flush</em>), descartando essas instruções incorretas e reiniciando a busca a partir do endereço correto de memória, o que gera uma perda temporária de desempenho conhecida como travada ou atraso.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativa A está incorreta</strong> porque o erro de previsão é contornado dinamicamente pelo hardware, não exigindo o desligamento ou reset físico do sistema.</li>
+                        <li><strong>Alternativa B está incorreta</strong> pois a frequência física de clock do processador é estável e não pode ser duplicada de forma dinâmica e instantânea pelo circuito para compensar erros de previsão.</li>
+                        <li><strong>Alternativa D está incorreta</strong> uma vez que o processador não executa códigos em sentido reverso para anular erros lógicos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 9 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="A" id="q9">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        09
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    Em jogos eletrônicos tridimensionais complexos, como os de RPG de mundo aberto, é comum observar pequenas engasgadas ou micro-travadas (<em>stuttering</em>) na tela quando ocorrem eventos imprevisíveis, como a morte súbita do personagem em uma armadilha. Sob a ótica da organização estruturada de computadores, esse fenômeno físico é provocado por:
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-9" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> Um erro de previsão de desvio (<em>branch prediction</em>) que obriga o processador a realizar um descarte e limpeza das instruções incorretas no pipeline (<em>pipeline flush</em>).</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-9" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> Uma queda intencional da frequência do clock de 5,0 GHz para 0,5 GHz com o objetivo de resfriar os transistores do processador.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-9" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> Falha física irreparável nos registradores internos da ULA, exigindo a substituição do chip de silício por parte do usuário.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-9" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> Conflitos estruturais gerados pela falta de energia elétrica na placa-mãe para alimentar as portas lógicas da unidade de controle.</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: A.</strong> Quando ocorre um evento totalmente inesperado no jogo, o algoritmo de previsão de desvios erra o prognóstico. Esse erro de previsão interrompe o fluxo contínuo do pipeline, exigindo uma operação de limpeza (<em>pipeline flush</em>) para descartar as instruções inválidas e recomeçar o processamento a partir do novo cenário real do jogo. Esse tempo de recuperação lógica do processador reflete-se na tela do usuário como uma micro-travada momentânea.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativa B está incorreta</strong> pois o processador não reduz sua frequência de operação de forma brusca para 0,5 GHz em resposta a um evento lógico de software.</li>
+                        <li><strong>Alternativa C está incorreta</strong> por sugerir uma falha física catastrófica de hardware para explicar um comportamento dinâmico e comum de recuperação de erros lógicos.</li>
+                        <li><strong>Alternativa D está incorreta</strong> uma vez que a falta de energia na placa-mãe desligaria o computador por completo, não provocando apenas micro-travadas de software.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- QUESTÃO 10 -->
+            <div class="bg-white rounded-2xl border border-stone-200 p-6 md:p-8 shadow-sm transition-all hover:border-stone-300 question-card" data-correct="B" id="q10">
+                <div class="flex items-start justify-between gap-4 mb-4">
+                    <span class="inline-flex items-center justify-center bg-stone-100 text-stone-800 text-sm font-bold w-9 h-9 rounded-lg">
+                        10
+                    </span>
+                    <div class="status-badge hidden"></div>
+                </div>
+                <h3 class="text-lg font-semibold text-stone-900 leading-relaxed mb-6">
+                    Nas últimas décadas, a evolução tecnológica dos processadores enfrentou uma barreira térmica física que estabilizou a frequência de clock dos computadores comerciais na faixa de 3,5 GHz a 5,0 GHz. Para continuar elevando o desempenho computacional sem superaquecer ou derreter o silício, a engenharia de computadores implementou como solução:
+                </h3>
+                
+                <!-- Alternativas -->
+                <div class="space-y-3 options-container">
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-10" value="A" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">A)</strong> O abandono definitivo de componentes lógicos integrados e o retorno ao uso de válvulas termofônicas.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-10" value="B" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">B)</strong> O uso de pipelines profundos (<em>deep pipelines</em>) de múltiplos estágios (como 20 estágios), permitindo a entrega contínua de instruções a cada ciclo de clock mesmo com a frequência física estacionada.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-10" value="C" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">C)</strong> A redução da vazão de processamento do computador a níveis sequenciais clássicos para mitigar a geração de calor.</span>
+                    </label>
+                    <label class="option-label flex items-start gap-3 p-4 rounded-xl border border-stone-200 hover:bg-stone-50 cursor-pointer transition-all">
+                        <input type="radio" name="question-10" value="D" class="mt-1 accent-stone-800">
+                        <span class="text-stone-700"><strong class="mr-1">D)</strong> A exclusão de todos os mecanismos de adiantamento e execução fora de ordem, simplificando os chips.</span>
+                    </label>
+                </div>
+
+                <!-- Resolução (Invisível por padrão) -->
+                <div class="resolution-box hidden mt-6 p-5 rounded-xl border bg-stone-50 border-stone-200">
+                    <h4 class="text-sm font-bold text-stone-900 uppercase tracking-wider mb-2">Resolução Comentada:</h4>
+                    <p class="text-sm text-stone-600 leading-relaxed mb-3">
+                        <strong class="text-emerald-700">Alternativa Correta: B.</strong> Com o esgotamento dos ganhos obtidos pela elevação pura do clock (devido a limitações físicas de dissipação térmica), os projetistas de processadores adotaram pipelines profundos com cerca de 20 estágios especializados. Essa subdivisão permite que o processador opere em alta vazão, entregando uma instrução completa a cada ciclo de clock, o que assegura saltos expressivos de desempenho sem a necessidade de elevar a frequência de clock para além dos limites térmicos tolerados pelo silício.
+                    </p>
+                    <ul class="text-xs text-stone-500 space-y-1 pl-4 list-disc">
+                        <li><strong>Alternativa A está incorreta</strong> por sugerir o uso de tecnologias obsoletas e ineficientes de controle térmico.</li>
+                        <li><strong>Alternativa C está incorreta</strong> porque a redução de desempenho ao patamar sequencial clássico anularia os avanços computacionais obtidos nas últimas décadas.</li>
+                        <li><strong>Alternativa D está incorreta</strong> visto que desativar as técnicas de adiantamento e execução fora de ordem aumentaria a frequência de bolhas no pipeline, reduzindo drasticamente o desempenho do processador.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Botão de Ação Principal -->
+            <div id="action-area" class="pt-6 flex justify-center">
+                <button type="button" onclick="gradeQuiz()" id="submit-btn" class="bg-stone-900 hover:bg-stone-800 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-md active:scale-[0.98] w-full md:w-auto text-lg">
+                    Finalizar Simulado e Ver Resoluções
+                </button>
+            </div>
+        </form>
+
+        <!-- Banner de Validação customizado (sem alertas) -->
+        <div id="validation-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl p-6 max-w-sm w-full border border-stone-200 shadow-xl">
+                <div class="text-amber-500 mb-4 flex justify-center">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-stone-950 text-center mb-2">Simulado Incompleto</h3>
+                <p class="text-stone-600 text-sm text-center mb-6">
+                    Você ainda não respondeu todas as 10 questões do simulado. Deseja finalizar mesmo assim ou continuar respondendo?
+                </p>
+                <div class="flex flex-col gap-2">
+                    <button onclick="closeValidationModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-800 font-medium py-2 px-4 rounded-lg transition-all text-sm">
+                        Voltar e Responder
+                    </button>
+                    <button onclick="forceGradeQuiz()" class="bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 px-4 rounded-lg transition-all text-sm">
+                        Enviar Incompleto
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultados e Quadro Geral (Inicialmente Oculto) -->
+        <section id="results-panel" class="hidden mt-12 bg-white border border-stone-200 rounded-2xl p-6 md:p-8 shadow-md">
+            <h2 class="text-2xl font-bold text-stone-900 mb-6 text-center md:text-left">
+                Resultado Consolidado do Simulado
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-center">
+                <!-- Card Acertos -->
+                <div class="bg-stone-50 border border-stone-200 rounded-xl p-5">
+                    <span class="block text-xs uppercase tracking-wider text-stone-500 font-bold mb-1">Questões Corretas</span>
+                    <span id="result-score" class="text-4xl font-extrabold text-stone-900">0 / 10</span>
+                </div>
+                
+                <!-- Card Aproveitamento -->
+                <div class="bg-stone-50 border border-stone-200 rounded-xl p-5">
+                    <span class="block text-xs uppercase tracking-wider text-stone-500 font-bold mb-1">Aproveitamento</span>
+                    <span id="result-percent" class="text-4xl font-extrabold text-stone-900">0%</span>
+                </div>
+
+                <!-- Card Feedback -->
+                <div class="bg-stone-50 border border-stone-200 rounded-xl p-5 flex flex-col justify-center">
+                    <span class="block text-xs uppercase tracking-wider text-stone-500 font-bold mb-1">Classificação</span>
+                    <span id="result-evaluation" class="text-xl font-bold text-stone-900">Regulamentar</span>
+                </div>
+            </div>
+
+            <div id="results-feedback-box" class="p-4 rounded-xl text-sm leading-relaxed mb-8">
+                <!-- Preenchido dinamicamente por JS -->
+            </div>
+
+            <!-- Botões Extras de Pós-Simulado -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="restartQuiz()" class="border border-stone-300 hover:bg-stone-50 text-stone-800 font-medium px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H17" />
+                    </svg>
+                    Refazer Simulado
+                </button>
+                <button onclick="window.print()" class="bg-stone-900 hover:bg-stone-800 text-white font-medium px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" />
+                    </svg>
+                    Imprimir Simulado / PDF
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-white border-t border-stone-200 py-8 px-4 mt-16">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-sm text-stone-500">
+                Simulado Interativo desenvolvido estritamente a partir do conteúdo técnico-pedagógico ministrado na Aula 05.
+            </p>
+            <p class="text-xs text-stone-400 mt-2">
+                Preparação e Otimização para Concursos Públicos Docentes (EBTT).
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts Operacionais do Quiz -->
+    <script>
+        // Função auxiliar para rolar a tela suavemente
+        function scrollToElement(element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Fecha o modal de validação
+        function closeValidationModal() {
+            document.getElementById('validation-modal').classList.add('hidden');
+        }
+
+        // Verifica se todas as 10 questões possuem pelo menos uma alternativa selecionada
+        function checkIncompleteQuestions() {
+            const unanswered = [];
+            for (let i = 1; i <= 10; i++) {
+                const checked = document.querySelector(`input[name="question-${i}"]:checked`);
+                if (!checked) {
+                    unanswered.push(i);
+                }
+            }
+            return unanswered;
+        }
+
+        // Ponto de entrada padrão do botão "Finalizar"
+        function gradeQuiz() {
+            const unanswered = checkIncompleteQuestions();
+            if (unanswered.length > 0) {
+                // Abre o modal de aviso amigável
+                document.getElementById('validation-modal').classList.remove('hidden');
+            } else {
+                executeGrading();
+            }
+        }
+
+        // Força a correção mesmo se faltarem questões
+        function forceGradeQuiz() {
+            closeValidationModal();
+            executeGrading();
+        }
+
+        // Lógica Core de Correção e Revelação dos Comentários
+        function executeGrading() {
+            let correctCount = 0;
+            const totalQuestions = 10;
+            const cards = document.querySelectorAll('.question-card');
+
+            // Esconde o banner de instruções inicial para limpar o layout
+            document.getElementById('instructions-banner').classList.add('hidden');
+
+            cards.forEach((card, index) => {
+                const questionNum = index + 1;
+                const correctAnswer = card.getAttribute('data-correct');
+                const selectedInput = document.querySelector(`input[name="question-${questionNum}"]:checked`);
+                const userChoice = selectedInput ? selectedInput.value : null;
+
+                // Destaca visualmente a resolução
+                const resolutionBox = card.querySelector('.resolution-box');
+                resolutionBox.classList.remove('hidden');
+
+                // Remove classes antigas de correção para evitar conflitos de re-envio
+                card.classList.remove('border-stone-200', 'border-emerald-300', 'border-rose-300', 'bg-emerald-50/10', 'bg-rose-50/10');
+                
+                // Trata as opções de input (destaca as corretas/erradas)
+                const options = card.querySelectorAll('.option-label');
+                options.forEach(opt => {
+                    const radio = opt.querySelector('input');
+                    opt.classList.remove('bg-emerald-50', 'border-emerald-300', 'bg-rose-50', 'border-rose-300', 'opacity-60');
+                    radio.disabled = true; // Desabilita para não poder mudar as respostas após finalizar
+
+                    if (radio.value === correctAnswer) {
+                        // Sempre destaca a alternativa correta em verde
+                        opt.classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-900', 'font-medium');
+                    } else if (userChoice && radio.value === userChoice) {
+                        // Se o usuário escolheu uma alternativa incorreta, destaca em vermelho
+                        opt.classList.add('bg-rose-50', 'border-rose-300', 'text-rose-900');
+                    } else {
+                        // Apaga sutilmente as alternativas não envolvidas para melhorar o foco
+                        opt.classList.add('opacity-60');
+                    }
+                });
+
+                // Crachá de status da questão
+                const badge = card.querySelector('.status-badge');
+                badge.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800', 'bg-stone-100', 'text-stone-800');
+
+                if (userChoice === correctAnswer) {
+                    correctCount++;
+                    card.classList.add('border-emerald-300', 'bg-emerald-50/10');
+                    badge.innerHTML = `
+                        <span class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> Correcta
+                        </span>`;
+                } else if (!userChoice) {
+                    card.classList.add('border-stone-300', 'bg-stone-50/30');
+                    badge.innerHTML = `
+                        <span class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-stone-100 text-stone-800">
+                            Não respondida
+                        </span>`;
+                } else {
+                    card.classList.add('border-rose-300', 'bg-rose-50/10');
+                    badge.innerHTML = `
+                        <span class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full bg-rose-100 text-rose-800">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg> Incorreta
+                        </span>`;
+                }
+            });
+
+            // Geração de feedbacks do score final
+            const percentage = (correctCount / totalQuestions) * 100;
+            
+            // Atualiza cabeçalho (visível em desktop)
+            document.getElementById('quick-stats').classList.remove('hidden');
+            document.getElementById('header-score').innerText = `${correctCount} / ${totalQuestions}`;
+            document.getElementById('header-percent').innerText = `${percentage}%`;
+
+            // Atualiza painel inferior de resultados
+            const resultsPanel = document.getElementById('results-panel');
+            resultsPanel.classList.remove('hidden');
+            document.getElementById('result-score').innerText = `${correctCount} / ${totalQuestions}`;
+            document.getElementById('result-percent').innerText = `${percentage}%`;
+
+            let evalText = "";
+            let evalColorClass = "";
+            let feedbackText = "";
+
+            if (percentage >= 90) {
+                evalText = "Excelente!";
+                evalColorClass = "bg-emerald-50 text-emerald-900 border-emerald-200";
+                feedbackText = "Parabéns! Seu aproveitamento é equivalente ao nível de excelência exigido para aprovações diretas nas primeiras colocações de Institutos Federais. Você domina os conceitos de ciclos de instruções, pipeline de execução e mitigação de hazards.";
+            } else if (percentage >= 70) {
+                evalText = "Aprovado!";
+                evalColorClass = "bg-blue-50 text-blue-900 border-blue-200";
+                feedbackText = "Ótimo desempenho! Você demonstra boa compreensão dos fundamentos de hardware e arquitetura de computadores abordados nesta aula. Com alguns pequenos ajustes, alcançará a gabaritagem das questões.";
+            } else if (percentage >= 50) {
+                evalText = "Regular";
+                evalColorClass = "bg-amber-50 text-amber-900 border-amber-200";
+                feedbackText = "Desempenho mediano. É altamente recomendável reler a apostila teórica referente à Aula 05 e revisar com calma cada uma das resoluções comentadas abaixo, focando especialmente nos conceitos de encaminhamento (forwarding) e desvio.";
+            } else {
+                evalText = "Revisar Conteúdo";
+                evalColorClass = "bg-rose-50 text-rose-900 border-rose-200";
+                feedbackText = "Aproveitamento abaixo do ideal para o certame. Aproveite que o gabarito comentado está totalmente aberto abaixo para estudar diretamente as resoluções e fixar os conceitos do ciclo de instruções (FI, DI, EI, WO).";
+            }
+
+            const evalSpan = document.getElementById('result-evaluation');
+            evalSpan.innerText = evalText;
+            
+            const feedbackBox = document.getElementById('results-feedback-box');
+            feedbackBox.className = `p-5 rounded-xl text-sm leading-relaxed mb-8 border ${evalColorClass}`;
+            feedbackBox.innerHTML = `<strong>Feedback Diagnóstico:</strong> ${feedbackText}`;
+
+            // Substitui o botão "Finalizar" por uma indicação de simulação concluída
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerText = "Simulado Corrigido";
+            submitBtn.disabled = true;
+            submitBtn.className = "bg-stone-400 text-stone-100 font-semibold px-8 py-4 rounded-xl cursor-not-allowed w-full md:w-auto text-lg";
+
+            // Rola suavemente a tela até o painel de resultados no rodapé
+            scrollToElement(resultsPanel);
+        }
+
+        // Reinicia o simulado para novas tentativas
+        function restartQuiz() {
+            // Recarrega os inputs
+            document.getElementById('quiz-form').reset();
+
+            // Esconde resultados e mostra o banner de instruções inicial
+            document.getElementById('results-panel').classList.add('hidden');
+            document.getElementById('instructions-banner').classList.remove('hidden');
+            document.getElementById('quick-stats').classList.add('hidden');
+
+            // Reseta botões e cards
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerText = "Finalizar Simulado e Ver Resoluções";
+            submitBtn.disabled = false;
+            submitBtn.className = "bg-stone-900 hover:bg-stone-800 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-md active:scale-[0.98] w-full md:w-auto text-lg";
+
+            const cards = document.querySelectorAll('.question-card');
+            cards.forEach(card => {
+                card.classList.remove('border-emerald-300', 'border-rose-300', 'bg-emerald-50/10', 'bg-rose-50/10');
+                card.classList.add('border-stone-200');
+
+                card.querySelector('.status-badge').classList.add('hidden');
+                card.querySelector('.resolution-box').classList.add('hidden');
+
+                const options = card.querySelectorAll('.option-label');
+                options.forEach(opt => {
+                    opt.classList.remove('bg-emerald-50', 'border-emerald-300', 'bg-rose-50', 'border-rose-300', 'opacity-60', 'text-emerald-900', 'text-rose-900', 'font-medium');
+                    opt.querySelector('input').disabled = false;
+                });
+            });
+
+            // Sobe ao topo de forma suave
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
