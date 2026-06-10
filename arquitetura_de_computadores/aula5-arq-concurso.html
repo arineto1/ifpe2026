@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulado - Manutenção de Computadores</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fontes do Google: Inter para interface legível e Playfair Display para títulos elegantes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Estilos personalizados para leitura confortável e sem fadiga visual */
+    body {
+      background-color: #FAF9F5; /* Marfim quente */
+      color: #1C1917; /* Grafite escuro e macio, sem contraste agressivo de preto puro */
+    }
+    
+    /* Custom scrollbar suave */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1EFEA;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D1CDC4;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #BAB5AA;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen selection:bg-amber-100 selection:text-amber-900 pb-20">
+
+  <!-- Cabeçalho Principal (Aparência Editorial Premium) -->
+  <header class="border-b border-[#EAE6DF] pt-12 pb-10 px-4 mb-8 bg-[#F5F3EC]">
+    <div class="max-w-3xl mx-auto text-center">
+      <span class="inline-block px-3 py-1 bg-amber-100 text-amber-950 font-semibold text-xs tracking-wider uppercase rounded-full mb-4">
+        Simulado Preparatório
+      </span>
+      <h1 class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 text-[#2A2421]">
+        Concurso Público
+      </h1>
+      <p class="text-stone-600 font-medium text-base md:text-lg mb-2">
+        Setor de Estudo: Suporte Técnico, Manutenção e Arquitetura de Computadores
+      </p>
+      <div class="h-[2px] w-20 bg-amber-700 mx-auto my-4"></div>
+      <p class="text-stone-500 text-xs md:text-sm max-w-xl mx-auto italic leading-relaxed">
+        Com base exclusiva nos tópicos de diagnóstico e solução de problemas de hardware e software (Aula 05). Desenvolvido com paleta de cores confortável para sessões prolongadas de estudo focado.
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4">
+    <!-- Caixa de Instruções Rápidas -->
+    <div class="bg-[#F1EFEA] border-l-4 border-amber-600 p-5 rounded-r-lg mb-8 shadow-sm">
+      <h3 class="font-semibold text-stone-900 mb-2 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-amber-700">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+        </svg>
+        Instruções do Simulado
+      </h3>
+      <ul class="text-sm text-stone-700 space-y-1.5 list-disc pl-5 leading-relaxed">
+        <li>O simulado é composto por <strong>10 questões inéditas</strong> com 4 alternativas cada.</li>
+        <li>Selecione uma resposta para cada questão antes de enviar.</li>
+        <li>Após clicar em <strong>"Finalizar e Ver Gabarito"</strong>, você receberá a sua pontuação, o gabarito detalhado em tempo real e a <strong>resolução comentada</strong> de cada pergunta direto na mesma página.</li>
+      </ul>
+    </div>
+
+    <!-- Container das Questões -->
+    <form id="quiz-form" onsubmit="event.preventDefault(); submitQuiz();" class="space-y-10">
+      
+      <!-- QUESTÃO 1 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-1">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 01</span>
+          <span class="text-xs text-stone-400">Suporte de Energia</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          Durante um atendimento de suporte técnico em um laboratório de informática, o técnico depara-se com um computador que apresenta o seguinte cenário: <strong>ao acionar o botão de energia, o equipamento não demonstra nenhum sinal de vida (sem acendimento de luzes, sem rotação das ventoinhas e sem ruídos internos)</strong>. Com base nos procedimentos de diagnóstico apresentados na aula, qual deve ser a ordem correta e prioritária de ações diretas para a resolução do problema?
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="B">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q1" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> Executar o comando <code class="bg-stone-100 px-1 py-0.5 rounded text-xs text-[#b45309]">sfc /scannow</code> no Prompt de Comando, aplicar spray limpa-contato nos módulos de memória RAM e verificar o cabo de força.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q1" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> Verificar o encaixe do cabo de força na tomada e na fonte; testar o funcionamento da tomada com outro aparelho; e checar se a chave liga/desliga $(I/O)$ na parte traseira está na posição "I".</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q1" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> Substituir imediatamente o HD mecânico por um SSD de alta velocidade, checar o cooler do processador e testar os cabos de rede.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q1" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> Abrir o gerenciador de tarefas por meio do atalho <kbd class="bg-stone-100 border border-stone-300 px-1 py-0.5 rounded text-xs">Ctrl + Shift + Esc</kbd>, desabilitar os programas de inicialização e reiniciar o roteador.</span>
+          </label>
+        </div>
+
+        <!-- Explicação (Oculta por padrão) -->
+        <div id="explanation-1" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: B)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            Quando o computador não dá nenhum sinal de vida ao apertar o botão de ligar, o material didático aponta como causa provável a falta de energia ou mau contato nos cabos. A solução passo a passo consiste estritamente em: 1) Verificar se o cabo de força está bem encaixado na tomada e na fonte; 2) Testar a tomada com outro aparelho (como carregador de celular); 3) Checar se a chave traseira $(I/O)$ está na posição "I" (ligado). As alternativas A, C e D trazem comandos ou procedimentos voltados a outros problemas (como lentidão, rede ou tela preta).
+          </p>
+        </div>
+      </div>
+
+      <!-- QUESTÃO 2 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-2">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 02</span>
+          <span class="text-xs text-stone-400">Memória RAM & Inicialização</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          No contexto da manutenção preditiva e corretiva de computadores, um sintoma clássico é aquele em que o computador <strong>demonstra sinais de vida (luzes acendem e coolers giram), porém a tela permanece completamente preta ou exibe a mensagem "Sem Sinal"</strong>. De acordo com o material da aula, a causa provável e a analogia didática utilizada para explicar esse fenômeno correspondem a:
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="C">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q2" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> Superaquecimento do processador, comparado a um "apagão" por atingir o limite térmico de segurança.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q2" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> Cache de DNS corrompido, comparado ao "esquecimento" de como traduzir os endereços dos sites em IPs reais.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q2" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> Mau contato nos pentes de memória RAM, comparado a um "esquecimento" temporário em que o computador não consegue "lembrar" como iniciar o sistema.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q2" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> Sobrecarga do sistema por excesso de programas na inicialização, comparada a um "congestionamento" de hardware.</span>
+          </label>
+        </div>
+
+        <!-- Explicação -->
+        <div id="explanation-2" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: C)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            O sintoma de ligar (acender luzes e girar coolers) mas não emitir vídeo (tela preta ou sem sinal) tem como causa provável o mau contato nos pentes de memória RAM. O material didático adota uma analogia pedagógica ilustrada por um cérebro perguntando "Ué, quem sou eu?", explicando que é como se o computador sofresse um "esquecimento" temporário e não conseguisse "lembrar" como iniciar o sistema.
+          </p>
+        </div>
+      </div>
+
+      <!-- QUESTÃO 3 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-3">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 03</span>
+          <span class="text-xs text-stone-400">Segurança & Manutenção Física</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          Ao realizar a manutenção corretiva nos módulos de memória RAM para sanar falhas de inicialização, o técnico deve seguir um protocolo de segurança e limpeza. Caso o laboratório de informática <strong>não disponha de spray limpa-contato</strong> no momento, o procedimento alternativo recomendado pela aula e os devidos cuidados técnicos associados são:
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="B">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q3" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> Utilizar álcool isopropílico aplicado com um pincel diretamente nos slots pretos de expansão da placa-mãe.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q3" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> Usar uma borracha escolar branca e limpa, esfregando suavemente apenas nos contatos dourados, garantindo a remoção total de qualquer resíduo ou farelo.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q3" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> Esfregar os contatos com uma flanela seca até ouvir o clique de travamento das peças.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q3" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> Substituir o pente de memória danificado por um SSD portátil conectado à porta USB traseira.</span>
+          </label>
+        </div>
+
+        <!-- Explicação -->
+        <div id="explanation-3" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: B)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            Conforme a nota explícita do guia de manutenção de memória RAM, se o técnico não possuir o spray limpa-contato, a alternativa recomendada é a utilização de uma borracha escolar branca e limpa. O cuidado fundamental descrito é esfregar suavemente apenas nos contatos dourados e certificar-se de remover todo o resíduo e farelo antes de recolocar a peça no slot.
+          </p>
+        </div>
+      </div>
+
+      <!-- QUESTÃO 4 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-4">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 04</span>
+          <span class="text-xs text-stone-400">Limites Térmicos & CPU</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          Um usuário relata que seu computador <strong>apaga repentinamente ou congela a imagem do nada após alguns minutos de uso intenso</strong> (especialmente durante a execução de tarefas pesadas como jogos ou edições de vídeo). O diagnóstico técnico aponta para <strong>superaquecimento</strong>, pois o processador atingiu o limite térmico de segurança (ex: $95^\circ\text{C}+$). Segundo a aula, o sistema adota essa medida de desligamento automático com o objetivo direto de:
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="B">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q4" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> Economizar energia elétrica e renovar o endereço de IP local.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q4" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> Evitar que as peças do computador queimem.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q4" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> Forçar a atualização dos drivers corrompidos da placa de vídeo.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q4" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> Limpar o cache de arquivos temporários armazenados no HD mecânico.</span>
+          </label>
+        </div>
+
+        <!-- Explicação -->
+        <div id="explanation-4" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: B)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            O material textual e infográfico deixa claro que, diante do superaquecimento (causado por ventoinha falhando ou pasta térmica seca), o processador atinge seu limite térmico de segurança. O sistema aciona o desligamento automático de emergência especificamente para "evitar que as peças queimem" (mecanismo de proteção de hardware).
+          </p>
+        </div>
+      </div>
+
+      <!-- QUESTÃO 5 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-5">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 05</span>
+          <span class="text-xs text-stone-400">Pasta Térmica</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          Para solucionar problemas de superaquecimento do processador, o técnico de suporte deve executar um conjunto de ações de manutenção preventiva e corretiva de hardware. Dentre as soluções indicadas no material, a substituição da <strong>pasta térmica</strong> exige etapas específicas, que consistem em:
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="C">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q5" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> Aplicar uma nova camada de pasta diretamente sobre a poeira acumulada nos dissipadores de metal.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q5" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> Lavar o cooler com água corrente e aplicar a pasta nos contatos dourados da memória RAM.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q5" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> Remover o cooler do processador, limpar a pasta antiga utilizando álcool isopropílico e aplicar uma nova camada de pasta térmica de boa qualidade sobre o processador.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q5" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> Borrifar spray limpa-contato na ventoinha ligada e espalhar a pasta térmica nas saídas de ar do gabinete.</span>
+          </label>
+        </div>
+
+        <!-- Explicação -->
+        <div id="explanation-5" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: C)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            De acordo com o passo a passo de "Troque a Pasta Térmica", a sequência correta exige: remover o cooler do processador, realizar a limpeza da pasta antiga utilizando álcool isopropílico (conforme demonstrado na imagem com um pincel/hastes) e aplicar uma nova camada de pasta térmica de boa qualidade sobre o processador para restabelecer a correta condução de calor.
+          </p>
+        </div>
+      </div>
+
+      <!-- QUESTÃO 6 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-6">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 06</span>
+          <span class="text-xs text-stone-400">Armazenamento & Desempenho</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          A <strong>lentidão extrema</strong> ao iniciar o sistema, carregar a área de trabalho ou abrir programas simples (como navegadores e pastas) é um problema frequentemente diagnosticado em computadores antigos ou desatualizados. Conforme a abordagem de hardware ministrada na aula, as duas causas prováveis para essa situação e a principal modificação física recomendada para obter o maior ganho de velocidade são, respectivamente:
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="D">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q6" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> Filtro de linha danificado e chave traseira desligada; substituição da fonte de alimentação.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q6" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> Drivers desatualizados e infecção por vírus; atualização do Windows Update.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q6" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> Conflito de IP e cache de DNS corrompido; reinicialização do roteador de internet.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q6" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> Gargalo no armazenamento (HD mecânico antigo, desgastado ou lotado) ou falta de memória RAM; substituição do HD por um SSD.</span>
+          </label>
+        </div>
+
+        <!-- Explicação -->
+        <div id="explanation-6" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: D)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            O material define que a lentidão extrema ao iniciar ou abrir arquivos simples provém de um "gargalo no armazenamento" (causado por HD mecânico antigo, desgastado ou lotado) ou "falta de memória" RAM. A aula crava que trocar o HD por um SSD é "a melhor solução" e a evolução de hardware que traz o maior ganho de velocidade.
+          </p>
+        </div>
+      </div>
+
+      <!-- QUESTÃO 7 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-7">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 07</span>
+          <span class="text-xs text-stone-400">Windows & Inicialização</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          Em computadores com <strong>hardware moderno e bom</strong> (ex: processadores modernos e placas de vídeo robustas), pode ocorrer o sintoma de <strong>lentidão geral e inicialização demorada do Windows logo após o boot</strong>. Identificada a causa provável como o excesso de aplicativos inicializando junto com o sistema, qual o procedimento correto ensinado na aula para otimizar essa inicialização?
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="A">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q7" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> Acessar o Gerenciador de Tarefas (<kbd class="bg-stone-100 border border-stone-300 px-1 py-0.5 rounded text-xs">Ctrl + Shift + Esc</kbd>), navegar até a aba de inicialização ("Aplicativos de Inicialização" ou "Inicializar") e desabilitar programas não essenciais (como launchers e Spotify), mantendo ativos os drivers e antivírus.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q7" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> Abrir o Prompt de Comando (CMD) como Administrador e digitar o comando <code class="bg-stone-100 px-1 py-0.5 rounded text-xs text-[#b45309]">ipconfig /flushdns</code> para limpar a inicialização do sistema.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q7" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> Desinstalar todos os drivers de áudio e vídeo por meio do Painel de Controle para aliviar o processador no boot.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q7" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> Retirar os pentes de memória RAM com o computador ligado para forçar o Windows a resetar os aplicativos de inicialização.</span>
+          </label>
+        </div>
+
+        <!-- Explicação -->
+        <div id="explanation-7" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: A)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            Para resolver a inicialização demorada em hardwares modernos sufocados por excesso de programas iniciais, o procedimento ensinado é abrir o Gerenciador de Tarefas (`Ctrl + Shift + Esc`), ir à aba correspondente ao sistema operacional (Windows 10 ou 11) e clicar com o botão direito para "Desabilitar" softwares desnecessários. O texto faz um alerta explícito: "NÃO DESABILITE drivers de áudio, vídeo ou programas de antivírus", tornando a alternativa A a única correta.
+          </p>
+        </div>
+      </div>
+
+      <!-- QUESTÃO 8 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-8">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 08</span>
+          <span class="text-xs text-stone-400">Erros Críticos (BSOD)</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          As chamadas <strong>Telas Azuis da Morte (BSOD - Blue Screen of Death)</strong> representam travamentos críticos do sistema operacional. A aula destaca duas causas prováveis para esse tipo de falha de software: **drivers corrompidos/desatualizados** e **arquivos do sistema danificados** (por quedas de energia ou vírus). Para reparar diretamente os arquivos danificados do sistema, o comando exato que deve ser executado no Prompt de Comando (CMD) como Administrador é:
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="B">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q8" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> <code class="bg-stone-100 px-1 py-0.5 rounded text-xs text-[#b45309]">ipconfig /flushdns</code></span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q8" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> <code class="bg-stone-100 px-1 py-0.5 rounded text-xs text-[#b45309]">sfc /scannow</code></span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q8" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> <kbd class="bg-stone-100 border border-stone-300 px-1 py-0.5 rounded text-xs">Ctrl + Shift + Esc</kbd></span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q8" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> <code class="bg-stone-100 px-1 py-0.5 rounded text-xs text-[#b45309]">chkdsk /f /r</code></span>
+          </label>
+        </div>
+
+        <!-- Explicação -->
+        <div id="explanation-8" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: B)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            No item "Reparar os Arquivos do Sistema" dentro do tópico de Telas Azuis (BSOD), o guia orienta abrir o Prompt de Comando (CMD) como Administrador e digitar especificamente o comando `sfc /scannow`. Esse comando faz com que o próprio Windows encontre e corrija os arquivos corrompidos automaticamente.
+          </p>
+        </div>
+      </div>
+
+      <!-- QUESTÃO 9 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-9">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 09</span>
+          <span class="text-xs text-stone-400">Segurança Digital & Malware</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          Um computador apresenta comportamento estranho: janelas de propaganda abrindo do nada, páginas de busca do navegador alteradas sozinhas e lentidão abrupta. Diante de uma provável <strong>infecção por malware ou vírus</strong>, a aula prescreve três passos simples de limpeza e proteção digital. Assinale a alternativa que descreve incorretamente ou contraria as orientações de navegação segura contidas no material:
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="C">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q9" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> Executar uma "Verificação completa" nas opções de verificação da Segurança do Windows (Windows Defender).</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q9" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> Acessar a página de extensões/complementos do navegador e remover tudo o que for desconhecido.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q9" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> Baixar arquivos executáveis (<code class="bg-stone-100 px-1 py-0.5 rounded text-xs">.exe</code>) de ativadores ou links recebidos em e-mails suspeitos para atualizar o antivírus.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q9" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> Ir ao Painel de Controle do sistema e desinstalar programas recentes ou suspeitos que não se lembre de ter instalado.</span>
+          </label>
+        </div>
+
+        <!-- Explicação -->
+        <div id="explanation-9" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: C)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            A alternativa C está incorreta e contraria as boas práticas da aula. O material instrui expressamente na seção de "Navegação Segura" que o usuário deve "evitar clicar em links suspeitos" e "nunca baixar arquivos executáveis (.exe) de fontes que não sejam os sites oficiais dos desenvolvedores", categorizando links falsos, ativadores e downloads piratas como as causas do problema. As demais alternativas listam procedimentos corretos presentes no guia de soluções.
+          </p>
+        </div>
+      </div>
+
+      <!-- QUESTÃO 10 -->
+      <div class="bg-white rounded-xl border border-[#EAE6DF] shadow-sm p-6 md:p-8 hover:shadow-md transition duration-300 question-card" id="q-card-10">
+        <div class="flex items-center justify-between mb-4 border-b border-[#F5F3EC] pb-3">
+          <span class="text-amber-800 font-bold tracking-wider text-sm uppercase">Questão 10</span>
+          <span class="text-xs text-stone-400">Redes & Internet</span>
+        </div>
+        <p class="text-[17px] text-stone-900 font-medium leading-relaxed mb-6">
+          "O ícone do Wi-Fi mostra que o computador está conectado à rede local, mas os sites não carregam e os aplicativos ficam em modo offline". De acordo com o guia de soluções para rede apresentado na aula, quando a causa provável for o <strong>cache de DNS corrompido</strong> (o sistema esqueceu como traduzir endereços de sites em IPs reais), o comando indicado para zerar a memória de caminhos de rede e forçar conexões limpas é:
+        </p>
+        
+        <div class="space-y-3 options-group" data-correct="B">
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q10" value="A" class="mt-1 accent-amber-700" required>
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">A)</strong> <code class="bg-stone-100 px-1 py-0.5 rounded text-xs text-[#b45309]">sfc /scannow</code>, executado no Windows Settings.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q10" value="B" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">B)</strong> <code class="bg-stone-100 px-1 py-0.5 rounded text-xs text-[#b45309]">ipconfig /flushdns</code>, executado no Prompt de Comando (CMD) como Administrador.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q10" value="C" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">C)</strong> <code class="bg-stone-100 px-1 py-0.5 rounded text-xs text-[#b45309]">cmd /restart_router</code>, executado diretamente no navegador de internet.</span>
+          </label>
+          <label class="flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative">
+            <input type="radio" name="q10" value="D" class="mt-1 accent-amber-700">
+            <span class="text-stone-800 text-sm leading-relaxed"><strong class="mr-1">D)</strong> <code class="bg-stone-100 px-1 py-0.5 rounded text-xs text-[#b45309]">ping 192.168.1.10</code>, executado no Gerenciador de Tarefas.</span>
+          </label>
+        </div>
+
+        <!-- Explicação -->
+        <div id="explanation-10" class="mt-6 bg-[#FAF9F5] rounded-lg p-5 border border-amber-200 hidden">
+          <h4 class="font-bold text-amber-900 text-sm mb-2 flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Resolução Comentada (Gabarito: B)
+          </h4>
+          <p class="text-stone-700 text-sm leading-relaxed">
+            Para mitigar o problema de estar conectado ao Wi-Fi mas sem navegação por conta de cache de DNS corrompido, a solução direta descrita no material é abrir o Prompt de Comando (CMD) na condição de Administrador e executar o comando `ipconfig /flushdns`, que zera a memória de caminhos de rede.
+          </p>
+        </div>
+      </div>
+
+      <!-- Seção de Ações e Resultados -->
+      <div class="pt-6">
+        <!-- Dashboard de Resultados (Oculto Inicialmente) -->
+        <div id="results-dashboard" class="hidden bg-white rounded-xl border-2 border-amber-600 shadow-md p-8 text-center mb-8 animate-fade-in">
+          <h2 class="font-serif text-2xl md:text-3xl font-bold text-stone-900 mb-2">Desempenho no Simulado</h2>
+          <div class="flex items-center justify-center gap-4 my-6">
+            <div class="bg-amber-50 rounded-full h-24 w-24 flex items-center justify-center border-2 border-amber-400">
+              <span id="score-text" class="text-3xl font-bold text-amber-950">0/10</span>
+            </div>
+            <div class="text-left">
+              <p class="text-sm text-stone-500 font-semibold uppercase tracking-wider">Aproveitamento</p>
+              <p id="percentage-text" class="text-2xl font-bold text-stone-800">0%</p>
+              <p id="feedback-text" class="text-sm text-stone-600 mt-0.5">Continue estudando para alcançar a aprovação!</p>
+            </div>
+          </div>
+          <p class="text-stone-500 text-xs italic">Toda a prova foi corrigida. Veja abaixo a indicação das respostas e os comentários em cada questão.</p>
+        </div>
+
+        <div class="flex flex-wrap gap-4 items-center justify-center">
+          <button type="submit" id="btn-submit" class="bg-amber-800 hover:bg-amber-900 text-white font-semibold px-8 py-4 rounded-lg shadow-md transition duration-200 text-base flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+            Finalizar e Ver Gabarito
+          </button>
+          
+          <button type="button" id="btn-reset" onclick="resetQuiz()" class="hidden bg-[#F1EFEA] hover:bg-stone-200 text-stone-800 font-semibold px-8 py-4 rounded-lg border border-stone-300 transition duration-200 text-base flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+            Tentar Novamente
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </main>
+
+  <!-- Rodapé Preventivo Acadêmico -->
+  <footer class="mt-20 border-t border-[#EAE6DF] pt-8 pb-12 bg-[#F5F3EC]">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <div class="bg-white p-5 rounded-lg border border-[#EAE6DF] max-w-xl mx-auto mb-6 text-stone-700 text-xs md:text-sm leading-relaxed shadow-sm">
+        <strong class="text-stone-900 block mb-1">💡 A Regra de Ouro (Aula 05)</strong>
+        "A maioria dos problemas técnicos em manutenção se resolve de maneira simples com dois passos básicos primordiais: reiniciar o sistema ou verificar os cabos de conexão física."
+      </div>
+      <p class="text-stone-500 text-xs tracking-wider uppercase font-medium">Suporte Técnico de TI & Redes</p>
+      <p class="text-stone-400 text-xs mt-1">Simulado Automatizado de Aprendizagem de TI</p>
+    </div>
+  </footer>
+
+  <!-- Script de Controle do Quiz -->
+  <script>
+    function submitQuiz() {
+      const form = document.getElementById('quiz-form');
+      const questionsCount = 10;
+      let score = 0;
+
+      // Iterar por todas as questões
+      for (let i = 1; i <= questionsCount; i++) {
+        const questionCard = document.getElementById(`q-card-${i}`);
+        const optionsGroup = questionCard.querySelector('.options-group');
+        const correctAnswer = optionsGroup.getAttribute('data-correct');
+        const selectedOption = form.querySelector(`input[name="q${i}"]:checked`);
+        const explanation = document.getElementById(`explanation-${i}`);
+
+        // Tornar visível a resolução comentada
+        explanation.classList.remove('hidden');
+
+        // Estilizar todas as opções com base no acerto
+        const labels = optionsGroup.querySelectorAll('label');
+        labels.forEach(label => {
+          const radioInput = label.querySelector('input');
+          // Desabilitar interações de cliques futuros
+          radioInput.disabled = true;
+          label.classList.remove('hover:bg-stone-50', 'hover:border-stone-400', 'cursor-pointer');
+          
+          if (radioInput.value === correctAnswer) {
+            // Destacar o gabarito oficial em verde suave
+            label.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-950');
+            // Adicionar sinalizador visual correto
+            const correctBadge = document.createElement('span');
+            correctBadge.className = "absolute right-3 top-3 text-emerald-600 font-bold text-xs bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1";
+            correctBadge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg> Correto`;
+            label.appendChild(correctBadge);
+          }
+
+          if (selectedOption && radioInput.value === selectedOption.value) {
+            if (selectedOption.value === correctAnswer) {
+              score++;
+            } else {
+              // Se errou, pintar a alternativa errada em vermelho suave
+              label.classList.add('bg-rose-50', 'border-rose-400', 'text-rose-950');
+              const wrongBadge = document.createElement('span');
+              wrongBadge.className = "absolute right-3 top-3 text-rose-600 font-bold text-xs bg-rose-100 px-2 py-0.5 rounded-full flex items-center gap-1";
+              wrongBadge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg> Errado`;
+              label.appendChild(wrongBadge);
+            }
+          }
+        });
+      }
+
+      // Atualizar o Dashboard de Resultados
+      const scoreText = document.getElementById('score-text');
+      const percentageText = document.getElementById('percentage-text');
+      const feedbackText = document.getElementById('feedback-text');
+      const dashboard = document.getElementById('results-dashboard');
+
+      const percentage = Math.round((score / questionsCount) * 100);
+      scoreText.innerText = `${score}/${questionsCount}`;
+      percentageText.innerText = `${percentage}%`;
+
+      // Definir feedback textual adequado ao simulado
+      if (percentage >= 80) {
+        feedbackText.innerText = "Excelente desempenho! Sua pontuação o coloca na zona de provável classificação e aprovação técnica no concurso.";
+        feedbackText.className = "text-sm font-semibold text-emerald-700 mt-0.5";
+      } else if (percentage >= 60) {
+        feedbackText.innerText = "Bom desempenho! Você possui domínio básico sólido, mas precisa revisar alguns conceitos corretivos de hardware.";
+        feedbackText.className = "text-sm font-semibold text-amber-700 mt-0.5";
+      } else {
+        feedbackText.innerText = "Desempenho abaixo do perfil esperado. Recomendamos uma leitura atenta do material e novos testes focados.";
+        feedbackText.className = "text-sm font-semibold text-rose-700 mt-0.5";
+      }
+
+      // Exibir o dashboard e ocultar botão Enviar
+      dashboard.classList.remove('hidden');
+      document.getElementById('btn-submit').classList.add('hidden');
+      document.getElementById('btn-reset').classList.remove('hidden');
+
+      // Scroll suave até o topo ou dashboard
+      window.scrollTo({
+        top: dashboard.offsetTop - 40,
+        behavior: 'smooth'
+      });
+    }
+
+    function resetQuiz() {
+      const form = document.getElementById('quiz-form');
+      form.reset();
+
+      const questionsCount = 10;
+      for (let i = 1; i <= questionsCount; i++) {
+        const questionCard = document.getElementById(`q-card-${i}`);
+        const optionsGroup = questionCard.querySelector('.options-group');
+        const explanation = document.getElementById(`explanation-${i}`);
+
+        // Ocultar explicações novamente
+        explanation.classList.add('hidden');
+
+        // Resetar estilos das alternativas
+        const labels = optionsGroup.querySelectorAll('label');
+        labels.forEach(label => {
+          const radioInput = label.querySelector('input');
+          radioInput.disabled = false;
+          
+          // Limpar classes extras
+          label.className = "flex items-start gap-3 p-4 rounded-lg border border-stone-200 cursor-pointer hover:bg-stone-50 hover:border-stone-400 transition-all duration-150 relative";
+          
+          // Remover badges criados dinamicamente
+          const badges = label.querySelectorAll('span.absolute');
+          badges.forEach(b => b.remove());
+        });
+      }
+
+      // Resetar visual do Dashboard e botões
+      document.getElementById('results-dashboard').classList.add('hidden');
+      document.getElementById('btn-submit').classList.remove('hidden');
+      document.getElementById('btn-reset').classList.add('hidden');
+
+      // Voltar ao topo da página suavemente
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  </script>
+</body>
+</html>
